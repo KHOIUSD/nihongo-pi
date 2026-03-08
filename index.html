@@ -66,41 +66,6 @@
         const Pi = window.Pi;
         Pi.init({ version: "2.0", sandbox: true });
 
-        const vocabulary = [
-            { kanji: "加工", reading: "かこう", meaning: "Gia công", example:"プラスチックを加工する。(Gia công nhựa)" },
-            { kanji: "合格", reading: "ごうかく", meaning: "Đỗ / Vượt qua", example:"テストが合格した。(Tôi đã vượt qua bài kiểm tra)" },
-            { kanji: "改善", reading: "かいぜん", meaning: "Cải thiện,cải tiến (Kaizen)", example:"作業工程を改善する。（Cải thiện công đoạn làm việc)" }
-        ];
-        let currentIndex = 0;
-
-        // --- UI INTERACTION LOGIC ---
-        const card = document.getElementById('card');
-        const reading = document.getElementById('reading');
-        const meaning = document.getElementById('meaning');
-        const example = document.getElementById('example');
-
-        // Toggle card flip
-        card.addEventListener('click', () => {
-            reading.classList.toggle('invisible');
-            meaning.classList.toggle('invisible');
-            example.classList.toggle('invisible');
-        });
-
-        // Next card action
-        document.getElementById('btn-next').addEventListener('click', () => {
-            currentIndex = (currentIndex + 1) % vocabulary.length;
-            document.getElementById('kanji').innerText = vocabulary[currentIndex].kanji;
-            document.getElementById('reading').innerText = vocabulary[currentIndex].reading;
-            document.getElementById('meaning').innerText = vocabulary[currentIndex].meaning;
-            document.getElementById('example').innerText = vocabulary[currentIndex].example;
-            reading.classList.add('invisible');
-            meaning.classList.add('invisible');
-            example.classList.add('invisible');
-        });
-
-        // --- PI WEB3 LOGIC ---
-
-        // 1. Authentication
         document.getElementById('btn-auth').addEventListener('click', async () => {
             try {
                 const scopes = ['username', 'payments'];
