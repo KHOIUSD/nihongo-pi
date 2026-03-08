@@ -1,8 +1,8 @@
 // --- CONFIGURATION & DATA ---
 const vocabulary = [
-    { kanji: "加工", reading: "かこう", meaning: "Gia công", example: "プラスチックを加工する (Gia công nhựa)" },
-    { kanji: "合格", reading: "ごうかく", meaning: "Đỗ / Vượt qua", example: "N2試験に合格する (Đỗ kỳ thi N2)" },
-    { kanji: "改善", reading: "かいぜん", meaning: "Cải thiện (Kaizen)", example: "作業工程を改善する (Cải thiện công đoạn làm việc)" }
+    { kanji: "加工", reading: "かこう", meaning: "Gia công", example: "プラスチックを加工する。 (Gia công nhựa)" },
+    { kanji: "合格", reading: "ごうかく", meaning: "Đỗ / Vượt qua", example: "N2試験に合格する。 (Đỗ kỳ thi N2)" },
+    { kanji: "改善", reading: "かいぜん", meaning: "Cải thiện, cải tiến (Kaizen)", example: "作業工程を改善する。 (Cải thiện công đoạn làm việc)" }
 ];
 let currentIndex = 0;
 
