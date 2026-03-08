@@ -3,136 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nihongo Pro Card</title>
+    <title>Nihongo Flashcards Pi</title>
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
     <script>Pi.init({ version: "2.0", sandbox: true });</script>
     <style>
-        :root { --green: #58a65c; --red: #d9534f; --purple: #57317f; }
-        body { font-family: sans-serif; margin: 0; background: #f5f5f5; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        :root { --pi-purple: #57317f; --green-app: #58a65c; --red-app: #d9534f; }
+        body { font-family: sans-serif; margin: 0; background: #fff; display: flex; flex-direction: column; height: 100vh; color: #333; overflow: hidden; }
         
-        .header { background: #fff; padding: 15px; display: flex; align-items: center; border-bottom: 1px solid #ddd; font-weight: bold; }
-        
-        .status-bar { display: flex; justify-content: center; align-items: center; gap: 15px; padding: 10px; background: #fff; font-size: 18px; font-weight: bold; }
-        .num-red { color: var(--red); }
-        .num-green { color: var(--green); }
+        /* Header & Status */
+        .header { display: flex; align-items: center; padding: 15px; font-size: 16px; border-bottom: 1px solid #f0f0f0; font-weight: bold; }
+        .status-bar { display: flex; justify-content: center; align-items: center; padding: 10px; gap: 15px; font-size: 20px; font-weight: bold; }
+        .num-red { color: var(--red-app); }
+        .num-green { color: var(--green-app); }
+        .menu-icon { margin-left: 15px; color: var(--green-app); font-size: 24px; cursor: pointer; }
 
-        .card-container { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; position: relative; }
-        .flashcard { width: 100%; max-width: 340px; height: 450px; background: #fff; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; padding: 30px; box-sizing: border-box; text-align: center; transition: 0.3s; cursor: pointer; border: 1px solid #eee; }
+        /* 3D Flashcard */
+        .main-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .flashcard-container { width: 320px; height: 450px; perspective: 1000px; }
+        .flashcard { width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; cursor: pointer; position: relative; }
+        .flashcard.flipped { transform: rotateY(180deg); }
+        .front, .back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 2px solid var(--pi-purple); padding: 25px; box-sizing: border-box; }
         
-        .kanji { font-size: 65px; font-weight: bold; margin-top: 50px; }
-        .example { margin-top: 30px; text-align: left; font-size: 18px; color: #444; }
-        .highlight { color: var(--red); font-weight: bold; }
+        /* Mặt trước (Trắng) */
+        .front { background: white; }
+        .front .level { color: var(--pi-purple); font-weight: bold; position: absolute; top: 30px; }
+        .front h1 { font-size: 75px; margin: 0; color: #333; }
+        .front .hint { font-size: 12px; color: #888; position: absolute; bottom: 30px; }
 
-        .controls { display: flex; justify-content: space-around; align-items: center; padding: 20px; background: #fff; border-top: 1px solid #eee; }
-        .btn { border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .btn-red { background: var(--red); color: white; }
-        .btn-green { background: var(--green); color: white; }
-        .btn-nav { background: #eee; color: #333; }
-        
-        .audio-btn { background: var(--green); width: 50px; height: 50px; border-radius: 50%; border: none; color: white; font-size: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        /* Mặt sau (Tím) */
+        .back { background: var(--pi-purple); color: white; transform: rotateY(180deg); text-align: center; }
+        .back h2 { font-size: 32px; margin-bottom: 10px; }
+        .back .mean { font-size: 24px; margin: 20px 0; }
+        .back hr { width: 80%; border: 0; border-top: 1px solid rgba(255,255,255,0.3); }
+
+        /* Controls */
+        .action-buttons { display: flex; width: 100%; justify-content: space-around; padding: 10px 20px; box-sizing: border-box; }
+        .btn-circle { width: 55px; height: 55px; border-radius: 50%; border: none; color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .btn-nav { background: #eee; color: #333; border-radius: 10px; padding: 10px 20px; border: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="header">❮ Khóa học N2 (50 từ vựng)</div>
+    <div class="header">❮ Khóa học N2 (Động từ - 50 từ)</div>
 
     <div class="status-bar">
-        <span class="num-red" id="stat-wrong">0</span>
-        <span id="stat-progress">← 1/50 →</span>
-        <span class="num-green" id="stat-right">0</span>
-        <button onclick="shuffleCards()" style="margin-left:10px; border:none; background:none; color:var(--green); font-weight:bold;">XÁO TRỘN</button>
+        <span class="num-red" id="wrong-count">0</span>
+        <span id="progress-text">← 1/50 →</span>
+        <span class="num-green" id="right-count">0</span>
+        <span class="menu-icon" onclick="shuffleCards()">🔄</span>
     </div>
 
-    <div class="card-container">
-        <div class="flashcard" id="main-card" onclick="flip()">
-            <div id="front-side">
-                <div class="kanji" id="display-word">漏れる</div>
-                <div class="example" id="display-ex">木と木の間から光が<span class="highlight">漏れ</span>ている。</div>
+    <div class="main-content">
+        <div class="flashcard-container">
+            <div class="flashcard" id="card" onclick="this.classList.toggle('flipped')">
+                <div class="front">
+                    <div class="level">N2</div>
+                    <h1 id="jp-word">漏れる</h1>
+                    <div class="hint">Chạm để xem nghĩa</div>
+                </div>
+                <div class="back">
+                    <h2 id="jp-read">もれる</h2>
+                    <hr>
+                    <div class="mean">Nghĩa: <strong id="vn-mean">Rò rỉ</strong></div>
+                    <div id="ex-sentence" style="font-size: 16px; opacity: 0.9;">Ví dụ: 光が漏れている。</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="controls">
-        <button class="btn btn-nav" onclick="prev()">⬅ Lùi</button>
-        <button class="audio-btn" onclick="speak()">🔊</button>
-        <button class="btn btn-nav" onclick="next()">Tiếp ➡</button>
-    </div>
-
-    <div class="controls" style="padding-top: 0;">
-        <button class="btn btn-red" onclick="mark(false)">CHƯA THUỘC (Vuốt Trái)</button>
-        <button class="btn btn-green" onclick="mark(true)">ĐÃ THUỘC (Vuốt Phải)</button>
+    <div class="action-buttons">
+        <button class="btn-nav" onclick="changeCard(-1)">Lùi</button>
+        <button class="btn-circle" style="background: var(--red-app)" onclick="mark(false)">✘</button>
+        <button class="btn-circle" style="background: var(--green-app)" onclick="speak()">🔊</button>
+        <button class="btn-circle" style="background: var(--green-app)" onclick="mark(true)">✔</button>
+        <button class="btn-nav" onclick="changeCard(1)">Tiếp</button>
     </div>
 
     <script>
-        // Danh sách mẫu 50 từ (Tôi rút gọn 5 từ mẫu, bạn có thể copy thêm vào)
-        let vocabulary = [
-            { j: "漏れる", v: "Rò rỉ", e: "光が<span class='highlight'>漏れ</span>ている。", s: "もれる" },
-            { j: "食べる", v: "Ăn", e: "ご飯를<span class='highlight'>食べ</span>る。", s: "たべる" },
-            { j: "行く", v: "Đi", e: "学校へ<span class='highlight'>行</span>く。", s: "いく" },
-            { j: "見る", v: "Xem", e: "テレビを<span class='highlight'>見</span>る。", s: "みる" },
-            { j: "来る", v: "Đến", e: "友達が<span class='highlight'>来</span>る。", s: "くる" }
-            // ... Thêm đủ 50 từ ở đây
+        let vocab = [
+            { j: "漏れる", r: "もれる", m: "Rò rỉ", e: "光が漏れている。" },
+            { j: "食べる", r: "たべる", m: "Ăn", e: "ご飯を食べる。" },
+            { j: "見る", r: "みる", m: "Xem/Nhìn", e: "テレビを見る。" },
+            { j: "行く", r: "いく", m: "Đi", e: "学校へ行く。" },
+            { j: "来る", r: "くる", m: "Đến", e: "友達が来る。" }
+            // Bạn có thể copy thêm đủ 50 từ vào đây
         ];
 
-        let currentIndex = 0;
-        let learned = new Set();
-        let notLearned = new Set();
-        let isShowingMean = false;
+        let index = 0;
+        let right = new Set();
+        let wrong = new Set();
 
-        function updateUI() {
-            const item = vocabulary[currentIndex];
-            document.getElementById('display-word').innerText = isShowingMean ? item.v : item.j;
-            document.getElementById('display-ex').innerHTML = isShowingMean ? "Giải nghĩa: " + item.v : "Ví dụ:<br>" + item.e;
-            document.getElementById('stat-progress').innerText = `← ${currentIndex + 1}/${vocabulary.length} →`;
-            document.getElementById('stat-right').innerText = learned.size;
-            document.getElementById('stat-wrong').innerText = notLearned.size;
+        function updateCard() {
+            const card = document.getElementById('card');
+            card.classList.remove('flipped');
+            setTimeout(() => {
+                const item = vocab[index];
+                document.getElementById('jp-word').innerText = item.j;
+                document.getElementById('jp-read').innerText = item.r;
+                document.getElementById('vn-mean').innerText = item.m;
+                document.getElementById('ex-sentence').innerText = "Ví dụ: " + item.e;
+                document.getElementById('progress-text').innerText = `← ${index + 1}/${vocab.length} →`;
+                document.getElementById('right-count').innerText = right.size;
+                document.getElementById('wrong-count').innerText = wrong.size;
+            }, 150);
         }
 
-        function flip() { isShowingMean = !isShowingMean; updateUI(); }
-
-        function next() {
-            if (currentIndex < vocabulary.length - 1) {
-                currentIndex++;
-                isShowingMean = false;
-                updateUI();
-            }
-        }
-
-        function prev() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                isShowingMean = false;
-                updateUI();
-            }
+        function changeCard(offset) {
+            index = (index + offset + vocab.length) % vocab.length;
+            updateCard();
         }
 
         function mark(isRight) {
-            if (isRight) {
-                learned.add(currentIndex);
-                notLearned.delete(currentIndex);
-            } else {
-                notLearned.add(currentIndex);
-                learned.delete(currentIndex);
-            }
-            next();
+            if (isRight) { right.add(index); wrong.delete(index); }
+            else { wrong.add(index); right.delete(index); }
+            changeCard(1);
         }
 
         function shuffleCards() {
-            vocabulary.sort(() => Math.random() - 0.5);
-            currentIndex = 0;
-            learned.clear();
-            notLearned.clear();
-            updateUI();
-            alert("Đã xáo trộn danh sách!");
+            vocab.sort(() => Math.random() - 0.5);
+            index = 0; right.clear(); wrong.clear();
+            updateCard();
         }
 
         function speak() {
-            const msg = new SpeechSynthesisUtterance(vocabulary[currentIndex].j);
+            const msg = new SpeechSynthesisUtterance(vocab[index].j);
             msg.lang = 'ja-JP';
             window.speechSynthesis.speak(msg);
         }
 
-        updateUI();
+        updateCard();
+        Pi.authenticate(['username', 'payments']).catch(e => {});
     </script>
 </body>
 </html>
