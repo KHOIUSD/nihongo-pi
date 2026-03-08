@@ -6,72 +6,79 @@
     <title>Nihongo Flashcards Pi</title>
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
     <script>Pi.init({ version: "2.0", sandbox: true });</script>
+    
     <style>
-        :root { --pi-purple: #57317f; --green: #2ecc71; --red: #e74c3c; --bg: #fdfbff; }
+        :root { --pi-purple: #57317f; --green: #2ecc71; --red: #e74c3c; --bg: #f8f9fa; }
         body { font-family: -apple-system, sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
-        /* Home & Lesson Selection */
-        #home-screen, #lesson-screen { flex: 1; overflow-y: auto; padding: 20px; }
-        .level-card { background: white; padding: 25px; border-radius: 20px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(87, 49, 127, 0.1); cursor: pointer; border: 2px solid var(--pi-purple); }
-        .level-card h2 { margin: 0; color: var(--pi-purple); font-size: 28px; }
-        .lesson-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
-        .lesson-item { background: var(--pi-purple); color: white; padding: 20px; text-align: center; border-radius: 15px; cursor: pointer; font-weight: bold; }
+        /* 1. Màn hình Trang chủ (N5 - N1) */
+        #home-screen, #lesson-screen { flex: 1; overflow-y: auto; padding: 20px; display: block; }
+        .level-card { background: white; padding: 25px; border-radius: 20px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(87, 49, 127, 0.15); cursor: pointer; border: 2px solid var(--pi-purple); transition: 0.2s; }
+        .level-card:active { transform: scale(0.98); }
+        .level-card h2 { margin: 0; color: var(--pi-purple); font-size: 32px; }
 
-        /* Card Stage */
+        /* 2. Màn hình Chọn Bài (30 từ/bài) */
+        .lesson-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .lesson-item { background: var(--pi-purple); color: white; padding: 20px; text-align: center; border-radius: 15px; cursor: pointer; font-weight: bold; font-size: 18px; }
+
+        /* 3. Màn hình Học Thẻ (Flashcard) */
         #card-screen { flex: 1; display: none; flex-direction: column; }
         .header { background: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; }
-        .progress-bar { width: 100%; height: 6px; background: #eee; }
+        .progress-bar { width: 100%; height: 6px; background: #e0e0e0; }
         #progress-fill { height: 100%; background: var(--pi-purple); width: 0%; transition: 0.4s; }
 
         .stage { flex: 1; display: flex; align-items: center; justify-content: center; perspective: 1200px; padding: 20px; }
-        .flashcard { width: 100%; max-width: 350px; height: 480px; position: relative; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+        .flashcard { width: 100%; max-width: 360px; height: 500px; position: relative; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
         .flashcard.flipped { transform: rotateY(180deg); }
         
-        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 35px; box-sizing: border-box; border: 3px solid var(--pi-purple); box-shadow: 0 15px 35px rgba(87, 49, 127, 0.15); background: white; }
+        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; box-sizing: border-box; border: 3px solid var(--pi-purple); box-shadow: 0 15px 40px rgba(0,0,0,0.1); background: white; }
+        .front { color: #333; }
         .back { background: var(--pi-purple); color: white; transform: rotateY(180deg); text-align: center; }
 
-        /* Front Style: Just Vocabulary */
-        .kanji-main { font-size: 80px; font-weight: bold; color: #333; margin: 0; }
-        .hint-text { position: absolute; bottom: 30px; font-size: 12px; color: #99a3ba; text-transform: uppercase; letter-spacing: 1px; }
+        /* Mặt trước: Chỉ từ vựng */
+        .kanji-big { font-size: 85px; font-weight: bold; margin: 0; }
+        .tap-hint { position: absolute; bottom: 30px; font-size: 12px; color: #99a3ba; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Back Style: Full Info */
-        .reading-back { font-size: 32px; margin-bottom: 5px; opacity: 0.9; }
-        .meaning-back { font-size: 28px; font-weight: bold; margin-bottom: 20px; }
-        .example-area { width: 100%; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.3); text-align: left; font-size: 18px; line-height: 1.5; }
-        .btn-speak-ex { background: rgba(255,255,255,0.2); border: none; color: white; padding: 5px 10px; border-radius: 5px; margin-top: 10px; font-size: 14px; cursor: pointer; }
+        /* Mặt sau: Đầy đủ thông tin */
+        .reading-back { font-size: 34px; margin-bottom: 10px; }
+        .meaning-back { font-size: 28px; font-weight: bold; margin-bottom: 30px; }
+        .example-box { width: 100%; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.3); text-align: left; }
+        .ex-jp { font-size: 19px; display: block; margin-bottom: 8px; }
+        .ex-vn { font-size: 16px; opacity: 0.8; }
+        .btn-audio-ex { background: rgba(255,255,255,0.2); border: 1px solid white; color: white; padding: 8px 15px; border-radius: 10px; margin-top: 12px; cursor: pointer; }
 
-        /* Footer Controls */
+        /* Footer Điều hướng & Phân loại */
         .footer { padding: 25px; background: white; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; }
-        .btn-action { width: 65px; height: 65px; border-radius: 50%; border: none; color: white; display: flex; align-items: center; justify-content: center; font-size: 26px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .btn-nav { background: #f0f2f5; color: var(--pi-purple); width: 50px; height: 50px; border-radius: 12px; border: none; font-size: 20px; font-weight: bold; }
-        .btn-wrong { background: var(--red); }
-        .btn-right { background: var(--green); }
-        .btn-audio { background: #3498db; }
+        .btn-action { width: 68px; height: 68px; border-radius: 50%; border: none; color: white; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .btn-nav { background: #f0f2f5; color: var(--pi-purple); width: 50px; height: 50px; border-radius: 12px; border: none; font-size: 22px; font-weight: bold; }
+        .btn-wrong { background: var(--red); } /* Vuốt trái/Bấm nút: Chưa thuộc */
+        .btn-right { background: var(--green); } /* Vuốt phải/Bấm nút: Thuộc */
+        .btn-audio-main { background: #3498db; }
     </style>
 </head>
 <body>
 
     <div id="home-screen">
-        <h1 style="color: var(--pi-purple); text-align: center; margin-bottom: 30px;">Nihongo Flashcards Pi</h1>
-        <div class="level-card" onclick="showLessons('N5')"><h2>N5</h2> <span>Sơ cấp 1 ❯</span></div>
-        <div class="level-card" onclick="showLessons('N4')"><h2>N4</h2> <span>Sơ cấp 2 ❯</span></div>
-        <div class="level-card" onclick="showLessons('N3')"><h2>N3</h2> <span>Trung cấp ❯</span></div>
-        <div class="level-card" onclick="showLessons('N2')"><h2>N2</h2> <span>Thượng trung cấp ❯</span></div>
-        <div class="level-card" onclick="showLessons('N1')"><h2>N1</h2> <span>Cao cấp ❯</span></div>
+        <h1 style="color: var(--pi-purple); text-align: center; margin-bottom: 30px;">Học Tiếng Nhật Pi</h1>
+        <div class="level-card" onclick="openLevel('N5')"><h2>N5</h2> <span>Sơ cấp 1 ❯</span></div>
+        <div class="level-card" onclick="openLevel('N4')"><h2>N4</h2> <span>Sơ cấp 2 ❯</span></div>
+        <div class="level-card" onclick="openLevel('N3')"><h2>N3</h2> <span>Trung cấp ❯</span></div>
+        <div class="level-card" onclick="openLevel('N2')"><h2>N2</h2> <span>Thượng trung cấp ❯</span></div>
+        <div class="level-card" onclick="openLevel('N1')"><h2>N1</h2> <span>Cao cấp ❯</span></div>
     </div>
 
     <div id="lesson-screen" style="display:none;">
-        <button onclick="goHome()" style="border:none; background:none; color:var(--pi-purple); font-weight:bold;">❮ QUAY LẠI</button>
-        <h2 id="current-lv-title" style="color: var(--pi-purple); margin: 20px 0;">Cấp độ</h2>
-        <div class="lesson-grid" id="list-lessons"></div>
+        <button onclick="backToHome()" style="border:none; background:none; color:var(--pi-purple); font-weight:bold; font-size: 16px; cursor:pointer;">❮ QUAY LẠI</button>
+        <h2 id="level-title" style="color: var(--pi-purple); margin: 20px 0;">Cấp độ</h2>
+        <div class="lesson-grid" id="lesson-list"></div>
     </div>
 
     <div id="card-screen">
         <div class="header">
-            <span onclick="exitLesson()" style="color: var(--pi-purple); font-weight: bold;">✕ THOÁT</span>
+            <span onclick="backToLessons()" style="color: var(--pi-purple); font-weight: bold; cursor:pointer;">✕ THOÁT</span>
             <div style="font-weight: bold;">
-                <span style="color: var(--red);" id="wrong-num">0</span> | 
-                <span style="color: var(--green);" id="right-num">0</span>
+                <span style="color: var(--red);" id="stat-wrong">0</span> | 
+                <span style="color: var(--green);" id="stat-right">0</span>
             </div>
         </div>
         <div class="progress-bar"><div id="progress-fill"></div></div>
@@ -79,108 +86,120 @@
         <div class="stage">
             <div class="flashcard" id="card" onclick="this.classList.toggle('flipped')">
                 <div class="card-face front">
-                    <div class="kanji-main" id="card-jp">漏れる</div>
-                    <div class="hint-text">Chạm để xem chi tiết</div>
+                    <div class="kanji-big" id="display-jp">漏れる</div>
+                    <div class="tap-hint">Chạm để lật thẻ</div>
                 </div>
                 <div class="card-face back">
-                    <div class="reading-back" id="card-hira">もれる</div>
-                    <div class="meaning-back" id="card-vn">Rò rỉ, lộ ra</div>
-                    <div class="example-area">
-                        <strong>Ví dụ:</strong><br>
-                        <span id="card-ex-jp">光が漏れている。</span><br>
-                        <small id="card-ex-vn" style="opacity: 0.8;">Ánh sáng đang rò rỉ qua.</small><br>
-                        <button class="btn-speak-ex" onclick="speak('ex'); event.stopPropagation();">🔊 </button>
+                    <div class="reading-back" id="display-hira">もれる</div>
+                    <div class="meaning-back" id="display-vn">Rò rỉ, lộ ra</div>
+                    <div class="example-box">
+                        <span class="ex-jp" id="display-ex-jp">光が漏れている。</span>
+                        <span class="ex-vn" id="display-ex-vn">Ánh sáng đang rò rỉ qua.</span>
+                        <button class="btn-audio-ex" onclick="speak('ex'); event.stopPropagation();">🔊 Nghe ví dụ</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="footer">
-            <button class="btn-nav" onclick="move(-1)">❮</button>
-            <button class="btn-action btn-wrong" onclick="mark(false)">✘</button>
-            <button class="btn-action btn-audio" onclick="speak('word')">🔊</button>
-            <button class="btn-action btn-right" onclick="mark(true)">✔</button>
-            <button class="btn-nav" onclick="move(1)">❯</button>
+            <button class="btn-nav" onclick="changeCard(-1)">❮</button>
+            <button class="btn-action btn-wrong" onclick="markCard(false)">✘</button>
+            <button class="btn-action btn-audio-main" onclick="speak('word')">🔊</button>
+            <button class="btn-action btn-right" onclick="markCard(true)">✔</button>
+            <button class="btn-nav" onclick="changeCard(1)">❯</button>
         </div>
     </div>
 
     <script>
-        // Dữ liệu mẫu (Cộng sự có thể nạp thêm 30 từ cho mỗi bài)
-        const vocabData = {
-            'N2': [
-                { j: "漏れる", h: "もれる", v: "Rò rỉ", ej: "光が漏れている。", ev: "Ánh sáng đang rò rỉ qua." },
-                { j: "焦る", h: "あせる", v: "Sốt ruột", ej: "時間がなくて焦る。", ev: "Không có thời gian nên sốt ruột." },
-                { j: "震える", h: "ふるえる", v: "Run rẩy", ej: "寒さで体が震える。", ev: "Cơ thể run lên vì lạnh." }
-            ]
+        // Dữ liệu mẫu cấu trúc 30 từ/bài
+        const masterData = {
+            'N5': { totalWords: 600, words: [] }, // Sẽ nạp dữ liệu thật vào đây
+            'N2': { 
+                totalWords: 1000, 
+                words: [
+                    { j: "漏れる", h: "もれる", v: "Rò rỉ", ej: "光が漏れている。", ev: "Ánh sáng đang rò rỉ qua." },
+                    { j: "焦る", h: "あせる", v: "Sốt ruột", ej: "時間がなくて焦る。", ev: "Không có thời gian nên sốt ruột." }
+                ]
+            }
         };
 
-        let currentList = [];
-        let curIdx = 0;
+        let currentActiveWords = [];
+        let currentIndex = 0;
         let learnedSet = new Set();
         let wrongSet = new Set();
 
-        function showLessons(lv) {
+        function openLevel(lv) {
             document.getElementById('home-screen').style.display = 'none';
             document.getElementById('lesson-screen').style.display = 'block';
-            document.getElementById('current-lv-title').innerText = "Cấp độ " + lv;
-            let container = document.getElementById('list-lessons');
-            container.innerHTML = "";
-            for(let i=1; i<=10; i++) {
-                let item = document.createElement('div');
-                item.className = 'lesson-item';
-                item.innerText = "Bài " + i;
-                item.onclick = () => startLearning(lv, i);
-                container.appendChild(item);
+            document.getElementById('level-title').innerText = "Cấp độ " + lv;
+            
+            const list = document.getElementById('lesson-list');
+            list.innerHTML = "";
+            // Tính số bài học (Giả sử mỗi bài 30 từ)
+            const totalLessons = 20; // Ví dụ 20 bài x 30 từ = 600 từ
+            for(let i=1; i<=totalLessons; i++) {
+                let btn = document.createElement('div');
+                btn.className = 'lesson-item';
+                btn.innerText = "Bài " + i;
+                btn.onclick = () => startCard(lv, i);
+                list.appendChild(btn);
             }
         }
 
-        function startLearning(lv, bIdx) {
-            currentList = vocabData['N2']; // Tạm thời dùng mẫu N2
-            curIdx = 0; learnedSet.clear(); wrongSet.clear();
+        function startCard(lv, lessonIdx) {
+            // Logic: Lấy 30 từ tương ứng với lessonIdx từ database
+            currentActiveWords = masterData['N2'].words; // Tạm dùng mẫu
+            currentIndex = 0; learnedSet.clear(); wrongSet.clear();
             document.getElementById('lesson-screen').style.display = 'none';
             document.getElementById('card-screen').style.display = 'flex';
-            render();
+            renderCard();
         }
 
-        function render() {
-            const item = currentList[curIdx] || {j:"Hết bài", h:"", v:"", ej:"", ev:""};
+        function renderCard() {
+            const item = currentActiveWords[currentIndex] || {j:"Hết bài", h:"", v:"", ej:"", ev:""};
             const card = document.getElementById('card');
             card.classList.remove('flipped');
+            
             setTimeout(() => {
-                document.getElementById('card-jp').innerText = item.j;
-                document.getElementById('card-hira').innerText = item.h;
-                document.getElementById('card-vn').innerText = item.v;
-                document.getElementById('card-ex-jp').innerText = item.ej;
-                document.getElementById('card-ex-vn').innerText = item.ev;
+                document.getElementById('display-jp').innerText = item.j;
+                document.getElementById('display-hira').innerText = item.h;
+                document.getElementById('display-vn').innerText = item.v;
+                document.getElementById('display-ex-jp').innerText = item.ej;
+                document.getElementById('display-ex-vn').innerText = item.ev;
                 
-                let p = ((curIdx + 1) / currentList.length) * 100;
+                let p = ((currentIndex + 1) / currentActiveWords.length) * 100;
                 document.getElementById('progress-fill').style.width = p + "%";
-                document.getElementById('right-num').innerText = learnedSet.size;
-                document.getElementById('wrong-num').innerText = wrongSet.size;
+                document.getElementById('stat-right').innerText = learnedSet.size;
+                document.getElementById('stat-wrong').innerText = wrongSet.size;
             }, 150);
         }
 
-        function move(s) {
-            curIdx = (curIdx + s + currentList.length) % currentList.length;
-            render();
+        function changeCard(offset) {
+            currentIndex = (currentIndex + offset + currentActiveWords.length) % currentActiveWords.length;
+            renderCard();
         }
 
-        function mark(ok) {
-            if(ok) { learnedSet.add(curIdx); wrongSet.delete(curIdx); }
-            else { wrongSet.add(curIdx); learnedSet.delete(curIdx); }
-            if(curIdx < currentList.length - 1) move(1);
+        function markCard(isRight) {
+            if(isRight) { learnedSet.add(currentIndex); wrongSet.delete(currentIndex); }
+            else { wrongSet.add(currentIndex); learnedSet.delete(currentIndex); }
+            if(currentIndex < currentActiveWords.length - 1) changeCard(1);
+            else alert("Đã xem hết 30 từ của bài này!");
         }
 
-        function speak(type) {
-            const item = currentList[curIdx];
-            let text = (type === 'word') ? item.j : item.ej;
-            let m = new SpeechSynthesisUtterance(text);
-            m.lang = 'ja-JP';
-            window.speechSynthesis.speak(m);
+        function speak(mode) {
+            const item = currentActiveWords[currentIndex];
+            const text = (mode === 'word') ? item.j : item.ej;
+            const synth = window.speechSynthesis;
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'ja-JP';
+            synth.speak(utter);
         }
 
-        function goHome() { document.getElementById('lesson-screen').style.display = 'none'; document.getElementById('home-screen').style.display = 'block'; }
-        function exitLesson() { document.getElementById('card-screen').style.display = 'none'; document.getElementById('lesson-screen').style.display = 'block'; }
+        function backToHome() { document.getElementById('lesson-screen').style.display = 'none'; document.getElementById('home-screen').style.display = 'block'; }
+        function backToLessons() { document.getElementById('card-screen').style.display = 'none'; document.getElementById('lesson-screen').style.display = 'block'; }
+
+        // Tự động Auth khi dùng trên Pi Browser
+        Pi.authenticate(['username', 'payments']).catch(e => console.log("Pi SDK sẵn sàng"));
     </script>
 </body>
 </html>
