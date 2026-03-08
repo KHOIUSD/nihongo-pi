@@ -7,15 +7,17 @@
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
     <script>Pi.init({ version: "2.0", sandbox: true });</script>
     <style>
-        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; background: #f0f2f5; margin: 0; }
-        #user-info { margin-bottom: 20px; color: #57317f; font-weight: bold; font-size: 18px; }
-        .flashcard-container { width: 300px; height: 400px; perspective: 1000px; }
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; background: #f0f2f5; margin: 0; padding: 20px; }
+        #user-info { margin-bottom: 15px; color: #57317f; font-weight: bold; font-size: 18px; }
+        .flashcard-container { width: 300px; height: 400px; perspective: 1000px; margin-bottom: 30px; }
         .flashcard { width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; cursor: pointer; position: relative; }
         .flashcard.flipped { transform: rotateY(180deg); }
-        .front, .back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); border: 3px solid #57317f; }
+        .front, .back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); border: 3px solid #57317f; padding: 20px; box-sizing: border-box; }
         .front { background: white; color: #333; }
-        .front h1 { font-size: 80px; margin: 0; }
-        .back { background: #57317f; color: white; transform: rotateY(180deg); padding: 20px; text-align: center; }
+        .front h1 { font-size: 70px; margin: 10px 0; }
+        .back { background: #57317f; color: white; transform: rotateY(180deg); text-align: center; }
+        .btn-next { background: #57317f; color: white; border: none; padding: 15px 40px; border-radius: 30px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .btn-next:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
@@ -23,23 +25,62 @@
     <div id="user-info">Đang xác thực Pioneer...</div>
 
     <div class="flashcard-container">
-        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard" id="card" onclick="this.classList.toggle('flipped')">
             <div class="front">
-                <p style="color: #57317f; font-weight: bold;">N5</p>
-                <h1>私</h1>
+                <p id="level" style="color: #57317f; font-weight: bold; margin:0;">N5</p>
+                <h1 id="kanji">私</h1>
                 <p style="font-size: 12px; color: #888;">Chạm để xem nghĩa</p>
             </div>
             <div class="back">
-                <h2>わたし (Watashi)</h2>
-                <p style="font-size: 24px;">Nghĩa: <strong>Tôi</strong></p>
-                <hr style="width: 80%;">
-                <p>Ví dụ: 私は学生です。</p>
+                <h2 id="hiragana">わたし</h2>
+                <p id="romaji" style="font-style: italic;">(Watashi)</p>
+                <p style="font-size: 24px;">Nghĩa: <strong id="mean">Tôi</strong></p>
             </div>
         </div>
     </div>
 
+    <button class="btn-next" onclick="nextCard()">Từ tiếp theo →</button>
+
     <script>
-        // Lệnh đăng nhập và hiện tên
+        // Danh sách 20 từ vựng N5
+        const vocabulary = [
+            { kanji: "私", hira: "わたし", romaji: "Watashi", mean: "Tôi" },
+            { kanji: "人", hira: "ひと", romaji: "Hito", mean: "Người" },
+            { kanji: "日本", hira: "にほん", romaji: "Nihon", mean: "Nhật Bản" },
+            { kanji: "先生", hira: "せんせい", romaji: "Sensei", mean: "Thầy cô" },
+            { kanji: "学生", hira: "がくせい", romaji: "Gakusei", mean: "Học sinh" },
+            { kanji: "友達", hira: "ともだち", romaji: "Tomodachi", mean: "Bạn bè" },
+            { kanji: "本", hira: "ほん", romaji: "Hon", mean: "Sách" },
+            { kanji: "水", hira: "みず", romaji: "Mizu", mean: "Nước" },
+            { kanji: "食べる", hira: "たべる", romaji: "Taberu", mean: "Ăn" },
+            { kanji: "飲む", hira: "のむ", romaji: "Nomu", mean: "Uống" },
+            { kanji: "見る", hira: "みる", romaji: "Miru", mean: "Xem/Nhìn" },
+            { kanji: "行く", hira: "いく", romaji: "Iku", mean: "Đi" },
+            { kanji: "来る", hira: "くる", romaji: "Kuru", mean: "Đến" },
+            { kanji: "大きい", hira: "おおきい", romaji: "Ookii", mean: "Lớn" },
+            { kanji: "小さい", hira: "ちいさい", romaji: "Chiisai", mean: "Nhỏ" },
+            { kanji: "学校", hira: "がっこう", romaji: "Gakkou", mean: "Trường học" },
+            { kanji: "時間", hira: "じかん", romaji: "Jikan", mean: "Thời gian" },
+            { kanji: "何", hira: "なに", romaji: "Nani", mean: "Cái gì" },
+            { kanji: "今日", hira: "きょう", romaji: "Kyou", mean: "Hôm nay" },
+            { kanji: "明日", hira: "あした", romaji: "Ashita", mean: "Ngày mai" }
+        ];
+
+        let currentIndex = 0;
+
+        function nextCard() {
+            const card = document.getElementById('card');
+            card.classList.remove('flipped'); // Reset mặt thẻ
+            
+            setTimeout(() => {
+                currentIndex = (currentIndex + 1) % vocabulary.length;
+                document.getElementById('kanji').innerText = vocabulary[currentIndex].kanji;
+                document.getElementById('hiragana').innerText = vocabulary[currentIndex].hira;
+                document.getElementById('romaji').innerText = "(" + vocabulary[currentIndex].romaji + ")";
+                document.getElementById('mean').innerText = vocabulary[currentIndex].mean;
+            }, 200);
+        }
+
         async function login() {
             try {
                 const user = await Pi.authenticate(['username', 'payments']);
