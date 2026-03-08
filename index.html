@@ -291,6 +291,49 @@
 
         // Tự động Auth khi dùng trên Pi Browser
         Pi.authenticate(['username', 'payments']).catch(e => console.log("Pi SDK sẵn sàng"));
+        // ============================================================
+        // ĐOẠN MÃ CẬP NHẬT TIẾN ĐỘ
+        // ============================================================
+        function updateLevelProgress(levelId) {
+            const lv = levelId.toLowerCase();
+            const bar = document.getElementById('prog-' + lv);
+            if (bar) {
+                const learnedWords = JSON.parse(localStorage.getItem(`learned_${lv}`)) || [];
+                const totalWordsMap = { 'n5': 600, 'n4': 700, 'n3': 1000, 'n2': 1000, 'n1': 2000 };
+                const total = totalWordsMap[lv] || 100;
+                const percent = Math.round((learnedWords.length / total) * 100);
+                bar.style.width = percent + "%";
+                const progressTextElement = bar.parentElement.nextElementSibling;
+                if (progressTextElement) {
+                    progressTextElement.innerText = "Đã hoàn thành: " + percent + "%";
+                }
+                localStorage.setItem(`percent_${lv}`, percent);
+            }
+        }
+
+        function saveProgress(levelId, wordId) {
+            const lv = levelId.toLowerCase();
+            let learnedWords = JSON.parse(localStorage.getItem(`learned_${lv}`)) || [];
+            if (!learnedWords.includes(wordId)) {
+                learnedWords.push(wordId);
+                localStorage.setItem(`learned_${lv}`, JSON.stringify(learnedWords));
+            }
+            updateLevelProgress(lv);
+        }
+
+        // Chỉnh sửa lại window.onload có sẵn của bạn hoặc thêm mới như sau:
+        window.addEventListener('load', function() {
+            ['n5', 'n4', 'n3', 'n2', 'n1'].forEach(lv => {
+                updateLevelProgress(lv);
+            });
+            // Giữ lại phần Pi Authenticate nếu có
+            if (typeof Pi !== 'undefined') {
+                Pi.authenticate(['username', 'payments']).catch(e => {});
+            }
+        });
+
+    </script> 
+</body>
     </script>
 </body>
 </html>
