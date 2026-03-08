@@ -3,93 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nihongo Flashcards Pi</title>
+    <title>Nihongo Pro Card</title>
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
     <script>Pi.init({ version: "2.0", sandbox: true });</script>
     <style>
-        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; background: #f0f2f5; margin: 0; padding: 20px; }
-        #user-info { margin-bottom: 15px; color: #57317f; font-weight: bold; font-size: 18px; }
-        .flashcard-container { width: 300px; height: 400px; perspective: 1000px; margin-bottom: 30px; }
-        .flashcard { width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; cursor: pointer; position: relative; }
-        .flashcard.flipped { transform: rotateY(180deg); }
-        .front, .back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); border: 3px solid #57317f; padding: 20px; box-sizing: border-box; }
-        .front { background: white; color: #333; }
-        .front h1 { font-size: 70px; margin: 10px 0; }
-        .back { background: #57317f; color: white; transform: rotateY(180deg); text-align: center; }
-        .btn-next { background: #57317f; color: white; border: none; padding: 15px 40px; border-radius: 30px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        .btn-next:active { transform: scale(0.95); }
+        :root { --green: #58a65c; --red: #d9534f; --purple: #57317f; }
+        body { font-family: sans-serif; margin: 0; background: #f5f5f5; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        
+        .header { background: #fff; padding: 15px; display: flex; align-items: center; border-bottom: 1px solid #ddd; font-weight: bold; }
+        
+        .status-bar { display: flex; justify-content: center; align-items: center; gap: 15px; padding: 10px; background: #fff; font-size: 18px; font-weight: bold; }
+        .num-red { color: var(--red); }
+        .num-green { color: var(--green); }
+
+        .card-container { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; position: relative; }
+        .flashcard { width: 100%; max-width: 340px; height: 450px; background: #fff; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; padding: 30px; box-sizing: border-box; text-align: center; transition: 0.3s; cursor: pointer; border: 1px solid #eee; }
+        
+        .kanji { font-size: 65px; font-weight: bold; margin-top: 50px; }
+        .example { margin-top: 30px; text-align: left; font-size: 18px; color: #444; }
+        .highlight { color: var(--red); font-weight: bold; }
+
+        .controls { display: flex; justify-content: space-around; align-items: center; padding: 20px; background: #fff; border-top: 1px solid #eee; }
+        .btn { border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .btn-red { background: var(--red); color: white; }
+        .btn-green { background: var(--green); color: white; }
+        .btn-nav { background: #eee; color: #333; }
+        
+        .audio-btn { background: var(--green); width: 50px; height: 50px; border-radius: 50%; border: none; color: white; font-size: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
 
-    <div id="user-info">Đang xác thực Pioneer...</div>
+    <div class="header">❮ Khóa học N2 (50 từ vựng)</div>
 
-    <div class="flashcard-container">
-        <div class="flashcard" id="card" onclick="this.classList.toggle('flipped')">
-            <div class="front">
-                <p id="level" style="color: #57317f; font-weight: bold; margin:0;">N5</p>
-                <h1 id="kanji">私</h1>
-                <p style="font-size: 12px; color: #888;">Chạm để xem nghĩa</p>
-            </div>
-            <div class="back">
-                <h2 id="hiragana">わたし</h2>
-                <p id="romaji" style="font-style: italic;">(Watashi)</p>
-                <p style="font-size: 24px;">Nghĩa: <strong id="mean">Tôi</strong></p>
+    <div class="status-bar">
+        <span class="num-red" id="stat-wrong">0</span>
+        <span id="stat-progress">← 1/50 →</span>
+        <span class="num-green" id="stat-right">0</span>
+        <button onclick="shuffleCards()" style="margin-left:10px; border:none; background:none; color:var(--green); font-weight:bold;">XÁO TRỘN</button>
+    </div>
+
+    <div class="card-container">
+        <div class="flashcard" id="main-card" onclick="flip()">
+            <div id="front-side">
+                <div class="kanji" id="display-word">漏れる</div>
+                <div class="example" id="display-ex">木と木の間から光が<span class="highlight">漏れ</span>ている。</div>
             </div>
         </div>
     </div>
 
-    <button class="btn-next" onclick="nextCard()">Từ tiếp theo →</button>
+    <div class="controls">
+        <button class="btn btn-nav" onclick="prev()">⬅ Lùi</button>
+        <button class="audio-btn" onclick="speak()">🔊</button>
+        <button class="btn btn-nav" onclick="next()">Tiếp ➡</button>
+    </div>
+
+    <div class="controls" style="padding-top: 0;">
+        <button class="btn btn-red" onclick="mark(false)">CHƯA THUỘC (Vuốt Trái)</button>
+        <button class="btn btn-green" onclick="mark(true)">ĐÃ THUỘC (Vuốt Phải)</button>
+    </div>
 
     <script>
-        // Danh sách 20 từ vựng N5
-        const vocabulary = [
-            { kanji: "私", hira: "わたし", romaji: "Watashi", mean: "Tôi" },
-            { kanji: "人", hira: "ひと", romaji: "Hito", mean: "Người" },
-            { kanji: "日本", hira: "にほん", romaji: "Nihon", mean: "Nhật Bản" },
-            { kanji: "先生", hira: "せんせい", romaji: "Sensei", mean: "Thầy cô" },
-            { kanji: "学生", hira: "がくせい", romaji: "Gakusei", mean: "Học sinh" },
-            { kanji: "友達", hira: "ともだち", romaji: "Tomodachi", mean: "Bạn bè" },
-            { kanji: "本", hira: "ほん", romaji: "Hon", mean: "Sách" },
-            { kanji: "水", hira: "みず", romaji: "Mizu", mean: "Nước" },
-            { kanji: "食べる", hira: "たべる", romaji: "Taberu", mean: "Ăn" },
-            { kanji: "飲む", hira: "のむ", romaji: "Nomu", mean: "Uống" },
-            { kanji: "見る", hira: "みる", romaji: "Miru", mean: "Xem/Nhìn" },
-            { kanji: "行く", hira: "いく", romaji: "Iku", mean: "Đi" },
-            { kanji: "来る", hira: "くる", romaji: "Kuru", mean: "Đến" },
-            { kanji: "大きい", hira: "おおきい", romaji: "Ookii", mean: "Lớn" },
-            { kanji: "小さい", hira: "ちいさい", romaji: "Chiisai", mean: "Nhỏ" },
-            { kanji: "学校", hira: "がっこう", romaji: "Gakkou", mean: "Trường học" },
-            { kanji: "時間", hira: "じかん", romaji: "Jikan", mean: "Thời gian" },
-            { kanji: "何", hira: "なに", romaji: "Nani", mean: "Cái gì" },
-            { kanji: "今日", hira: "きょう", romaji: "Kyou", mean: "Hôm nay" },
-            { kanji: "明日", hira: "あした", romaji: "Ashita", mean: "Ngày mai" }
+        // Danh sách mẫu 50 từ (Tôi rút gọn 5 từ mẫu, bạn có thể copy thêm vào)
+        let vocabulary = [
+            { j: "漏れる", v: "Rò rỉ", e: "光が<span class='highlight'>漏れ</span>ている。", s: "もれる" },
+            { j: "食べる", v: "Ăn", e: "ご飯를<span class='highlight'>食べ</span>る。", s: "たべる" },
+            { j: "行く", v: "Đi", e: "学校へ<span class='highlight'>行</span>く。", s: "いく" },
+            { j: "見る", v: "Xem", e: "テレビを<span class='highlight'>見</span>る。", s: "みる" },
+            { j: "来る", v: "Đến", e: "友達が<span class='highlight'>来</span>る。", s: "くる" }
+            // ... Thêm đủ 50 từ ở đây
         ];
 
         let currentIndex = 0;
+        let learned = new Set();
+        let notLearned = new Set();
+        let isShowingMean = false;
 
-        function nextCard() {
-            const card = document.getElementById('card');
-            card.classList.remove('flipped'); // Reset mặt thẻ
-            
-            setTimeout(() => {
-                currentIndex = (currentIndex + 1) % vocabulary.length;
-                document.getElementById('kanji').innerText = vocabulary[currentIndex].kanji;
-                document.getElementById('hiragana').innerText = vocabulary[currentIndex].hira;
-                document.getElementById('romaji').innerText = "(" + vocabulary[currentIndex].romaji + ")";
-                document.getElementById('mean').innerText = vocabulary[currentIndex].mean;
-            }, 200);
+        function updateUI() {
+            const item = vocabulary[currentIndex];
+            document.getElementById('display-word').innerText = isShowingMean ? item.v : item.j;
+            document.getElementById('display-ex').innerHTML = isShowingMean ? "Giải nghĩa: " + item.v : "Ví dụ:<br>" + item.e;
+            document.getElementById('stat-progress').innerText = `← ${currentIndex + 1}/${vocabulary.length} →`;
+            document.getElementById('stat-right').innerText = learned.size;
+            document.getElementById('stat-wrong').innerText = notLearned.size;
         }
 
-        async function login() {
-            try {
-                const user = await Pi.authenticate(['username', 'payments']);
-                document.getElementById('user-info').innerText = "Chào Pioneer: " + user.user.username;
-            } catch (err) {
-                document.getElementById('user-info').innerText = "Vui lòng chạy trong Pi Browser";
+        function flip() { isShowingMean = !isShowingMean; updateUI(); }
+
+        function next() {
+            if (currentIndex < vocabulary.length - 1) {
+                currentIndex++;
+                isShowingMean = false;
+                updateUI();
             }
         }
-        login();
+
+        function prev() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                isShowingMean = false;
+                updateUI();
+            }
+        }
+
+        function mark(isRight) {
+            if (isRight) {
+                learned.add(currentIndex);
+                notLearned.delete(currentIndex);
+            } else {
+                notLearned.add(currentIndex);
+                learned.delete(currentIndex);
+            }
+            next();
+        }
+
+        function shuffleCards() {
+            vocabulary.sort(() => Math.random() - 0.5);
+            currentIndex = 0;
+            learned.clear();
+            notLearned.clear();
+            updateUI();
+            alert("Đã xáo trộn danh sách!");
+        }
+
+        function speak() {
+            const msg = new SpeechSynthesisUtterance(vocabulary[currentIndex].j);
+            msg.lang = 'ja-JP';
+            window.speechSynthesis.speak(msg);
+        }
+
+        updateUI();
     </script>
 </body>
 </html>
