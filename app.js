@@ -50,6 +50,18 @@ async function unlockPremiumContent() {
  * Function to update UI after successful payment
  */
 function enablePremiumFeatures() {
-    document.getElementById('premium-badge').classList.remove('hidden');
-    // Logic to load more advanced vocabulary from your database
+    const badge = document.getElementById('premium-badge');
+    const premiumSection = document.getElementById('premium-section');
+
+    // Show the premium badge if it exists
+    if (badge) {
+        badge.classList.remove('hidden');
+    }
+
+    // Hide the upgrade section to clean up the UI
+    if (premiumSection) {
+        premiumSection.style.display = 'none';
+    }
+    
+    console.log("Premium features enabled successfully.");
 }
