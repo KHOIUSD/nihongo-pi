@@ -32,6 +32,7 @@
                 <h2 id="kanji" class="text-6xl font-bold mb-4 text-gray-800">日本語</h2>
                 <p id="reading" class="text-xl text-gray-500 mb-2 invisible">にほんご</p>
                 <p id="meaning" class="text-lg text-purple-600 font-medium invisible">Tiếng Nhật</p>
+                <p id="example" class="text-sm text-gray-400 italic mt-2 invisible"></p>
             </div>
             <p class="mt-4 text-xs text-gray-400">Chạm vào thẻ để xem chi tiết hơn </p>
 
@@ -52,7 +53,7 @@
 
         <footer class="py-6 flex flex-col gap-3">
             <button id="btn-next" class="w-full bg-purple-600 text-white font-bold py-4 rounded-2xl hover:bg-purple-700 shadow-lg transition-all active:translate-y-1">
-                Thẻ tiếp theo
+                Tiếp theo
             </button>
             <button id="btn-auth" class="w-full bg-white border-2 border-purple-600 text-purple-600 font-bold py-3 rounded-2xl hover:bg-purple-50 transition-colors">
                 Kết nối ví Pi
@@ -76,11 +77,13 @@
         const card = document.getElementById('card');
         const reading = document.getElementById('reading');
         const meaning = document.getElementById('meaning');
+        const example = document.getElementById('example');
 
         // Toggle card flip
         card.addEventListener('click', () => {
             reading.classList.toggle('invisible');
             meaning.classList.toggle('invisible');
+            example.classList.toggle('invisible');
         });
 
         // Next card action
@@ -89,8 +92,10 @@
             document.getElementById('kanji').innerText = vocabulary[currentIndex].kanji;
             document.getElementById('reading').innerText = vocabulary[currentIndex].reading;
             document.getElementById('meaning').innerText = vocabulary[currentIndex].meaning;
+            document.getElementById('example').innerText = vocabulary[currentIndex].example;
             reading.classList.add('invisible');
             meaning.classList.add('invisible');
+            example.classList.add('invisible');
         });
 
         // --- PI WEB3 LOGIC ---
