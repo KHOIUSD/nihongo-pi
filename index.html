@@ -19,8 +19,11 @@
     </style>
 </head>
 <body>
+    <div id="user-info" style="text-align: center; margin: 20px; color: #57317f; font-weight: bold;">
+        Đang kết nối với Pi...
+    </div>
 
-<div class="flashcard-container">
+    <div class="flashcard-container">
     <div class="flashcard" onclick="this.classList.toggle('flipped')">
         <div class="front">
             <p style="color: #57317f; font-weight: bold;">N5</p>
@@ -35,6 +38,22 @@
         </div>
     </div>
 </div>
+<script>
+        // Đoạn mã này giúp ứng dụng nhận diện người dùng Pi
+        async function login() {
+            try {
+                // Yêu cầu người dùng cấp quyền truy cập tên
+                const user = await Pi.authenticate(['username', 'payments']);
+                document.getElementById('user-info').innerText = "Chào bạn: " + user.user.username;
+            } catch (err) {
+                document.getElementById('user-info').innerText = "Vui lòng mở App trong Pi Browser";
+                console.error(err);
+            }
+        }
+        
+        // Gọi hàm đăng nhập khi trang web tải xong
+        login();
+</script>
 
 </body>
 </html>
