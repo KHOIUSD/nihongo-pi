@@ -110,34 +110,6 @@
             }
         });
 
-        // 2. Payment Function
-        async function unlockPremiumContent() {
-            try {
-                const paymentData = {
-                    amount: 3.14,
-                    memo: "Unlock Premium Japanese Vocab",
-                    metadata: { item_id: "premium_01" }
-                };
-
-                const callbacks = {
-                    onReadyForServerApproval: (paymentId) => {
-                        console.log("Ready for approval. ID:", paymentId);
-                        // Send paymentId to your backend here
-                    },
-                    onReadyForServerCompletion: (paymentId, txid) => {
-                        console.log("Ready for completion. TXID:", txid);
-                        // Verify completion with your backend here
-                    },
-                    onCancel: (paymentId) => console.log("Cancelled"),
-                    onError: (error) => console.error("Error:", error),
-                };
-
-                await Pi.createPayment(paymentData, callbacks);
-            } catch (err) {
-                console.error("Payment initiation failed:", err);
-            }
-        }
-
         function onIncompletePaymentFound(payment) {
             console.log("Found incomplete payment", payment);
         };
