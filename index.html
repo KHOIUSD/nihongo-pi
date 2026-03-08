@@ -91,57 +91,73 @@
 <body>
 
     <div id="home-screen">
-        <h1 style="color: var(--pi-purple); text-align: center; margin-bottom: 30px;">Học Tiếng Nhật Pi</h1>
-        <div class="level-card" onclick="openLevel('N5')"><h2>N5</h2> <span>Sơ cấp 1 ❯</span></div>
-        <div class="level-card" onclick="openLevel('N4')"><h2>N4</h2> <span>Sơ cấp 2 ❯</span></div>
-        <div class="level-card" onclick="openLevel('N3')"><h2>N3</h2> <span>Trung cấp ❯</span></div>
-        <div class="level-card" onclick="openLevel('N2')"><h2>N2</h2> <span>Thượng trung cấp ❯</span></div>
-        <div class="level-card" onclick="openLevel('N1')"><h2>N1</h2> <span>Cao cấp ❯</span></div>
-    </div>
+    <h1 style="color: var(--pi-purple); text-align: center; margin-bottom: 30px;">Học Tiếng Nhật Pi</h1>
 
-    <div id="lesson-screen" style="display:none;">
-        <button onclick="backToHome()" style="border:none; background:none; color:var(--pi-purple); font-weight:bold; font-size: 16px; cursor:pointer;">❮ QUAY LẠI</button>
-        <h2 id="level-title" style="color: var(--pi-purple); margin: 20px 0;">Cấp độ</h2>
-        <div class="lesson-grid" id="lesson-list"></div>
-    </div>
-
-    <div id="card-screen">
-        <div class="header">
-            <span onclick="backToLessons()" style="color: var(--pi-purple); font-weight: bold; cursor:pointer;">✕ THOÁT</span>
-            <div style="font-weight: bold;">
-                <span style="color: var(--red);" id="stat-wrong">0</span> | 
-                <span style="color: var(--green);" id="stat-right">0</span>
+    <div class="level-card" onclick="openLevel('N5')">
+        <div style="width: 100%;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>N5</h2>
+                <span style="font-size: 14px; color: #888;">Sơ cấp 1 ❯</span>
             </div>
-        </div>
-        <div class="progress-bar"><div id="progress-fill"></div></div>
-
-        <div class="stage">
-            <div class="flashcard" id="card" onclick="this.classList.toggle('flipped')">
-                <div class="card-face front">
-                    <div class="kanji-big" id="display-jp">漏れる</div>
-                    <div class="tap-hint">Chạm để lật thẻ</div>
-                </div>
-                <div class="card-face back">
-                    <div class="reading-back" id="display-hira">もれる</div>
-                    <div class="meaning-back" id="display-vn">Rò rỉ, lộ ra</div>
-                    <div class="example-box">
-                        <span class="ex-jp" id="display-ex-jp">光が漏れている。</span>
-                        <span class="ex-vn" id="display-ex-vn">Ánh sáng đang rò rỉ qua.</span>
-                        <button class="btn-audio-ex" onclick="speak('ex'); event.stopPropagation();">🔊 Nghe ví dụ</button>
-                    </div>
-                </div>
+            <div class="progress-container-mini">
+                <div class="progress-bar-mini" id="prog-n5" style="width: 0%;"></div>
             </div>
-        </div>
-
-        <div class="footer">
-            <button class="btn-nav" onclick="changeCard(-1)">❮</button>
-            <button class="btn-action btn-wrong" onclick="markCard(false)">✘</button>
-            <button class="btn-action btn-audio-main" onclick="speak('word')">🔊</button>
-            <button class="btn-action btn-right" onclick="markCard(true)">✔</button>
-            <button class="btn-nav" onclick="changeCard(1)">❯</button>
+            <span class="progress-text">Đã hoàn thành: 0%</span>
         </div>
     </div>
 
+    <div class="level-card" onclick="openLevel('N4')">
+        <div style="width: 100%;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>N4</h2>
+                <span style="font-size: 14px; color: #888;">Sơ cấp 2 ❯</span>
+            </div>
+            <div class="progress-container-mini">
+                <div class="progress-bar-mini" id="prog-n4" style="width: 0%;"></div>
+            </div>
+            <span class="progress-text">Đã hoàn thành: 0%</span>
+        </div>
+    </div>
+
+    <div class="level-card" onclick="openLevel('N3')">
+        <div style="width: 100%;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>N3</h2>
+                <span style="font-size: 14px; color: #888;">Trung cấp ❯</span>
+            </div>
+            <div class="progress-container-mini">
+                <div class="progress-bar-mini" id="prog-n3" style="width: 0%;"></div>
+            </div>
+            <span class="progress-text">Đã hoàn thành: 0%</span>
+        </div>
+    </div>
+
+    <div class="level-card" onclick="openLevel('N2')">
+        <div style="width: 100%;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>N2</h2>
+                <span style="font-size: 14px; color: #888;">Thượng trung cấp ❯</span>
+            </div>
+            <div class="progress-container-mini">
+                <div class="progress-bar-mini" id="prog-n2" style="width: 0%;"></div>
+            </div>
+            <span class="progress-text">Đã hoàn thành: 0%</span>
+        </div>
+    </div>
+
+    <div class="level-card" onclick="openLevel('N1')">
+        <div style="width: 100%;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>N1</h2>
+                <span style="font-size: 14px; color: #888;">Cao cấp ❯</span>
+            </div>
+            <div class="progress-container-mini">
+                <div class="progress-bar-mini" id="prog-n1" style="width: 0%;"></div>
+            </div>
+            <span class="progress-text">Đã hoàn thành: 0%</span>
+        </div>
+    </div>
+</div>
     <script>
         // Dữ liệu mẫu cấu trúc 30 từ/bài
         const masterData = {
