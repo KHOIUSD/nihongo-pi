@@ -158,6 +158,49 @@
         </div>
     </div>
 </div>
+
+    <div id="lesson-screen" style="display:none;">
+        <button onclick="backToHome()" style="border:none; background:none; color:var(--pi-purple); font-weight:bold; font-size: 16px; cursor:pointer;">❮ QUAY LẠI</button>
+        <h2 id="level-title" style="color: var(--pi-purple); margin: 20px 0;">Cấp độ</h2>
+        <div class="lesson-grid" id="lesson-list"></div>
+    </div>
+
+    <div id="card-screen">
+        <div class="header">
+            <span onclick="backToLessons()" style="color: var(--pi-purple); font-weight: bold; cursor:pointer;">✕ THOÁT</span>
+            <div style="font-weight: bold;">
+                <span style="color: var(--red);" id="stat-wrong">0</span> | 
+                <span style="color: var(--green);" id="stat-right">0</span>
+            </div>
+        </div>
+        <div class="progress-bar"><div id="progress-fill"></div></div>
+
+        <div class="stage">
+            <div class="flashcard" id="card" onclick="this.classList.toggle('flipped')">
+                <div class="card-face front">
+                    <div class="kanji-big" id="display-jp">漏れる</div>
+                    <div class="tap-hint">Chạm để lật thẻ</div>
+                </div>
+                <div class="card-face back">
+                    <div class="reading-back" id="display-hira">もれる</div>
+                    <div class="meaning-back" id="display-vn">Rò rỉ, lộ ra</div>
+                    <div class="example-box">
+                        <span class="ex-jp" id="display-ex-jp">光が漏れている。</span>
+                        <span class="ex-vn" id="display-ex-vn">Ánh sáng đang rò rỉ qua.</span>
+                        <button class="btn-audio-ex" onclick="speak('ex'); event.stopPropagation();">🔊 Nghe ví dụ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <button class="btn-nav" onclick="changeCard(-1)">❮</button>
+            <button class="btn-action btn-wrong" onclick="markCard(false)">✘</button>
+            <button class="btn-action btn-audio-main" onclick="speak('word')">🔊</button>
+            <button class="btn-action btn-right" onclick="markCard(true)">✔</button>
+            <button class="btn-nav" onclick="changeCard(1)">❯</button>
+        </div>
+    </div>
     <script>
         // Dữ liệu mẫu cấu trúc 30 từ/bài
         const masterData = {
