@@ -7,27 +7,44 @@ const vocabulary = [
 let currentIndex = 0;
 
 // --- DOM ELEMENTS ---
-const card = document.getElementById('card');
+const cardInner = document.getElementById('card-inner');
 const kanjiText = document.getElementById('kanji');
 const readingText = document.getElementById('reading');
 const meaningText = document.getElementById('meaning');
-const exampleText = document.getElementById('example'); 
+const exampleText = document.getElementById('example');
 const btnNext = document.getElementById('btn-next');
 
-// --- CARD INTERACTION LOGIC ---
+/**
+ * Handle card flip interaction
+ * Toggles the 3D rotation class
+ */
+cardInner.addEventListener('click', () => {
+    // Toggle the 180-degree rotation class
+    cardInner.classList.toggle('is-flipped');
+});
 
 /**
- * Toggles the visibility of the answer (reading, meaning, and example).
+ * Handle the transition to the next vocabulary card
+ * Resets flip state before updating content to prevent spoilers
  */
-card.addEventListener('click', () => {
-    if (readingText && meaningText) {
-        readingText.classList.toggle('invisible');
-        meaningText.classList.toggle('invisible');
-        if (exampleText) exampleText.classList.toggle('invisible');
+btnNext.addEventListener('click', () => {
+    // 1. Flip the card back to the front side first
+    cardInner.classList.remove('is-flipped');
+
+    // 2. Wait for the flip-back animation to complete (150ms) 
+    // before updating the text content to ensure a smooth transition
+    setTimeout(() => {
+        currentIndex = (currentIndex + 1) % vocabulary.length;
         
-        // Visual feedback when flipped
-        card.classList.toggle('bg-purple-50');
-    }
+        // Update UI with the next vocabulary data
+        kanjiText.innerText = vocabulary[currentIndex].kanji;
+        readingText.innerText = vocabulary[currentIndex].reading;
+        meaningText.innerText = vocabulary[currentIndex].meaning;
+        
+        if (exampleText) {
+            exampleText.innerText = vocabulary[currentIndex].example;
+        }
+    }, 150);
 });
 
 /**
