@@ -28,13 +28,22 @@
         </div>
 
         <main class="flex-grow flex flex-col justify-center items-center">
-            <div id="card" class="bg-white w-full aspect-[4/3] rounded-2xl shadow-xl flex flex-col justify-center items-center p-8 transition-all duration-300 active:scale-95 cursor-pointer border-b-4 border-purple-200">
-                <h2 id="kanji" class="text-6xl font-bold mb-4 text-gray-800">日本語</h2>
-                <p id="reading" class="text-xl text-gray-500 mb-2 invisible">にほんご</p>
-                <p id="meaning" class="text-lg text-purple-600 font-medium invisible">Tiếng Nhật</p>
-                <p id="example" class="text-sm text-gray-400 italic mt-2 invisible"></p>
+            <div id="card-container" class="w-full aspect-[4/3] perspective-1000 cursor-pointer group">
+                <div id="card-inner" class="relative w-full h-full transition-transform duration-500 transform-style-3d shadow-xl rounded-2xl">
+        
+                    <div class="absolute w-full h-full backface-hidden bg-white rounded-2xl flex flex-col justify-center items-center p-8 border-b-4 border-purple-200">
+                        <h2 id="kanji" class="text-6xl font-bold text-gray-800">日本語</h2>
+                        <p class="mt-4 text-xs text-gray-400">Chạm để lật mặt sau</p>
+                    </div>
+
+                    <div class="absolute w-full h-full backface-hidden bg-purple-50 rounded-2xl flex flex-col justify-center items-center p-8 rotate-y-180 border-b-4 border-purple-400">
+                        <p id="reading" class="text-xl text-purple-500 mb-2 font-medium">にほんご</p>
+                        <p id="meaning" class="text-2xl text-gray-800 font-bold">Tiếng Nhật</p>
+                        <p id="example" class="text-sm text-gray-500 italic mt-4 text-center px-4"></p>
+                    </div>
+
+               </div>
             </div>
-            <p class="mt-4 text-xs text-gray-400">Chạm vào thẻ để xem chi tiết hơn </p>
 
             <section id="premium-section" class="mt-8 w-full bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-2xl p-4 shadow-sm">
                 <div class="flex items-center justify-between">
