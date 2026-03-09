@@ -18,8 +18,43 @@ const meaningDisplay = document.getElementById('meaning');
 const exampleDisplay = document.getElementById('example');
 const nextButton = document.getElementById('btn-next');
 
+// Progress Bar Elements
+const progressBar = document.getElementById('progress-bar');
+const progressText = document.getElementById('progress-text');
+
 // ==========================================
-// 3. INTERACTIVE LOGIC & HAPTIC FEEDBACK
+// 3. AUXILIARY FUNCTIONS (SPEECH & PROGRESS)
+// ==========================================
+
+/**
+ * Updates the learning progress UI.
+ */
+function updateProgress() {
+    const total = vocabulary.length;
+    const current = currentIndex + 1;
+    const percentage = (current / total) * 100;
+    
+    if (progressBar) progressBar.style.width = `${percentage}%`;
+    if (progressText) progressText.innerText = `${current}/${total}`;
+}
+
+/**
+ * Text-to-Speech: Pronounces Japanese text using Web Speech API.
+ */
+function speakJapanese(text) {
+    if ('speechSynthesis' in window) {
+        // Cancel previous speech to prevent overlapping
+        window.speechSynthesis.cancel();
+        
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'ja-JP'; // Set to Japanese
+        utterance.rate = 0.85;    // Natural learning speed
+        window.speechSynthesis.speak(utterance);
+    }
+}
+
+// ==========================================
+// 4. INTERACTIVE LOGIC & HAPTIC FEEDBACK
 // ==========================================
 
 /**
@@ -37,15 +72,15 @@ cardInner.addEventListener('click', () => {
  * Reset card state, trigger vibration, and load the next vocabulary item.
  */
 nextButton.addEventListener('click', () => {
-    // Trigger a stronger vibration (30ms) for transition confirmation
+    // 1. Trigger a stronger vibration (30ms) for transition confirmation
     if (navigator.vibrate) {
         navigator.vibrate(30); 
     }
 
-    // 1. Flip the card back to the front side first
+    // 2. Flip the card back to the front side first
     cardInner.classList.remove('is-flipped');
 
-    // 2. Wait for the flip-back animation (200ms) before updating content
+    // 3. Wait for the flip-back animation (200ms) before updating content
     setTimeout(() => {
         currentIndex = (currentIndex + 1) % vocabulary.length;
         
@@ -63,7 +98,7 @@ nextButton.addEventListener('click', () => {
 });
 
 // ==========================================
-// 4. PI WEB3 & PAYMENT INTEGRATION
+// 5. PI WEB3 & PAYMENT INTEGRATION
 // ==========================================
 
 /**
