@@ -113,6 +113,25 @@ nextButton.addEventListener('click', () => {
     }, 200); 
 });
 
+// IMPORTANT: Audio "Unlock" for Mobile/Pi Browser
+document.addEventListener('click', function unlockAudio() {
+    // Speak a silent string to "wake up" the audio engine on first touch
+    speakJapanese("");
+    document.removeEventListener('click', unlockAudio);
+}, { once: true });
+
+cardInner.addEventListener('click', () => {
+    if (navigator.vibrate) navigator.vibrate(15); 
+    
+    cardInner.classList.toggle('is-flipped');
+
+    // Speak when card is flipped to the back (Answer side)
+    if (cardInner.classList.contains('is-flipped')) {
+        // We speak the Kanji or Reading
+        speakJapanese(vocabulary[currentIndex].kanji);
+    }
+});
+
 // ==========================================
 // 5. PI WEB3 & PAYMENT INTEGRATION
 // ==========================================
