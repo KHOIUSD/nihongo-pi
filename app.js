@@ -24,15 +24,21 @@ const nextButton = document.getElementById('btn-next');
 
 // Flip card effect
 cardInner.addEventListener('click', () => {
+    if (navigator.vibrate) navigator.vibrate(15);
     cardInner.classList.toggle('is-flipped');
 });
 
 // Load next card with smooth transition
 nextButton.addEventListener('click', () => {
-    // 1. Flip back to front first
+    // 1. Trigger haptic feedback if supported by the browser
+    if (navigator.vibrate) {
+       // A 30ms vibration provides a subtle tactile confirmation for the card transition
+       navigator.vibrate(30); 
+    }
+    // 2. Flip back to front first
     cardInner.classList.remove('is-flipped');
 
-    // 2. Wait for flip animation (200ms), then update content
+    // 3. Wait for flip animation (200ms), then update content
     setTimeout(() => {
         currentIndex = (currentIndex + 1) % vocabulary.length;
         
