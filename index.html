@@ -14,15 +14,7 @@
         .is-flipped { transform: rotateY(180deg); }
     </style>
 </head>
-<div class="max-w-md mx-auto px-4 mb-2">
-    <div class="flex justify-between items-center mb-1">
-        <span class="text-[10px] font-bold text-purple-500 uppercase tracking-widest">Tiến độ học tập</span>
-        <span id="progress-text" class="text-[10px] font-bold text-purple-500">0/0</span>
-    </div>
-    <div class="w-full bg-gray-200 rounded-full h-1.5">
-        <div id="progress-bar" class="bg-purple-600 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
-    </div>
-</div>
+    
 <body class="bg-gray-100 font-sans">
 
     <div class="max-w-md mx-auto min-h-screen flex flex-col p-4">
@@ -43,6 +35,16 @@
             </div>
         </div>
 
+        <div class="max-w-md mx-auto px-4 mb-2">
+            <div class="flex justify-between items-center mb-1">
+                <span class="text-[10px] font-bold text-purple-500 uppercase tracking-widest">Tiến độ học tập</span>
+                <span id="progress-text" class="text-[10px] font-bold text-purple-500">0/0</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-1.5">
+                <div id="progress-bar" class="bg-purple-600 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+        </div>
+        
         <main class="flex-grow flex flex-col justify-center items-center">
             <div id="card-container" class="w-full aspect-[4/3] perspective-1000 cursor-pointer group">
                 <div id="card-inner" class="relative w-full h-full transition-transform duration-500 transform-style-3d shadow-xl rounded-2xl">
