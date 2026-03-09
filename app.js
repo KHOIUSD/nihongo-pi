@@ -8,45 +8,36 @@ let currentIndex = 0;
 
 // --- DOM ELEMENTS ---
 const cardInner = document.getElementById('card-inner');
-const kanjiText = document.getElementById('kanji');
-const readingText = document.getElementById('reading');
-const meaningText = document.getElementById('meaning');
-const exampleText = document.getElementById('example');
-const btnNext = document.getElementById('btn-next');
+const kanjiDisplay = document.getElementById('kanji');
+const readingDisplay = document.getElementById('reading');
+const meaningDisplay = document.getElementById('meaning');
+const exampleDisplay = document.getElementById('example');
+const nextButton = document.getElementById('btn-next');
 
-/**
- * Handle card flip interaction
- * Toggles the 3D rotation class
- */
+// --- CARD INTERACTION LOGIC ---
+
+// Flip card when clicked
 cardInner.addEventListener('click', () => {
-    // Toggle the 180-degree rotation class
     cardInner.classList.toggle('is-flipped');
 });
 
-/**
- * Handle the transition to the next vocabulary card
- * Resets flip state before updating content to prevent spoilers
- */
-btnNext.addEventListener('click', () => {
-    // 1. Flip the card back to the front side first
+// Reset and load next card
+nextButton.addEventListener('click', () => {
+    // 1. Flip back to front first
     cardInner.classList.remove('is-flipped');
 
-    // 2. Wait for the flip-back animation to complete (150ms) 
-    // before updating the text content to ensure a smooth transition
+    // 2. Wait for animation, then update content
     setTimeout(() => {
         currentIndex = (currentIndex + 1) % vocabulary.length;
         
-        // Update UI with the next vocabulary data
-        kanjiText.innerText = vocabulary[currentIndex].kanji;
-        readingText.innerText = vocabulary[currentIndex].reading;
-        meaningText.innerText = vocabulary[currentIndex].meaning;
-        
-        if (exampleText) {
-            exampleText.innerText = vocabulary[currentIndex].example;
+        kanjiDisplay.innerText = vocabulary[currentIndex].kanji;
+        readingDisplay.innerText = vocabulary[currentIndex].reading;
+        meaningDisplay.innerText = vocabulary[currentIndex].meaning;
+        if (exampleDisplay) {
+            exampleDisplay.innerText = vocabulary[currentIndex].example;
         }
-    }, 150);
+    }, 200); 
 });
-
 /**
  * Loads the next vocabulary item and resets the card state.
  */
