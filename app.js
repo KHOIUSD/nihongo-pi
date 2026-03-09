@@ -38,6 +38,20 @@ function updateProgress() {
     if (progressText) progressText.innerText = `${current}/${total}`;
 }
 
+// Variable to store the voice object once loaded
+let japaneseVoice = null;
+
+/**
+ * Pre-load Japanese voice to ensure it's ready.
+ */
+function loadVoices() {
+    const voices = window.speechSynthesis.getVoices();
+    japaneseVoice = voices.find(voice => voice.lang === 'ja-JP' || voice.lang.includes('ja'));
+}
+
+// Initial load for Chrome/Desktop
+window.speechSynthesis.onvoiceschanged = loadVoices;
+
 /**
  * Text-to-Speech: Pronounces Japanese text using Web Speech API.
  */
@@ -50,6 +64,8 @@ function speakJapanese(text) {
         utterance.lang = 'ja-JP'; // Set to Japanese
         utterance.rate = 0.85;    // Natural learning speed
         window.speechSynthesis.speak(utterance);
+    } else {
+        console.error("Speech Synthesis not supported in this browser.");
     }
 }
 
