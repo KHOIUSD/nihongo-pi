@@ -1,15 +1,15 @@
 // ==========================================
-// 1. CONFIGURATION & DATA
+// 1. VOCABULARY DATA CONFIGURATION
 // ==========================================
 const vocabulary = [
-    { kanji: "加工", reading: "かこう", meaning: "Gia công", example: "プラスチックを加工する。 (Gia công nhựa)" },
-    { kanji: "合格", reading: "ごうかく", meaning: "Đỗ / Vượt qua", example: "N2試験に合格する。 (Đỗ kỳ thi N2)" },
-    { kanji: "改善", reading: "かいぜん", meaning: "Cải thiện, cải tiến (Kaizen)", example: "作業工程を改善する (Cải thiện công đoạn làm việc)" }
+    { kanji: "加工", reading: "かこう", meaning: "Gia công", example: "プラスチックを加工する (Gia công nhựa)." },
+    { kanji: "合格", reading: "ごうかく", meaning: "Đỗ / Vượt qua", example: "N2試験に合格する (Đỗ kỳ thi N2)." },
+    { kanji: "改善", reading: "かいぜん", meaning: "Cải thiện (Kaizen)", example: "作業工程を改善する (Cải thiện quy trình làm việc)." }
 ];
 let currentIndex = 0;
 
 // ==========================================
-// 2. DOM ELEMENTS
+// 2. DOM ELEMENTS SELECTION
 // ==========================================
 const cardInner = document.getElementById('card-inner');
 const kanjiDisplay = document.getElementById('kanji');
@@ -19,29 +19,37 @@ const exampleDisplay = document.getElementById('example');
 const nextButton = document.getElementById('btn-next');
 
 // ==========================================
-// 3. CARD INTERACTION LOGIC
+// 3. INTERACTIVE LOGIC & HAPTIC FEEDBACK
 // ==========================================
 
-// Flip card effect
+/**
+ * Handle card flip animation and trigger haptic feedback.
+ */
 cardInner.addEventListener('click', () => {
-    if (navigator.vibrate) navigator.vibrate(15);
+    // Provide a subtle tactile confirmation (15ms)
+    if (navigator.vibrate) {
+        navigator.vibrate(15); 
+    }
     cardInner.classList.toggle('is-flipped');
 });
 
-// Load next card with smooth transition
+/**
+ * Reset card state, trigger vibration, and load the next vocabulary item.
+ */
 nextButton.addEventListener('click', () => {
-    // 1. Trigger haptic feedback if supported by the browser
+    // Trigger a stronger vibration (30ms) for transition confirmation
     if (navigator.vibrate) {
-       // A 30ms vibration provides a subtle tactile confirmation for the card transition
-       navigator.vibrate(30); 
+        navigator.vibrate(30); 
     }
-    // 2. Flip back to front first
+
+    // 1. Flip the card back to the front side first
     cardInner.classList.remove('is-flipped');
 
-    // 3. Wait for flip animation (200ms), then update content
+    // 2. Wait for the flip-back animation (200ms) before updating content
     setTimeout(() => {
         currentIndex = (currentIndex + 1) % vocabulary.length;
         
+        // Update UI with new vocabulary data (Vietnamese content)
         kanjiDisplay.innerText = vocabulary[currentIndex].kanji;
         readingDisplay.innerText = vocabulary[currentIndex].reading;
         meaningDisplay.innerText = vocabulary[currentIndex].meaning;
@@ -49,48 +57,47 @@ nextButton.addEventListener('click', () => {
         if (exampleDisplay) {
             exampleDisplay.innerText = vocabulary[currentIndex].example;
         }
-        console.log("Current Card Index:", currentIndex);
+        
+        console.log(`Current Card Index: ${currentIndex}`);
     }, 200); 
 });
 
 // ==========================================
-// 4. PI WEB3 & PAYMENT LOGIC
+// 4. PI WEB3 & PAYMENT INTEGRATION
 // ==========================================
 
+/**
+ * Initiate Pi Payment flow for Premium content access.
+ */
 async function unlockPremiumContent() {
     try {
         const paymentData = {
             amount: 3.14,
-            memo: "Unlock Lifetime Japanese Vocabulary Access",
+            memo: "Mở khóa kho từ vựng tiếng Nhật Premium",
             metadata: { packageId: "premium_n2_vocab_001" },
         };
 
         const callbacks = {
-            onReadyForServerApproval: (paymentId) => {
-                console.log("Payment ready for approval. ID:", paymentId);
-            },
-            onReadyForServerCompletion: (paymentId, txid) => {
-                console.log("Payment ready for completion. TXID:", txid);
-            },
-            onCancel: (paymentId) => {
-                console.log("Payment cancelled. ID:", paymentId);
-            },
-            onError: (error) => {
-                console.error("Payment error:", error);
-            },
+            onReadyForServerApproval: (paymentId) => console.log("Payment approved. ID:", paymentId),
+            onReadyForServerCompletion: (paymentId, txid) => console.log("Payment completed. TXID:", txid),
+            onCancel: (paymentId) => console.log("Người dùng đã hủy thanh toán."),
+            onError: (error) => console.error("Lỗi thanh toán:", error),
         };
 
         const payment = await Pi.createPayment(paymentData, callbacks);
         
         if (payment) {
-            alert("Mở khóa thành công! Chào mừng bạn đến với kho từ vựng Premium.");
+            alert("Thành công! Gói Premium đã được mở khóa.");
             enablePremiumFeatures();
         }
     } catch (err) {
-        console.error("Payment initiation failed:", err);
+        console.error("Không thể khởi tạo thanh toán:", err);
     }
 }
 
+/**
+ * Update UI elements to reflect Premium status.
+ */
 function enablePremiumFeatures() {
     const badge = document.getElementById('premium-badge');
     const premiumSection = document.getElementById('premium-section');
@@ -98,5 +105,5 @@ function enablePremiumFeatures() {
     if (badge) badge.classList.remove('hidden');
     if (premiumSection) premiumSection.style.display = 'none';
     
-    console.log("Premium features activated successfully.");
+    console.log("Tính năng Premium đã được kích hoạt.");
 }
