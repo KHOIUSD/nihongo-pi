@@ -17,13 +17,11 @@ const readingDisplay = document.getElementById('reading');
 const meaningDisplay = document.getElementById('meaning');
 const exampleDisplay = document.getElementById('example');
 const nextButton = document.getElementById('btn-next');
-
-// Progress Bar Elements
 const progressBar = document.getElementById('progress-bar');
 const progressText = document.getElementById('progress-text');
 
 // ==========================================
-// 3. AUXILIARY FUNCTIONS (SPEECH & PROGRESS)
+// 3. AUXILIARY FUNCTIONS PROGRESS
 // ==========================================
 
 /**
@@ -36,24 +34,6 @@ function updateProgress() {
     
     if (progressBar) progressBar.style.width = `${percentage}%`;
     if (progressText) progressText.innerText = `${current}/${total}`;
-}
-
-// Initial load for Chrome/Desktop
-window.speechSynthesis.onvoiceschanged = loadVoices;
-
-/**
- * Text-to-Speech: Pronounces Japanese text using Web Speech API.
- */
-function speakJapanese(text) {
-    if ('speechSynthesis' in window) {
-        // Cancel previous speech to prevent overlapping
-        window.speechSynthesis.cancel();
-        
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'ja-JP'; // Set to Japanese
-        utterance.rate = 0.85;    // Natural learning speed
-        window.speechSynthesis.speak(utterance);
-    }
 }
 
 // ==========================================
