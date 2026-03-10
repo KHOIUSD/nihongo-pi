@@ -66,8 +66,8 @@ cardInner.addEventListener('click', () => {
 /**
  * Reset card state, trigger vibration, and load the next vocabulary item.
  */
-nextButton.addEventListener('click', (even) => {
-    even.stopPropagation();
+nextButton.addEventListener('click', (event) => {
+    event.stopPropagation();
     // 1. Trigger a stronger vibration (30ms) for transition confirmation
     if (navigator.vibrate) {
         navigator.vibrate(30); 
@@ -129,3 +129,5 @@ function enablePremiumFeatures() {
     
     console.log("Tính năng Premium đã được kích hoạt.");
 }
+
+updateUI();
