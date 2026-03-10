@@ -55,21 +55,29 @@ function updateProgress() {
     if (progressText) progressText.innerText = `${current}/${total}`;
 }
 /**
- * Speech Synthesis Logic for Japanese pronunciation
- * Uses Web Speech API for zero-latency and offline support
+ * Audio Engine (Standardized)
  */
 function speakJapanese(text) {
-    if ('speechSynthesis' in window) {
-        // Cancel any ongoing speech to prevent overlap
-        window.speechSynthesis.cancel();
-        
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'ja-JP';
-        utterance.rate = 0.85; 
-        utterance.pitch = 1.0; // Slightly slower for better learning
-        
-        window.speechSynthesis.speak(utterance);
+    if (!window.speechSynthesis) return;
+
+    // Reset any current speech
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    
+    // Attempt to fetch Japanese voices
+    const voices = window.speechSynthesis.getVoices();
+    const japaneseVoice = voices.find(v => v.lang.includes('ja-JP') || v.lang.includes('jp'));
+    
+    if (japaneseVoice) {
+        utterance.voice = japaneseVoice;
     }
+
+    utterance.lang = 'ja-JP';
+    utterance.rate = 0.8; // Comfortable learning speed
+    utterance.volume = 1.0;
+
+    window.speechSynthesis.speak(utterance);
 }
 
 // ==========================================
@@ -80,18 +88,16 @@ function speakJapanese(text) {
  * Handle card flip animation and trigger haptic + audio feedback.
  */
 cardInner.addEventListener('click', () => {
-    // 1. Haptic feedback
+    // 1. Audio: Trigger first to ensure mobile activation
+    const currentText = vocabulary[currentIndex].kanji;
+    speakJapanese(currentText);
+
+    // 2. Haptic Feedback
     if (navigator.vibrate) {
         navigator.vibrate(15); 
     }
-    
-    // 2. Audio feedback: Only speak when flipping to the back side (showing meaning)
-    // or you can set it to speak every time the card is clicked
-    if (!cardInner.classList.contains('is-flipped')) {
-        const currentText = vocabulary[currentIndex].kanji;
-        speakJapanese(currentText);
-    }
 
+    // 3. Animation
     cardInner.classList.toggle('is-flipped');
 });
 
