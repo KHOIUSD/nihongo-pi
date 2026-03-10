@@ -4,7 +4,14 @@
 const vocabulary = [
     { kanji: "加工", reading: "かこう", meaning: "Gia công", example: "プラスチックを加工する (Gia công nhựa)." },
     { kanji: "合格", reading: "ごうかく", meaning: "Đỗ / Vượt qua", example: "N2試験に合格する (Đỗ kỳ thi N2)." },
-    { kanji: "改善", reading: "かいぜん", meaning: "Cải thiện (Kaizen)", example: "作業工程を改善する (Cải thiện quy trình làm việc)." }
+    { kanji: "改善", reading: "かいぜん", meaning: "Cải thiện / Cải tiến (Kaizen)", example: "作業工程を改善する (Cải thiện quy trình làm việc)." },
+    { kanji: "準備", reading: "じゅんび", meaning: "Chuẩn bị", example: "会議の準備をする (Chuẩn bị cho cuộc họp)." },
+    { kanji: "確認", reading: "かくにん", meaning: "Xác nhận", example: "メールを確認してください (Hãy kiểm tra email)." },
+    { kanji: "連絡", reading: "れんらく", meaning: "Liên lạc", example: "後で連絡します (Tôi sẽ liên lạc sau)." },
+    { kanji: "報告", reading: "ほうこく", meaning: "Báo cáo", example: "進捗を報告する (Báo cáo tiến độ)." },
+    { kanji: "相談", reading: "そうだん", meaning: "Thảo luận/Bàn bạc", example: "上司に相談する (Thảo luận với cấp trên)." },
+    { kanji: "注意", reading: "ちゅうい", meaning: "Chú ý/Cẩn thận", example: "足元に注意してください (Hãy chú ý dưới chân)." },
+    { kanji: "安全", reading: "あんぜん", meaning: "An toàn", example: " an toàn là trên hết (安全第一)." }
 ];
 let currentIndex = 0;
 
