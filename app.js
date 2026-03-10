@@ -26,8 +26,16 @@ const idBack = document.getElementById('card-id-back');
 // 3. AUXILIARY FUNCTIONS PROGRESS
 // ==========================================
 function updateUI() {
-    const word = vocabularyData[currentIndex];
+    const word = vocabulary[currentIndex];
     const displayId = `#${currentIndex + 1}`;
+    idFront.innerText = displayId;
+    idBack.innerText = displayId;
+    kanjiDisplay.innerText = vocabulary[currentIndex].kanji;
+    readingDisplay.innerText = vocabulary[currentIndex].reading;
+    meaningDisplay.innerText = vocabulary[currentIndex].meaning;
+    if (exampleDisplay) exampleDisplay.innerText = vocabulary[currentIndex].example;
+    updateProgress();
+}
 /**
  * Updates the learning progress UI.
  */
@@ -58,7 +66,8 @@ cardInner.addEventListener('click', () => {
 /**
  * Reset card state, trigger vibration, and load the next vocabulary item.
  */
-nextButton.addEventListener('click', () => {
+nextButton.addEventListener('click', (even) => {
+    even.stopPropagation();
     // 1. Trigger a stronger vibration (30ms) for transition confirmation
     if (navigator.vibrate) {
         navigator.vibrate(30); 
@@ -70,18 +79,7 @@ nextButton.addEventListener('click', () => {
     // 3. Wait for the flip-back animation (200ms) before updating content
     setTimeout(() => {
         currentIndex = (currentIndex + 1) % vocabulary.length;
-        
-        // Update UI with new vocabulary data (Vietnamese content)
-        idFront.innerText = displayId;
-        idBack.innerText = displayId;
-        kanjiDisplay.innerText = vocabulary[currentIndex].kanji;
-        readingDisplay.innerText = vocabulary[currentIndex].reading;
-        meaningDisplay.innerText = vocabulary[currentIndex].meaning;
-        
-        if (exampleDisplay) {
-            exampleDisplay.innerText = vocabulary[currentIndex].example;
-        }
-        
+        updateUI();
         console.log(`Current Card Index: ${currentIndex}`);
     }, 200); 
 });
