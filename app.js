@@ -57,27 +57,21 @@ function updateProgress() {
 /**
  * Audio Engine (Standardized)
  */
+/**
+ * PLAN B: High-quality Audio via Google TTS API
+ * Works on Pi Browser and provides native pronunciation
+ */
 function speakJapanese(text) {
-    if (!window.speechSynthesis) return;
-
-    // Reset any current speech
-    window.speechSynthesis.cancel();
-
-    const utterance = new SpeechSynthesisUtterance(text);
+    // 1. Create a dynamic Audio object with Google TTS link
+    // 'ja' is the language code for Japanese
+    const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=ja&client=tw-ob`;
     
-    // Attempt to fetch Japanese voices
-    const voices = window.speechSynthesis.getVoices();
-    const japaneseVoice = voices.find(v => v.lang.includes('ja-JP') || v.lang.includes('jp'));
-    
-    if (japaneseVoice) {
-        utterance.voice = japaneseVoice;
-    }
+    const audio = new Audio(audioUrl);
 
-    utterance.lang = 'ja-JP';
-    utterance.rate = 0.8; // Comfortable learning speed
-    utterance.volume = 1.0;
-
-    window.speechSynthesis.speak(utterance);
+    // 2. Play the audio
+    audio.play().catch(err => {
+        console.error("Audio playback failed (usually needs user interaction first):", err);
+    });
 }
 
 // ==========================================
