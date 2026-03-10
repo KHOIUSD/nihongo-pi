@@ -12,7 +12,7 @@
             user-select: none;
             -webkit-user-select: none;
             overflow-x: hidden;
-            background-color: #f8fafc;
+            background-color: #f1f5f9;
         }
             .app-container {
             width: 100%;
@@ -23,29 +23,25 @@
             flex-direction: column;
             padding: 1.5rem;
         }
-        .card-punch-hole, .card-punch-hole-back {
-    　　　　　width: 3rem;  
-   　　　　　 height: 3rem;
-    　　　　　border-radius: 50%;
-    　　　　　display: flex;
-    　　　　　justify-content: center;
-   　　　　　 align-items: center;
-    　　　　　position: relative;
-    　　　　　box-shadow: 
-       　　　　　inset 0 4px 6px rgba(0, 0, 0, 0.1),
-             　　inset 0 1px 2px rgba(0, 0, 0, 0.1); 
-    　　　　　background-color: #f1f5f9; 
-    　　　　　border: 3px solid white; 
-　　　　}
-
-　　　　.card-punch-hole-back {
-    　　　　background-color: #f1f5f9; 
-    　　　　border: 3px solid #slate-50; 
-　　　　}
         .perspective-1000 { perspective: 1000px; }
         .transform-style-3d { transform-style: preserve-3d; }
         .backface-hidden { backface-visibility: hidden; }
         .rotate-y-180 { transform: rotateY(180deg); }
+        .punch-hole {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background-color: #f1f5f9; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.12), inset 0 1px 2px rgba(0, 0, 0, 0.1);
+            border: 2px solid #ffffff;
+            z-index: 50;
+        }
         .is-flipped { transform: rotateY(180deg); }
     </style>
 </head>
@@ -85,11 +81,9 @@
                 <div id="card-inner" class="relative w-full h-full transition-all duration-500 transform-style-3d cursor-pointer active:scale-95">
         
                     <div class="absolute inset-0 w-full h-full backface-hidden bg-white rounded-2xl flex flex-col justify-center items-center p-8 border-b-4 border-purple-200 relative">
-                        <div class="absolute top-6 left-8 flex items-center gap-2">
-      　　　　　　　　　　　  <div class="card-punch-hole">
-            　　　　　　　　　　　<span id="card-id-front" class="text-xs font-black text-slate-800 uppercase tracking-widest">#1</span>
-       　　　　　　　　　　　 </div>
-    　　　　　　　　　　　</div>
+                        <div class="punch-hole">
+                            <span id="card-id-front" class="text-[10px] font-black text-slate-500">#1</span>
+                        </div>
                         <h2 id="kanji" class="text-6xl font-bold text-gray-800">日本語</h2>
                         <div class="absolute bottom-4 right-4 flex items-center gap-1.5 animate-pulse">
                             <span class="text-[10px] font-medium text-purple-400 italic">Chạm để lật</span>
@@ -102,11 +96,9 @@
                     </div>
 
                     <div class="absolute inset-0 w-full h-full backface-hidden bg-purple-50 rounded-2xl flex flex-col justify-center items-center p- rotate-y-180 border-b-4 border-purple-400">
-                        <div class="absolute top-6 left-8 flex items-center gap-2">
-       　　　　　　　　　　　 <div class="card-punch-hole-back">
-          　　　　　　　　　　　  <span id="card-id-back" class="text-xs font-black text-purple-800 uppercase tracking-widest">#1</span>
-       　　　　　　　　　　　 </div>
-  　　　　　　　　　　　  </div>
+                        <div class="punch-hole">
+                            <span id="card-id-back" class="text-[10px] font-black text-slate-500">#1</span>
+                        </div>
                         <p id="reading" class="text-3xl text-purple-600 mb-2 font-medium tracking-wide"></p>
                         <p id="meaning" class="text-3xl text-gray-800 font-bold text-center"></p>
                         <div class="w-12 h-1 bg-gradient-to-r from-purple-100 via-purple-300 to-purple-100 my-4 rounded-full shadow - sm"></div> <p id="example" class="text-sm text-gray-500 italic text-center px-4 leading-relaxed"></p>
