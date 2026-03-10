@@ -7,6 +7,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://sdk.mine.pi/pi-sdk.js"></script>
     <style>
+        .app-container {
+            width: 100%;
+            max-width: 480px; 
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+        }
         .perspective-1000 { perspective: 1000px; }
         .transform-style-3d { transform-style: preserve-3d; }
         .backface-hidden { backface-visibility: hidden; }
@@ -19,7 +28,7 @@
 
     <div class="max-w-md mx-auto min-h-screen flex flex-col p-4">
         <header class="text-center py-6">
-            <h1 class="text-2xl font-bold text-purple-700">Nihongo Flashcards 🇯🇵</h1>
+            <h1 class="text-4xl font-bold text-purple-700">Nihongo Flashcards 🇯🇵</h1>
             <p class="text-gray-500 text-sm italic">Học tiếng Nhật trên hệ sinh thái Web3 Pi Network</p>
         </header>
 
