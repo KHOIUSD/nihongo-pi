@@ -55,29 +55,20 @@ function updateProgress() {
     if (progressText) progressText.innerText = `${current}/${total}`;
 }
 /**
- * Robust Audio Engine
- * Uses Web Speech API with automatic voice re-binding
+ * Audio Engine
+ * High-compatibility audio logic used by Pi Network Apps
  */
 function speakJapanese(text) {
-    if (!window.speechSynthesis) return;
-
-    // Stop current speech
-    window.speechSynthesis.cancel();
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'ja-JP';
-    utterance.rate = 0.8;
-
-    // Critical for Mobile: Some browsers need a second to load voices
-    let voices = window.speechSynthesis.getVoices();
+    // We use a reliable TTS service that returns a direct audio stream
+    const audioUrl = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&le=jap`;
     
-    // Find Japanese voice
-    let jpVoice = voices.find(v => v.lang.includes('ja') || v.lang.includes('JP'));
-    if (jpVoice) {
-        utterance.voice = jpVoice;
-    }
+    const audio = new Audio(audioUrl);
+    audio.volume = 1.0;
 
-    window.speechSynthesis.speak(utterance);
+    // Play the sound
+    audio.play().catch(error => {
+        console.warn("Audio playback was prevented. Ensure user interaction first.", error);
+    });
 }
 
 // ==========================================
@@ -88,14 +79,16 @@ function speakJapanese(text) {
  * Handle card flip animation and trigger haptic + audio feedback.
  */
 cardInner.addEventListener('click', function() {
-    // 1. Force the browser to recognize the intent to speak
-    const textToSpeak = vocabulary[currentIndex].kanji;
-    speakJapanese(textToSpeak);
+    // 1. Play Audio immediately on user touch
+    const currentKanji = vocabulary[currentIndex].kanji;
+    speakJapanese(currentKanji);
 
-    // 2. Haptic feedback
-    if (navigator.vibrate) navigator.vibrate(15);
+    // 2. Trigger Haptic
+    if (navigator.vibrate) {
+        navigator.vibrate(15); 
+    }
 
-    // 3. Flip
+    // 3. Toggle Card Flip
     this.classList.toggle('is-flipped');
 });
 
