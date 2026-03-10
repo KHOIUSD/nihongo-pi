@@ -31,7 +31,6 @@ function updateProgress() {
     const total = vocabulary.length;
     const current = currentIndex + 1;
     const percentage = (current / total) * 100;
-    
     document.getElementById('card-counter').innerText = `#${displayNum}`;
     document.getElementById('card-counter-back').innerText = `#${displayNum}`;
     
