@@ -32,6 +32,9 @@ function updateProgress() {
     const current = currentIndex + 1;
     const percentage = (current / total) * 100;
     
+    document.getElementById('card-counter').innerText = `#${displayNum}`;
+    document.getElementById('card-counter-back').innerText = `#${displayNum}`;
+    
     if (progressBar) progressBar.style.width = `${percentage}%`;
     if (progressText) progressText.innerText = `${current}/${total}`;
 }
