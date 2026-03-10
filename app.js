@@ -55,20 +55,29 @@ function updateProgress() {
     if (progressText) progressText.innerText = `${current}/${total}`;
 }
 /**
- * PLAN B: High-quality Audio via Google TTS API
- * Works on Pi Browser and provides native pronunciation
+ * Robust Audio Engine
+ * Uses Web Speech API with automatic voice re-binding
  */
 function speakJapanese(text) {
-    // 1. Create a dynamic Audio object with Google TTS link
-    // 'ja' is the language code for Japanese
-    const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=ja&client=tw-ob`;
-    
-    const audio = new Audio(audioUrl);
+    if (!window.speechSynthesis) return;
 
-    // 2. Play the audio
-    audio.play().catch(err => {
-        console.error("Audio playback failed (usually needs user interaction first):", err);
-    });
+    // Stop current speech
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ja-JP';
+    utterance.rate = 0.8;
+
+    // Critical for Mobile: Some browsers need a second to load voices
+    let voices = window.speechSynthesis.getVoices();
+    
+    // Find Japanese voice
+    let jpVoice = voices.find(v => v.lang.includes('ja') || v.lang.includes('JP'));
+    if (jpVoice) {
+        utterance.voice = jpVoice;
+    }
+
+    window.speechSynthesis.speak(utterance);
 }
 
 // ==========================================
@@ -78,18 +87,16 @@ function speakJapanese(text) {
 /**
  * Handle card flip animation and trigger haptic + audio feedback.
  */
-cardInner.addEventListener('click', () => {
-    // 1. Audio: Trigger first to ensure mobile activation
-    const currentText = vocabulary[currentIndex].kanji;
-    speakJapanese(currentText);
+cardInner.addEventListener('click', function() {
+    // 1. Force the browser to recognize the intent to speak
+    const textToSpeak = vocabulary[currentIndex].kanji;
+    speakJapanese(textToSpeak);
 
-    // 2. Haptic Feedback
-    if (navigator.vibrate) {
-        navigator.vibrate(15); 
-    }
+    // 2. Haptic feedback
+    if (navigator.vibrate) navigator.vibrate(15);
 
-    // 3. Animation
-    cardInner.classList.toggle('is-flipped');
+    // 3. Flip
+    this.classList.toggle('is-flipped');
 });
 
 /**
