@@ -11,7 +11,7 @@ const vocabulary = [
     { kanji: "報告", reading: "ほうこく", meaning: "Báo cáo", example: "進捗を報告する (Báo cáo tiến độ)." },
     { kanji: "相談", reading: "そうだん", meaning: "Thảo luận/Bàn bạc", example: "上司に相談する (Thảo luận với cấp trên)." },
     { kanji: "注意", reading: "ちゅうい", meaning: "Chú ý/Cẩn thận", example: "足元に注意してください (Hãy chú ý dưới chân)." },
-    { kanji: "安全", reading: "あんぜん", meaning: "An toàn", example: " an toàn là trên hết (安全第一)." }
+    { kanji: "安全", reading: "あんぜん", meaning: "An toàn", example: " 安全第一 (An toàn là trên hết)." }
 ];
 let currentIndex = 0;
 
@@ -54,19 +54,44 @@ function updateProgress() {
     if (progressBar) progressBar.style.width = `${percentage}%`;
     if (progressText) progressText.innerText = `${current}/${total}`;
 }
+/**
+ * Speech Synthesis Logic for Japanese pronunciation
+ * Uses Web Speech API for zero-latency and offline support
+ */
+function speakJapanese(text) {
+    if ('speechSynthesis' in window) {
+        // Cancel any ongoing speech to prevent overlap
+        window.speechSynthesis.cancel();
+        
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'ja-JP';
+        utterance.rate = 0.85; 
+        utterance.pitch = 1.0; // Slightly slower for better learning
+        
+        window.speechSynthesis.speak(utterance);
+    }
+}
 
 // ==========================================
 // 4. INTERACTIVE LOGIC & HAPTIC FEEDBACK
 // ==========================================
 
 /**
- * Handle card flip animation and trigger haptic feedback.
+ * Handle card flip animation and trigger haptic + audio feedback.
  */
 cardInner.addEventListener('click', () => {
-    // Provide a subtle tactile confirmation (15ms)
+    // 1. Haptic feedback
     if (navigator.vibrate) {
         navigator.vibrate(15); 
     }
+    
+    // 2. Audio feedback: Only speak when flipping to the back side (showing meaning)
+    // or you can set it to speak every time the card is clicked
+    if (!cardInner.classList.contains('is-flipped')) {
+        const currentText = vocabulary[currentIndex].kanji;
+        speakJapanese(currentText);
+    }
+
     cardInner.classList.toggle('is-flipped');
 });
 
