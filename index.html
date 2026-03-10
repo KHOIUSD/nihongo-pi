@@ -13,7 +13,8 @@
             -webkit-user-select: none;
             overflow-x: hidden;
             background-color: #f8fafc;
-        .app-container {
+        }
+            .app-container {
             width: 100%;
             max-width: 480px; 
             margin: 0 auto;
@@ -22,6 +23,25 @@
             flex-direction: column;
             padding: 1.5rem;
         }
+        .card-punch-hole, .card-punch-hole-back {
+    　　　　　width: 3rem;  
+   　　　　　 height: 3rem;
+    　　　　　border-radius: 50%;
+    　　　　　display: flex;
+    　　　　　justify-content: center;
+   　　　　　 align-items: center;
+    　　　　　position: relative;
+    　　　　　box-shadow: 
+       　　　　　inset 0 4px 6px rgba(0, 0, 0, 0.1),
+             　　inset 0 1px 2px rgba(0, 0, 0, 0.1); 
+    　　　　　background-color: #f1f5f9; 
+    　　　　　border: 3px solid white; 
+　　　　}
+
+　　　　.card-punch-hole-back {
+    　　　　background-color: #f1f5f9; 
+    　　　　border: 3px solid #slate-50; 
+　　　　}
         .perspective-1000 { perspective: 1000px; }
         .transform-style-3d { transform-style: preserve-3d; }
         .backface-hidden { backface-visibility: hidden; }
