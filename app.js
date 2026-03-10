@@ -19,11 +19,15 @@ const exampleDisplay = document.getElementById('example');
 const nextButton = document.getElementById('btn-next');
 const progressBar = document.getElementById('progress-bar');
 const progressText = document.getElementById('progress-text');
+const idFront = document.getElementById('card-id-front');
+const idBack = document.getElementById('card-id-back');
 
 // ==========================================
 // 3. AUXILIARY FUNCTIONS PROGRESS
 // ==========================================
-
+function updateUI() {
+    const word = vocabularyData[currentIndex];
+    const displayId = `#${currentIndex + 1}`;
 /**
  * Updates the learning progress UI.
  */
@@ -31,8 +35,6 @@ function updateProgress() {
     const total = vocabulary.length;
     const current = currentIndex + 1;
     const percentage = (current / total) * 100;
-    document.getElementById('card-id-front').innerText = `#${displayId}`;
-    document.getElementById('card-id-back').innerText = `#${displayId}`;
     
     if (progressBar) progressBar.style.width = `${percentage}%`;
     if (progressText) progressText.innerText = `${current}/${total}`;
@@ -70,6 +72,8 @@ nextButton.addEventListener('click', () => {
         currentIndex = (currentIndex + 1) % vocabulary.length;
         
         // Update UI with new vocabulary data (Vietnamese content)
+        idFront.innerText = displayId;
+        idBack.innerText = displayId;
         kanjiDisplay.innerText = vocabulary[currentIndex].kanji;
         readingDisplay.innerText = vocabulary[currentIndex].reading;
         meaningDisplay.innerText = vocabulary[currentIndex].meaning;
