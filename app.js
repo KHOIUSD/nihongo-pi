@@ -55,9 +55,6 @@ function updateProgress() {
     if (progressText) progressText.innerText = `${current}/${total}`;
 }
 /**
- * Audio Engine (Standardized)
- */
-/**
  * PLAN B: High-quality Audio via Google TTS API
  * Works on Pi Browser and provides native pronunciation
  */
