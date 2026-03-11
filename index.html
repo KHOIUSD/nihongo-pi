@@ -42,7 +42,74 @@
             border: 2px solid #ffffff;
             z-index: 50;
         }
+        
         .is-flipped { transform: rotateY(180deg); }
+        /* Navigation Container */
+        .control-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 95%;
+            margin: 25px auto;
+            gap: 12px;
+        } 
+
+        /* Global Button Styling */
+       .btn-next, .btn-nav-secondary {
+           flex: 1;
+           height: 52px;
+           border-radius: 16px;
+           font-weight: 700;
+           font-size: 14px;
+           border: none;
+           cursor: pointer;
+           display: flex;
+           align-items: center;
+          justify-content: center;
+          gap: 8px;
+          text-transform: uppercase; /* Tạo sự chuyên nghiệp */
+          letter-spacing: 0.8px;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+       }
+
+       /* Primary Action: Next */
+      .btn-next {
+          background: #8A2BE2;
+          color: #FFFFFF;
+          box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+       }
+
+       /* Secondary Action: Prev */
+      .btn-nav-secondary {
+         background: #F3E8FF;
+         color: #8A2BE2;
+       }
+
+      /* Central Branding (The Pivot Point) */
+     .app-brand-center {
+         flex: 0 0 70px;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         position: relative;
+      }
+
+     .logo-mini {
+         width: 58px;
+         height: 58px;
+         background: #FFFFFF;
+         border: 3px solid #8A2BE2;
+         border-radius: 50%;
+         padding: 6px;
+         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+         z-index: 5;
+         transition: transform 0.3s ease;
+     }
+
+     /* Hover/Active Feedback */
+    .btn-next:active, .btn-nav-secondary:active {
+        transform: scale(0.95);
+     }
     </style>
 </head>
     
