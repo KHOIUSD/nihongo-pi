@@ -64,7 +64,7 @@ function updateProgress() {
     if (progressText) progressText.innerText = `${current}/${total}`;
 }
 /**
- * Audio engine cofiguration
+ * Audio engine configuration
  */
 // Initialize a subtle UI sound effect (Sfx) for better tactile feedback
 const flipSfx = new Audio('https://www.soundjay.com/buttons/sounds/button-20.mp3'); 
