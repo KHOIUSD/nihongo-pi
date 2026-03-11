@@ -55,19 +55,34 @@
             gap: 12px;
         } 
 
-        /* Primary Action: Next */
-       .btn-next {
-           background: #8A2BE2; 
-           color: #FFFFFF;
-           box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
-        }
+       /* 1. PRIMARY ACTION (Next) */
+.btn-next {
+    background: #8A2BE2 !important; /* Standard Deep Purple */
+    color: #FFFFFF !important;
+    font-weight: 700;
+    border: 2px solid #8A2BE2 !important; /* Matching border for alignment */
+    box-shadow: 0 4px 15px rgba(138, 43, 226, 0.25);
+    transition: all 0.2s ease-in-out;
+}
 
-       /* Secondary Action: Prev*/
-      .btn-nav-secondary {
-          background: rgba(138, 43, 226, 0.12); 
-          color: #8A2BE2; 
-          border: 1px solid rgba(138, 43, 226, 0.2); 
-       }
+/* 2. SECONDARY ACTION (Prev) */
+.btn-nav-secondary {
+    /* Uses the exact same base color with 12% opacity for luxury tint */
+    background: rgba(138, 43, 226, 0.12) !important; 
+    color: #8A2BE2 !important; 
+    font-weight: 700;
+    /* Subtle border to bridge the gap between both buttons */
+    border: 2px solid rgba(138, 43, 226, 0.25) !important;
+    box-shadow: none !important;
+    transition: all 0.2s ease-in-out;
+}
+
+/* 3. LOGO SYNC (The Bridge) */
+.logo-btn, .logo-wrapper {
+    border: 2px solid #8A2BE2 !important; /* Unified brand border */
+    background: #FFFFFF !important;
+    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.15);
+}
 
        /* Secondary Action: Prev Button - Balanced with Next Button */
        .btn-nav-secondary {
@@ -104,6 +119,7 @@
      /* Hover/Active Feedback */
     .btn-next:active, .btn-nav-secondary:active {
         transform: scale(0.95);
+        opacity: 0.9;
      }
     /* ============================================================
    AUDIO HINT COMPONENT (Global Standard)
