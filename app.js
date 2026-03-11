@@ -207,8 +207,8 @@ audioHintBtn.addEventListener('click', function(event) {
     speakJapanese(currentWord);
 
     // Haptic feedback for hint activation
-    if (navigator.vibrate) navigator.vibrate(10);}, { passive: false },
-);
+    if (navigator.vibrate) navigator.vibrate(10);}, { passive: false 
+});
 
 // ==========================================
 // 6. PI WEB3 & PAYMENT INTEGRATION
