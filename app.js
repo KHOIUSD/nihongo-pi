@@ -24,6 +24,7 @@ const kanjiDisplay = document.getElementById('kanji');
 const readingDisplay = document.getElementById('reading');
 const meaningDisplay = document.getElementById('meaning');
 const exampleDisplay = document.getElementById('example');
+const prevButton = document.getElementById('prev-btn');
 const nextButton = document.getElementById('btn-next');
 const progressBar = document.getElementById('progress-bar');
 const progressText = document.getElementById('progress-text');
@@ -98,17 +99,26 @@ cardInner.addEventListener('click', function() {
  */
 nextButton.addEventListener('click', (event) => {
     event.stopPropagation();
+    handleNavigation(true); // true = Next
+});
+prevButton.addEventListener('click', (event) => {
+    event.stopPropagation();
+    handleNavigation(false); // false = Prev
+});
     // 1. Trigger a stronger vibration (30ms) for transition confirmation
-    if (navigator.vibrate) {
-        navigator.vibrate(30); 
+    function changeCard(isNext) {
+    if (navigator.vibrate) navigator.vibrate(isNext ? 25 : 15); 
     }
-
     // 2. Flip the card back to the front side first
     cardInner.classList.remove('is-flipped');
 
     // 3. Wait for the flip-back animation (200ms) before updating content
     setTimeout(() => {
-        currentIndex = (currentIndex + 1) % vocabulary.length;
+        if (isNext) {
+            currentIndex = (currentIndex + 1) % vocabulary.length;
+        } else {
+            currentIndex = (currentIndex - 1 + vocabulary.length) % vocabulary.length;
+        }
         // Save current index to localStorage
         localStorage.setItem('nihongo_progress', currentIndex);
         updateUI();
