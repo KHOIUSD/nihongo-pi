@@ -13,7 +13,8 @@ const vocabulary = [
     { kanji: "注意", reading: "ちゅうい", meaning: "Chú ý/Cẩn thận", example: "足元に注意してください (Hãy chú ý dưới chân)." },
     { kanji: "安全", reading: "あんぜん", meaning: "An toàn", example: " 安全第一 (An toàn là trên hết)." }
 ];
-let currentIndex = 0;
+// Load saved progress or start from 0
+let currentIndex = parseInt(localStorage.getItem('nihongo_progress')) || 0;
 
 // ==========================================
 // 2. DOM ELEMENTS SELECTION
@@ -108,6 +109,8 @@ nextButton.addEventListener('click', (event) => {
     // 3. Wait for the flip-back animation (200ms) before updating content
     setTimeout(() => {
         currentIndex = (currentIndex + 1) % vocabulary.length;
+        // Save current index to localStorage
+        localStorage.setItem('nihongo_progress', currentIndex);
         updateUI();
         console.log(`Current Card Index: ${currentIndex}`);
     }, 200); 
