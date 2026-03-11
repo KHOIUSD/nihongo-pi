@@ -100,7 +100,6 @@ cardInner.addEventListener('click', function() {
     // 1. Trigger a stronger vibration (30ms) for transition confirmation
     function changeCard(isNext) {
     if (navigator.vibrate) navigator.vibrate(isNext ? 25 : 15); 
-    }
     // 2. Flip the card back to the front side first
     cardInner.classList.remove('is-flipped');
 
