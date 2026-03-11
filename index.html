@@ -55,34 +55,18 @@
             gap: 12px;
         } 
 
-        /* Global Button Styling */
-       .btn-next, .btn-nav-secondary {
-           flex: 1;
-           height: 52px;
-           border-radius: 16px;
-           font-weight: 700;
-           font-size: 14px;
-           border: none;
-           cursor: pointer;
-           display: flex;
-           align-items: center;
-          justify-content: center;
-          gap: 8px;
-          text-transform: uppercase; 
-          letter-spacing: 0.8px;
-          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-       }
-
-       /* Primary Action: Next Button - High Visual Weight */
+        /* Primary Action: Next */
        .btn-next {
-           background: #8A2BE2; 
+           background: #8A2BE2; /* Tím đậm chủ đạo */
            color: #FFFFFF;
            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
-           border: 2px solid #8A2BE2; /* Standardize height with border */
-           flex: 1; /* Makes both buttons equal width */
-           height: 50px;
-           border-radius: 15px;
-           font-weight: bold;
+        }
+
+       /* Secondary Action: Prev*/
+      .btn-nav-secondary {
+          background: rgba(138, 43, 226, 0.12); 
+          color: #8A2BE2; 
+          border: 1px solid rgba(138, 43, 226, 0.2); 
        }
 
        /* Secondary Action: Prev Button - Balanced with Next Button */
