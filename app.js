@@ -186,7 +186,7 @@ prevButton.addEventListener('click', (event) => {
 });
 
 // ==========================================
-// AUDIO HINT LOGIC (Listen without Flipping)
+// 5. AUDIO HINT LOGIC (Listen without Flipping)
 // ==========================================
 
 /**
@@ -197,7 +197,9 @@ const audioHintBtn = document.getElementById('audio-hint');
 
 audioHintBtn.addEventListener('click', function(event) {
     // Prevent the card from flipping when clicking the speaker icon
-    event.stopPropagation(); 
+    event.stopPropagation();
+    // 2. Prevent default behavior
+    event.preventDefault();
 
     const currentWord = vocabulary[currentIndex].kanji;
 
@@ -209,7 +211,7 @@ audioHintBtn.addEventListener('click', function(event) {
 });
 
 // ==========================================
-// 5. PI WEB3 & PAYMENT INTEGRATION
+// 6. PI WEB3 & PAYMENT INTEGRATION
 // ==========================================
 
 /**
