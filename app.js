@@ -160,7 +160,7 @@ function handleNavigation(isNext) {
         
         // Update User Interface
         updateUI();
-        flipSfx.play();
+        flipSfx.play().catch(() => {});
         
         // Unlock navigation after UI update is complete
         setTimeout(() => { isTransitioning = false; }, 100);
