@@ -37,13 +37,20 @@ const idBack = document.getElementById('card-id-back');
 function updateUI() {
     const word = vocabulary[currentIndex];
     const displayId = `#${currentIndex + 1}`;
-    idFront.innerText = displayId;
-    idBack.innerText = displayId;
-    kanjiDisplay.innerText = vocabulary[currentIndex].kanji;
-    readingDisplay.innerText = vocabulary[currentIndex].reading;
-    meaningDisplay.innerText = vocabulary[currentIndex].meaning;
-    if (exampleDisplay) exampleDisplay.innerText = vocabulary[currentIndex].example;
-    updateProgress();
+    const elements = [kanjiDisplay, readingDisplay, meaningDisplay, exampleDisplay];
+    elements.forEach(el => { if(el) el.style.opacity = '0.3'; });
+
+    setTimeout(() => {
+        idFront.innerText = displayId;
+        idBack.innerText = displayId;
+        kanjiDisplay.innerText = word.kanji;
+        readingDisplay.innerText = word.reading;
+        meaningDisplay.innerText = word.meaning;
+        if (exampleDisplay) exampleDisplay.innerText = word.example;
+        
+        elements.forEach(el => { if(el) el.style.opacity = '1'; });
+        updateProgress();
+    }, 50);
 }
 /**
  * Updates the learning progress UI.
