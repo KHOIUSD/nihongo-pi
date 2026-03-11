@@ -64,20 +64,45 @@ function updateProgress() {
     if (progressText) progressText.innerText = `${current}/${total}`;
 }
 /**
- * Audio Engine
- * High-compatibility audio logic used by Pi Network Apps
+ * Audio engine cofiguration
+ */
+// Initialize a subtle UI sound effect (Sfx) for better tactile feedback
+const flipSfx = new Audio('https://www.soundjay.com/buttons/sounds/button-20.mp3'); 
+flipSfx.volume = 0.3;
+
+/**
+ * Handles Japanese Text-to-Speech (TTS) with layered audio effects.
+ * Includes a subtle click sound before the voice for a premium feel.
+ * @param {string} text - The Japanese text to be pronounced.
  */
 function speakJapanese(text) {
-    // We use a reliable TTS service that returns a direct audio stream
-    const audioUrl = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&le=jap`;
-    
-    const audio = new Audio(audioUrl);
-    audio.volume = 1.0;
+    // 1. Stop previous audio playback to prevent overlapping/echo
+    if (window.currentAudio) {
+        window.currentAudio.pause();
+        window.currentAudio.currentTime = 0;
+    }
 
-    // Play the sound
-    audio.play().catch(error => {
-        console.warn("Audio playback was prevented. Ensure user interaction first.", error);
+    // 2. Play a brief UI feedback sound (Click effect)
+    flipSfx.play().catch(() => {
+        /* Silently handle cases where audio is blocked by browser policy */
     });
+
+    // 3. Configure the Japanese TTS voice using a reliable CDN
+    const audioUrl = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&le=jap`;
+    const audio = new Audio(audioUrl);
+    
+    // Global reference to manage state across multiple interactions
+    window.currentAudio = audio;
+    
+    // Set volume to 0.9 to prevent clipping/distortion on mobile speakers
+    audio.volume = 0.9; 
+
+    // 4. Slight 100ms delay to separate the click sound from the speech
+    setTimeout(() => {
+        audio.play().catch(error => {
+            console.warn("Audio playback was prevented by browser security policy.", error);
+        });
+    }, 100);
 }
 
 // ==========================================
@@ -102,26 +127,46 @@ cardInner.addEventListener('click', function() {
 });
 
 /**
- * Reset card state, trigger vibration, and load the next vocabulary item.
+ * Navigation logic with Debounce & Haptic
  */
-    // 1. Trigger a stronger vibration (30ms) for transition confirmation
-    function handleNavigation(isNext) {
-    if (navigator.vibrate) navigator.vibrate(isNext ? 25 : 15); 
-    // 2. Flip the card back to the front side first
+let isTransitioning = false; // Prevents overlapping animations from rapid clicks
+
+/**
+ * Handles card navigation (Next/Prev) with haptic feedback and smooth transitions.
+ * @param {boolean} isNext - Direction of navigation
+ */
+function handleNavigation(isNext) {
+    if (isTransitioning) return; 
+    isTransitioning = true;
+
+    // 1. Trigger Haptic Feedback (Stronger for Next, lighter for Prev)
+    if (navigator.vibrate) {
+        navigator.vibrate(isNext ? [30, 10, 30] : 20); 
+    }
+
+    // 2. Reset card flip state before switching content
     cardInner.classList.remove('is-flipped');
 
-    // 3. Wait for the flip-back animation (200ms) before updating content
+    // 3. Wait for flip-back animation (300ms) for a premium feel
     setTimeout(() => {
         if (isNext) {
             currentIndex = (currentIndex + 1) % vocabulary.length;
         } else {
             currentIndex = (currentIndex - 1 + vocabulary.length) % vocabulary.length;
         }
-        // Save current index to localStorage
+
+        // Persist progress to LocalStorage
         localStorage.setItem('nihongo_progress', currentIndex);
+        
+        // Update User Interface
         updateUI();
-        console.log(`Current Card Index: ${currentIndex}`);
-    }, 200); 
+        
+        // Auto-play pronunciation for better learning experience
+        speakJapanese(vocabulary[currentIndex].kanji);
+        
+        // Unlock navigation after UI update is complete
+        setTimeout(() => { isTransitioning = false; }, 100);
+    }, 300);
 }
 nextButton.addEventListener('click', (event) => {
     event.stopPropagation();
