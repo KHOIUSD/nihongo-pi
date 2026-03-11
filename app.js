@@ -110,20 +110,30 @@ function speakJapanese(text) {
 // ==========================================
 
 /**
- * Handle card flip animation and trigger haptic + audio feedback.
+ * Handles the card flip interaction.
+ * Implements "Active Recall" by only playing audio when the answer is revealed.
  */
 cardInner.addEventListener('click', function() {
-    // 1. Play Audio immediately on user touch
-    const currentKanji = vocabulary[currentIndex].kanji;
-    speakJapanese(currentKanji);
+    // 1. Toggle the visual flip animation
+    this.classList.toggle('is-flipped');
 
-    // 2. Trigger Haptic
+    // 2. Logic: Only play pronunciation when revealing the back side (The Answer)
+    if (this.classList.contains('is-flipped')) {
+        const currentKanji = vocabulary[currentIndex].kanji;
+        
+        // Play Japanese pronunciation as a confirmation of the user's guess
+        speakJapanese(currentKanji); 
+    } else {
+        // If flipping back to the front (The Question) - play a subtle UI click
+        flipSfx.play().catch(() => {
+            /* Handle potential browser audio restrictions */
+        });
+    }
+
+    // 3. Provide subtle Haptic Feedback for a tactile experience
     if (navigator.vibrate) {
         navigator.vibrate(15); 
     }
-
-    // 3. Toggle Card Flip
-    this.classList.toggle('is-flipped');
 });
 
 /**
