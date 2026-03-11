@@ -25,7 +25,7 @@ const readingDisplay = document.getElementById('reading');
 const meaningDisplay = document.getElementById('meaning');
 const exampleDisplay = document.getElementById('example');
 const prevButton = document.getElementById('prev-btn');
-const nextButton = document.getElementById('btn-next');
+const nextButton = document.getElementById('next-btn');
 const progressBar = document.getElementById('progress-bar');
 const progressText = document.getElementById('progress-text');
 const idFront = document.getElementById('card-id-front');
@@ -97,14 +97,6 @@ cardInner.addEventListener('click', function() {
 /**
  * Reset card state, trigger vibration, and load the next vocabulary item.
  */
-nextButton.addEventListener('click', (event) => {
-    event.stopPropagation();
-    handleNavigation(true); // true = Next
-});
-prevButton.addEventListener('click', (event) => {
-    event.stopPropagation();
-    handleNavigation(false); // false = Prev
-});
     // 1. Trigger a stronger vibration (30ms) for transition confirmation
     function changeCard(isNext) {
     if (navigator.vibrate) navigator.vibrate(isNext ? 25 : 15); 
@@ -124,6 +116,14 @@ prevButton.addEventListener('click', (event) => {
         updateUI();
         console.log(`Current Card Index: ${currentIndex}`);
     }, 200); 
+}
+nextButton.addEventListener('click', (event) => {
+    event.stopPropagation();
+    handleNavigation(true); // true = Next
+});
+prevButton.addEventListener('click', (event) => {
+    event.stopPropagation();
+    handleNavigation(false); // false = Prev
 });
 
 // ==========================================
