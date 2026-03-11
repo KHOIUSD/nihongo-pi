@@ -98,7 +98,7 @@ cardInner.addEventListener('click', function() {
  * Reset card state, trigger vibration, and load the next vocabulary item.
  */
     // 1. Trigger a stronger vibration (30ms) for transition confirmation
-    function changeCard(isNext) {
+    function handleNavigation(isNext) {
     if (navigator.vibrate) navigator.vibrate(isNext ? 25 : 15); 
     // 2. Flip the card back to the front side first
     cardInner.classList.remove('is-flipped');
@@ -118,11 +118,11 @@ cardInner.addEventListener('click', function() {
 }
 nextButton.addEventListener('click', (event) => {
     event.stopPropagation();
-    changeCard(true); // true = Next
+    handleNavigation(true); // true = Next
 });
 prevButton.addEventListener('click', (event) => {
     event.stopPropagation();
-    changeCard(false); // false = Prev
+    handleNavigation(false); // false = Prev
 });
 
 // ==========================================
