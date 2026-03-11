@@ -160,9 +160,7 @@ function handleNavigation(isNext) {
         
         // Update User Interface
         updateUI();
-        
-        // Auto-play pronunciation for better learning experience
-        speakJapanese(vocabulary[currentIndex].kanji);
+        flipSfx.play();
         
         // Unlock navigation after UI update is complete
         setTimeout(() => { isTransitioning = false; }, 100);
