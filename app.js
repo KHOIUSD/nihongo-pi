@@ -186,6 +186,29 @@ prevButton.addEventListener('click', (event) => {
 });
 
 // ==========================================
+// AUDIO HINT LOGIC (Listen without Flipping)
+// ==========================================
+
+/**
+ * Allows users to hear the pronunciation as a hint while staying on the front side.
+ * This supports different learning styles (Auditory Hinting).
+ */
+const audioHintBtn = document.getElementById('audio-hint');
+
+audioHintBtn.addEventListener('click', function(event) {
+    // Prevent the card from flipping when clicking the speaker icon
+    event.stopPropagation(); 
+
+    const currentWord = vocabulary[currentIndex].kanji;
+
+    // Provide the audio feedback while keeping the answer hidden
+    speakJapanese(currentWord);
+
+    // Haptic feedback for hint activation
+    if (navigator.vibrate) navigator.vibrate(10);
+});
+
+// ==========================================
 // 5. PI WEB3 & PAYMENT INTEGRATION
 // ==========================================
 
