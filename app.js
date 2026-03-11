@@ -118,11 +118,11 @@ cardInner.addEventListener('click', function() {
 }
 nextButton.addEventListener('click', (event) => {
     event.stopPropagation();
-    handleNavigation(true); // true = Next
+    changeCard(true); // true = Next
 });
 prevButton.addEventListener('click', (event) => {
     event.stopPropagation();
-    handleNavigation(false); // false = Prev
+    changeCard(false); // false = Prev
 });
 
 // ==========================================
