@@ -46,138 +46,138 @@
         
         .is-flipped { transform: rotateY(180deg); }
         /* ============================================================
-   NAVIGATION SYSTEM - PREMIUM UI REFINEMENT
-   Target: Absolute Symmetry, Color Harmony, and Tactile Feedback
-   ============================================================ */
+        NAVIGATION SYSTEM - PREMIUM UI REFINEMENT
+        Target: Absolute Symmetry, Color Harmony, and Tactile Feedback
+        ============================================================ */
 
-/**
- * 1. LAYOUT CONTAINER
- * Maintains alignment and proportional spacing between elements.
- */
-.control-group {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 420px; /* Optimal width for modern mobile devices */
-    margin: 24px auto;
-    padding: 0 16px;
-    gap: 12px;
-}
+       /**
+       * 1. LAYOUT CONTAINER
+       * Maintains alignment and proportional spacing between elements.
+       */
+       .control-group {
+           display: flex;
+           align-items: center;
+           justify-content: space-between;
+           width: 100%;
+           max-width: 420px; /* Optimal width for modern mobile devices */
+           margin: 24px auto;
+           padding: 0 16px;
+           gap: 12px;
+       }
 
-/**
- * 2. BASE NAVIGATION STYLES
- * Enforces a unified "Pill-Shaped" design for a modern Web3 aesthetic.
- */
-.btn-next, .btn-nav-secondary {
-    flex: 1;                     /* Ensures identical width for both buttons */
-    height: 54px;                /* Standard touch target height for UX */
-    border-radius: 9999px;       /* Perfect "Pill" rounding */
-    font-weight: 700;
-    font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    cursor: pointer;
-    border: 2px solid #8A2BE2 !important; /* Unified brand border */
-}
+      /**
+      * 2. BASE NAVIGATION STYLES
+      * Enforces a unified "Pill-Shaped" design for a modern Web3 aesthetic.
+      */
+      .btn-next, .btn-nav-secondary {
+          flex: 1;                     /* Ensures identical width for both buttons */
+          height: 54px;                /* Standard touch target height for UX */
+          border-radius: 9999px;       /* Perfect "Pill" rounding */
+          font-weight: 700;
+          font-size: 0.95rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          cursor: pointer;
+          border: 2px solid #8A2BE2 !important; /* Unified brand border */
+       }
 
-/**
- * 3. PRIMARY ACTION (Next)
- * High visual weight to guide the user forward.
- */
-.btn-next {
-    background: #8A2BE2 !important;
-    color: #FFFFFF !important;
-    box-shadow: 0 4px 14px rgba(138, 43, 226, 0.3);
-}
+       /**
+       * 3. PRIMARY ACTION (Next)
+       * High visual weight to guide the user forward.
+       */
+       .btn-next {
+           background: #8A2BE2 !important;
+           color: #FFFFFF !important;
+           box-shadow: 0 4px 14px rgba(138, 43, 226, 0.3);
+       }
 
-/**
- * 4. SECONDARY ACTION (Prev)
- * Balanced tint to remain accessible but non-distracting.
- */
-.btn-nav-secondary {
-    background: rgba(138, 43, 226, 0.1) !important; /* Soft premium tint */
-    color: #8A2BE2 !important;
-    box-shadow: none !important;
-}
+       /**
+       * 4. SECONDARY ACTION (Prev)
+       * Balanced tint to remain accessible but non-distracting.
+       */
+       .btn-nav-secondary {
+           background: rgba(138, 43, 226, 0.1) !important; /* Soft premium tint */
+           color: #8A2BE2 !important;
+           box-shadow: none !important;
+       }
 
-/**
- * 5. BRANDING ANCHOR
- * Fixed width to prevent layout shifts during interaction.
- */
-.app-brand-center {
-    flex: 0 0 80px; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+       /**
+       * 5. BRANDING ANCHOR
+       * Fixed width to prevent layout shifts during interaction.
+       */
+       .app-brand-center {
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           flex: 0 0 80px; 
+       }
 
-/**
- * 6. MICRO-INTERACTION
- * Provides physical-depth feedback when tapped.
- */
-.btn-next:active, .btn-nav-secondary:active {
-    transform: scale(0.94); /* Tactile "push-down" sensation */
-    opacity: 0.85;
-}
-    /* ============================================================
-   AUDIO HINT COMPONENT (Global Standard)
-   Target: Hard-fix for persistent white highlights on Pi Browser
-   ============================================================ */
+       /**
+       * 6. MICRO-INTERACTION
+       * Provides physical-depth feedback when tapped.
+       */
+       .btn-next:active, .btn-nav-secondary:active {
+           transform: scale(0.94); /* Tactile "push-down" sensation */
+           opacity: 0.85;
+       }
+       /* ============================================================
+       AUDIO HINT COMPONENT (Global Standard)
+       Target: Hard-fix for persistent white highlights on Pi Browser
+       ============================================================ */
 
-.audio-hint-btn {
-  position: absolute;
-  top: 1.25rem;    
-  right: 1.25rem;
-  z-index: 100;     
-  width: 3.5rem;     /* Slightly larger hit area */
-  height: 3.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  outline: none;
+       .audio-hint-btn {
+           position: absolute;
+           top: 1.25rem;    
+           right: 1.25rem;
+           z-index: 100;     
+           width: 3.5rem;     /* Slightly larger hit area */
+           height: 3.5rem;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           cursor: pointer;
+           outline: none;
 
-  /* 1. CRITICAL: Remove all default browser overlays */
-  -webkit-tap-highlight-color: rgba(0,0,0,0) !important; /* Force transparency */
-  -webkit-touch-callout: none !important;               /* Disable callout menu */
-  -webkit-user-select: none !important;                 /* Disable text selection */
-  user-select: none !important;
+       /* 1. CRITICAL: Remove all default browser overlays */
+       -webkit-tap-highlight-color: rgba(0,0,0,0) !important; /* Force transparency */
+       -webkit-touch-callout: none !important;               /* Disable callout menu */
+       -webkit-user-select: none !important;                 /* Disable text selection */
+       user-select: none !important;
   
-  /* 2. OPTIONAL: Specific touch action for mobile logic */
-  touch-action: manipulation; 
-}
+       /* 2. OPTIONAL: Specific touch action for mobile logic */
+       touch-action: manipulation; 
+       }
 
-.audio-hint-btn i {
-  /* Keep your original styling */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.4rem;
-  height: 2.4rem;
-  background: rgba(255, 255, 255, 0.12); 
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  color: #E2D1F9; 
-  font-size: 1.1rem;
-  backdrop-filter: blur(8px); 
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+       .audio-hint-btn i {
+       /* Keep your original styling */
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       width: 2.4rem;
+       height: 2.4rem;
+       background: rgba(255, 255, 255, 0.12); 
+       border: 1px solid rgba(255, 255, 255, 0.2);
+       border-radius: 50%;
+       color: #E2D1F9; 
+       font-size: 1.1rem;
+       backdrop-filter: blur(8px); 
+       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   
-  /* 3. Ensure the icon itself doesn't trigger feedback */
-  pointer-events: none; 
-}
+       /* 3. Ensure the icon itself doesn't trigger feedback */
+       pointer-events: none; 
+       }
 
-/* REFINED ACTIVE STATE */
-.audio-hint-btn:active i {
-  /* Physical feedback without color flashing */
-  transform: scale(0.85); 
-  background: rgba(255, 255, 255, 0.15) !important;
-  border-color: rgba(255, 255, 255, 0.4);
-}
+       /* REFINED ACTIVE STATE */
+       .audio-hint-btn:active i {
+       /* Physical feedback without color flashing */
+       transform: scale(0.85); 
+       background: rgba(255, 255, 255, 0.15) !important;
+       border-color: rgba(255, 255, 255, 0.4);
+       }
     </style>
 </head>
     
