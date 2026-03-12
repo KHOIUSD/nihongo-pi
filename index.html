@@ -199,6 +199,27 @@
            color: #FBC02D !important; /* Đổi sang màu vàng khi chạm */
            padding-left: 10px;
        }
+       /* Padding cho các dòng iPhone/Android có tai thỏ dưới đáy */
+       .pb-safe {
+           padding-bottom: env(safe-area-inset-bottom);
+       }
+
+       /* Hiệu ứng khi nhấn vào các icon menu */
+       nav div:active {
+           transform: scale(0.9);
+           transition: 0.1s;
+       }
+
+       /* Làm mờ các mục không được chọn để nổi bật mục Home */
+       nav div {
+           cursor: pointer;
+           transition: opacity 0.3s;
+       }
+
+       nav div:hover {
+           opacity: 1;
+       }
+
     </style>
 </head>
     
@@ -355,5 +376,35 @@
         };
     </script>
     <script src="app.js"></script>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-black text-white h-[70px] flex items-center justify-around z-[1000] border-t border-gray-800 pb-safe">
+    <div class="flex flex-col items-center gap-1 opacity-100">
+        <i class="fas fa-home text-xl"></i>
+        <span class="text-[10px]">ホーム</span> </div>
+
+    <div class="flex flex-col items-center gap-1 opacity-60 relative">
+        <i class="fas fa-users text-xl"></i>
+        <span class="text-[10px] bg-red-500 text-white absolute -top-2 -right-3 px-1.5 rounded-full text-[9px]">12</span>
+        <span class="text-[10px]">友達</span> </div>
+
+    <div class="relative flex items-center justify-center w-12 h-8">
+        <div class="absolute inset-0 bg-[#00f2ea] rounded-lg translate-x-[-3px]"></div>
+        <div class="absolute inset-0 bg-[#ff0050] rounded-lg translate-x-[3px]"></div>
+        <div class="absolute inset-0 bg-white rounded-lg flex items-center justify-center">
+            <i class="fas fa-plus text-black text-sm"></i>
+        </div>
+    </div>
+
+    <div class="flex flex-col items-center gap-1 opacity-60 relative">
+        <i class="fas fa-comment-dots text-xl"></i>
+        <span class="text-[10px] bg-red-500 text-white absolute -top-2 -right-3 px-1.5 rounded-full text-[9px]">42</span>
+        <span class="text-[10px]">メッセージ</span> </div>
+
+    <div class="flex flex-col items-center gap-1 opacity-60">
+        <i class="fas fa-user-circle text-xl"></i>
+        <span class="text-[10px]">プロフィール</span> </div>
+    </nav>
+
+    <div class="h-[80px]"></div>   
 </body>
 </html>
