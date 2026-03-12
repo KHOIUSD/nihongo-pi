@@ -199,27 +199,66 @@
            color: #FBC02D !important; /* Đổi sang màu vàng khi chạm */
            padding-left: 10px;
        }
-       /* Padding cho các dòng iPhone/Android có tai thỏ dưới đáy */
-       .pb-safe {
-           padding-bottom: env(safe-area-inset-bottom);
-       }
+       .glass-nav {
+    position: fixed;
+    bottom: 20px; /* Cách đáy một chút để tạo độ nổi */
+    left: 15px;
+    right: 15px;
+    height: 70px;
+    background: rgba(255, 255, 255, 0.8); /* Độ trong suốt nhẹ */
+    backdrop-filter: blur(15px); /* Hiệu ứng kính mờ */
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 25px; /* Bo tròn cực mạnh */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    z-index: 1000;
+}
 
-       /* Hiệu ứng khi nhấn vào các icon menu */
-       nav div:active {
-           transform: scale(0.9);
-           transition: 0.1s;
-       }
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #64748b;
+    transition: all 0.3s ease;
+}
 
-       /* Làm mờ các mục không được chọn để nổi bật mục Home */
-       nav div {
-           cursor: pointer;
-           transition: opacity 0.3s;
-       }
+.nav-item.active {
+    color: #8A2BE2; /* Màu tím thương hiệu của bạn */
+}
 
-       nav div:hover {
-           opacity: 1;
-       }
+.nav-item i { font-size: 1.3rem; }
+.nav-item span { font-size: 10px; font-weight: 700; margin-top: 4px; }
 
+/* Nút giữa mang phong cách TikTok */
+.nav-create {
+    position: relative;
+    width: 50px;
+    height: 35px;
+    background: #000;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: -3px 0 #00f2ea, 3px 0 #ff0050; /* Hiệu ứng màu TikTok */
+}
+
+.plus-icon { color: #fff; font-size: 1.2rem; }
+
+/* Thông báo đỏ chuẩn TikTok */
+.badge {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    background: #FE2C55; /* Màu đỏ TikTok */
+    color: white;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: bold;
+}
     </style>
 </head>
     
@@ -377,34 +416,33 @@
     </script>
     <script src="app.js"></script>
 
-    <nav class="fixed bottom-0 left-0 right-0 bg-black text-white h-[70px] flex items-center justify-around z-[1000] border-t border-gray-800 pb-safe">
-    <div class="flex flex-col items-center gap-1 opacity-100">
-        <i class="fas fa-home text-xl"></i>
-        <span class="text-[10px]">ホーム</span> </div>
+    <nav class="glass-nav">
+    <div class="nav-item active">
+        <i class="fas fa-home"></i>
+        <span>ホーム</span>
+    </div>
+    
+    <div class="nav-item">
+        <i class="fas fa-search"></i>
+        <span>探す</span>
+    </div>
 
-    <div class="flex flex-col items-center gap-1 opacity-60 relative">
-        <i class="fas fa-users text-xl"></i>
-        <span class="text-[10px] bg-red-500 text-white absolute -top-2 -right-3 px-1.5 rounded-full text-[9px]">12</span>
-        <span class="text-[10px]">友達</span> </div>
-
-    <div class="relative flex items-center justify-center w-12 h-8">
-        <div class="absolute inset-0 bg-[#00f2ea] rounded-lg translate-x-[-3px]"></div>
-        <div class="absolute inset-0 bg-[#ff0050] rounded-lg translate-x-[3px]"></div>
-        <div class="absolute inset-0 bg-white rounded-lg flex items-center justify-center">
-            <i class="fas fa-plus text-black text-sm"></i>
+    <div class="nav-create">
+        <div class="plus-icon">
+            <i class="fas fa-plus"></i>
         </div>
     </div>
 
-    <div class="flex flex-col items-center gap-1 opacity-60 relative">
-        <i class="fas fa-comment-dots text-xl"></i>
-        <span class="text-[10px] bg-red-500 text-white absolute -top-2 -right-3 px-1.5 rounded-full text-[9px]">42</span>
-        <span class="text-[10px]">メッセージ</span> </div>
+    <div class="nav-item relative">
+        <i class="fas fa-comment-dots"></i>
+        <span class="badge">12</span>
+        <span>通知</span>
+    </div>
 
-    <div class="flex flex-col items-center gap-1 opacity-60">
-        <i class="fas fa-user-circle text-xl"></i>
-        <span class="text-[10px]">プロフィール</span> </div>
+    <div class="nav-item">
+        <i class="fas fa-user"></i>
+        <span>自分</span>
+    </div>
     </nav>
-
-    <div class="h-[80px]"></div>   
 </body>
 </html>
