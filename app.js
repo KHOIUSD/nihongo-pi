@@ -125,9 +125,7 @@ cardInner.addEventListener('click', function() {
         speakJapanese(currentKanji); 
     } else {
         // If flipping back to the front (The Question) - play a subtle UI click
-        flipSfx.play().catch(() => {
-            /* Handle potential browser audio restrictions */
-        });
+        speakJapanese(currentKanji);
     }
 
     // 3. Provide subtle Haptic Feedback for a tactile experience
