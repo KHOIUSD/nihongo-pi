@@ -199,21 +199,19 @@
            color: #FBC02D !important; /* Đổi sang màu vàng khi chạm */
            padding-left: 10px;
        }
-        .pi-bottom-nav {
+       .pi-bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 100%; /* Tràn hết màn hình */
-    height: 80px;
-    background: rgba(255, 255, 255, 0.96);
-    backdrop-filter: blur(25px); /* Hiệu ứng kính mờ cực sâu */
+    width: 100% !important; /* Phải có !important để tràn hết màn hình */
+    height: 75px;
+    background: #ffffff;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    border-top: 1px solid rgba(138, 43, 226, 0.1);
-    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.04);
+    border-top: 1px solid #eee;
     z-index: 1000;
-    padding-bottom: 15px;
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
 .pi-nav-item {
