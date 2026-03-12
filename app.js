@@ -124,7 +124,7 @@ cardInner.addEventListener('click', function() {
         // Play Japanese pronunciation as a confirmation of the user's guess
         speakJapanese(currentKanji); 
     } else {
-        // If flipping back to the front (The Question) - play a subtle UI click
+        // If flipping back to the front (The Question) 
         speakJapanese(currentKanji);
     }
 
