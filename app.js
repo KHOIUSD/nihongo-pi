@@ -1,3 +1,22 @@
+const menuToggle = document.getElementById('menu-toggle');
+const menuClose = document.getElementById('menu-close');
+const sideMenu = document.getElementById('side-menu');
+const menuOverlay = document.getElementById('menu-overlay');
+
+// Hàm mở menu
+menuToggle.addEventListener('click', () => {
+    sideMenu.classList.add('active');
+    menuOverlay.classList.add('active');
+});
+
+// Hàm đóng menu
+const closeMenu = () => {
+    sideMenu.classList.remove('active');
+    menuOverlay.classList.remove('active');
+};
+
+menuClose.addEventListener('click', closeMenu);
+menuOverlay.addEventListener('click', closeMenu);
 // ==========================================
 // 1. VOCABULARY DATA CONFIGURATION
 // ==========================================
