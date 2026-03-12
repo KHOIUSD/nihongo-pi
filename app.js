@@ -36,7 +36,7 @@ const idBack = document.getElementById('card-id-back');
 // ==========================================
 function updateUI() {
     const word = vocabulary[currentIndex];
-    const displayId = `#${currentIndex + 1}`;
+    const displayId = `${currentIndex + 1}`;
     const elements = [kanjiDisplay, readingDisplay, meaningDisplay, exampleDisplay];
     elements.forEach(el => { if(el) el.style.opacity = '0.3'; });
 
