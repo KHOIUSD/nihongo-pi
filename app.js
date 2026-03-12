@@ -117,9 +117,10 @@ cardInner.addEventListener('click', function() {
     // 1. Toggle the visual flip animation
     this.classList.toggle('is-flipped');
 
+    // Data extraction
+    const currentKanji = vocabulary[currentIndex].kanji;
     // 2. Logic: Only play pronunciation when revealing the back side (The Answer)
     if (this.classList.contains('is-flipped')) {
-        const currentKanji = vocabulary[currentIndex].kanji;
         
         // Play Japanese pronunciation as a confirmation of the user's guess
         speakJapanese(currentKanji); 
