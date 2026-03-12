@@ -45,6 +45,72 @@
         }
         
         .is-flipped { transform: rotateY(180deg); }
+
+/* ============================================================
+   PI NETWORK GOLD BUTTON - PREMIUM WEB3 STYLE
+   ============================================================ */
+
+/* 1. CONTAINER (Để căn giữa hoặc căn chỉnh vị trí) */
+.cta-container {
+    display: flex;
+    justify-content: center; /* Căn giữa trên di động */
+    margin: 30px auto;
+    width: 100%;
+    max-width: 400px; /* Độ rộng tối đa để không bị bè quá to */
+    padding: 0 15px;
+}
+
+/* 2. BASE STYLES (Đường viền, màu sắc, phông chữ) */
+.btn-pi-gold {
+    /* Đảm bảo chiếm trọn không gian container để to, dễ bấm */
+    flex: 1; 
+    height: 56px; /* Độ cao chuẩn UX cho ngón tay cái */
+    
+    /* Style bo góc (Viên thuốc - Pill shape) cực sang trọng */
+    border-radius: 9999px;
+    
+    /* Màu sắc chuẩn Pi: Nền tím trong suốt, viền và chữ vàng kim */
+    background: transparent;
+    border: 2px solid #FBC02D !important; /* Màu vàng kim (Gold) của Pi */
+    color: #FBC02D !important;
+    
+    /* Phông chữ & Căn chỉnh */
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase; /* Viết hoa toàn bộ cho chuyên nghiệp */
+    letter-spacing: 1px; /* Giãn cách chữ nhẹ nhàng */
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Giãn cách giữa chữ và icon */
+    text-decoration: none !important; /* Bỏ gạch chân thẻ A */
+    
+    /* Hiệu ứng chuyển động mượt mà */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 3. HOVER/ACTIVE STATES (Hiệu ứng tương tác) */
+.btn-pi-gold:hover {
+    /* Khi di chuột vào: Nền đầy màu vàng, chữ chuyển tím đậm */
+    background: #FBC02D !important;
+    color: #1A0D3F !important; /* Màu tím đậm của nền Pi */
+    box-shadow: 0 6px 15px rgba(251, 192, 45, 0.3); /* Đổ bóng lấp lánh */
+}
+
+.btn-pi-gold:active {
+    /* Hiệu ứng nhấn xuống (Tactile Feedback) */
+    transform: scale(0.96);
+    opacity: 0.9;
+}
+
+/* 4. ICON SPACER (Tinh chỉnh mũi tên) */
+.icon-spacer {
+    font-size: 0.9rem;
+}
+        
         /* ============================================================
         NAVIGATION SYSTEM - PREMIUM UI REFINEMENT
         Target: Absolute Symmetry, Color Harmony, and Tactile Feedback
@@ -184,6 +250,11 @@
 <body class="bg-gray-100 font-sans">
 
     <div class="max-w-md mx-auto min-h-screen flex flex-col p-4">
+        <div class="cta-container">
+            <a href="#" class="btn-pi-gold">
+                Menu
+                <i class="fas fa-arrow-right icon-spacer"></i> </a>
+        </div>
         <header class="text-center py-6">
             <h1 class="text-4xl font-bold text-purple-700">Nihongo Flashcards 🇯🇵</h1>
             <p class="text-gray-500 text-sm italic">Học tiếng Nhật trên hệ sinh thái Web3 Pi Network</p>
