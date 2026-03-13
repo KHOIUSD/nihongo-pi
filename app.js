@@ -1,20 +1,35 @@
-const menuToggle = document.getElementById("menu-toggle");
+// 1. CHỌN CÁC PHẦN TỬ (Sử dụng Selector linh hoạt hơn)
+const menuToggles = document.querySelectorAll("#menu-toggle"); // Lấy tất cả nút menu
 const menuClose = document.getElementById("menu-close");
 const sideMenu = document.getElementById("side-menu");
 const menuOverlay = document.getElementById("menu-overlay");
 
-// Hàm mở menu
-menuToggle.addEventListener("click", () => {
-    sideMenu.classList.add("active");
-    menuOverlay.classList.add("active");
-});
-
-// Hàm đóng menu
+// 2. HÀM ĐÓNG MENU (Có độ trễ để mượt mà)
 const closeMenu = () => {
     sideMenu.classList.remove("active");
     menuOverlay.classList.remove("active");
+    setTimeout(() => {
+        if (!sideMenu.classList.contains("active")) {
+            menuOverlay.classList.add("hidden");
+        }
+    }, 300); // Khớp với transition 300ms trong CSS
 };
 
+// 3. GÁN SỰ KIỆN MỞ MENU CHO TẤT CẢ NÚT
+menuToggles.forEach(btn => {
+    btn.addEventListener("click", () => {
+        menuOverlay.classList.remove("hidden");
+        // Force reflow để transition opacity hoạt động
+        void menuOverlay.offsetWidth; 
+        sideMenu.classList.add("active");
+        menuOverlay.classList.add("active");
+        
+        // Phản hồi rung cho người dùng (nếu thiết bị hỗ trợ)
+        if (navigator.vibrate) navigator.vibrate(10);
+    });
+});
+
+// 4. GÁN SỰ KIỆN ĐÓNG
 menuClose.addEventListener("click", closeMenu);
 menuOverlay.addEventListener("click", closeMenu);
 // ==========================================
