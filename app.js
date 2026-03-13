@@ -1,54 +1,104 @@
-const menuToggle = document.getElementById('menu-toggle');
-const menuClose = document.getElementById('menu-close');
-const sideMenu = document.getElementById('side-menu');
-const menuOverlay = document.getElementById('menu-overlay');
+const menuToggle = document.getElementById("menu-toggle");
+const menuClose = document.getElementById("menu-close");
+const sideMenu = document.getElementById("side-menu");
+const menuOverlay = document.getElementById("menu-overlay");
 
 // Hàm mở menu
-menuToggle.addEventListener('click', () => {
-    sideMenu.classList.add('active');
-    menuOverlay.classList.add('active');
+menuToggle.addEventListener("click", () => {
+    sideMenu.classList.add("active");
+    menuOverlay.classList.add("active");
 });
 
 // Hàm đóng menu
 const closeMenu = () => {
-    sideMenu.classList.remove('active');
-    menuOverlay.classList.remove('active');
+    sideMenu.classList.remove("active");
+    menuOverlay.classList.remove("active");
 };
 
-menuClose.addEventListener('click', closeMenu);
-menuOverlay.addEventListener('click', closeMenu);
+menuClose.addEventListener("click", closeMenu);
+menuOverlay.addEventListener("click", closeMenu);
 // ==========================================
 // 1. VOCABULARY DATA CONFIGURATION
 // ==========================================
 const vocabulary = [
-    { kanji: "加工", reading: "かこう", meaning: "Gia công", example: "プラスチックを加工する (Gia công nhựa)." },
-    { kanji: "合格", reading: "ごうかく", meaning: "Đỗ / Vượt qua", example: "N2試験に合格する (Đỗ kỳ thi N2)." },
-    { kanji: "改善", reading: "かいぜん", meaning: "Cải thiện / Cải tiến (Kaizen)", example: "作業工程を改善する (Cải thiện quy trình làm việc)." },
-    { kanji: "準備", reading: "じゅんび", meaning: "Chuẩn bị", example: "会議の準備をする (Chuẩn bị cho cuộc họp)." },
-    { kanji: "確認", reading: "かくにん", meaning: "Xác nhận", example: "メールを確認してください (Hãy kiểm tra email)." },
-    { kanji: "連絡", reading: "れんらく", meaning: "Liên lạc", example: "後で連絡します (Tôi sẽ liên lạc sau)." },
-    { kanji: "報告", reading: "ほうこく", meaning: "Báo cáo", example: "進捗を報告する (Báo cáo tiến độ)." },
-    { kanji: "相談", reading: "そうだん", meaning: "Thảo luận/Bàn bạc", example: "上司に相談する (Thảo luận với cấp trên)." },
-    { kanji: "注意", reading: "ちゅうい", meaning: "Chú ý/Cẩn thận", example: "足元に注意してください (Hãy chú ý dưới chân)." },
-    { kanji: "安全", reading: "あんぜん", meaning: "An toàn", example: " 安全第一 (An toàn là trên hết)." }
+    {
+        kanji: "加工",
+        reading: "かこう",
+        meaning: "Gia công",
+        example: "プラスチックを加工する (Gia công nhựa).",
+    },
+    {
+        kanji: "合格",
+        reading: "ごうかく",
+        meaning: "Đỗ / Vượt qua",
+        example: "N2試験に合格する (Đỗ kỳ thi N2).",
+    },
+    {
+        kanji: "改善",
+        reading: "かいぜん",
+        meaning: "Cải thiện / Cải tiến (Kaizen)",
+        example: "作業工程を改善する (Cải thiện quy trình làm việc).",
+    },
+    {
+        kanji: "準備",
+        reading: "じゅんび",
+        meaning: "Chuẩn bị",
+        example: "会議の準備をする (Chuẩn bị cho cuộc họp).",
+    },
+    {
+        kanji: "確認",
+        reading: "かくにん",
+        meaning: "Xác nhận",
+        example: "メールを確認してください (Hãy kiểm tra email).",
+    },
+    {
+        kanji: "連絡",
+        reading: "れんらく",
+        meaning: "Liên lạc",
+        example: "後で連絡します (Tôi sẽ liên lạc sau).",
+    },
+    {
+        kanji: "報告",
+        reading: "ほうこく",
+        meaning: "Báo cáo",
+        example: "進捗を報告する (Báo cáo tiến độ).",
+    },
+    {
+        kanji: "相談",
+        reading: "そうだん",
+        meaning: "Thảo luận/Bàn bạc",
+        example: "上司に相談する (Thảo luận với cấp trên).",
+    },
+    {
+        kanji: "注意",
+        reading: "ちゅうい",
+        meaning: "Chú ý/Cẩn thận",
+        example: "足元に注意してください (Hãy chú ý dưới chân).",
+    },
+    {
+        kanji: "安全",
+        reading: "あんぜん",
+        meaning: "An toàn",
+        example: " 安全第一 (An toàn là trên hết).",
+    },
 ];
 // Load saved progress or start from 0
-let currentIndex = parseInt(localStorage.getItem('nihongo_progress')) || 0;
+let currentIndex = parseInt(localStorage.getItem("nihongo_progress")) || 0;
 
 // ==========================================
 // 2. DOM ELEMENTS SELECTION
 // ==========================================
-const cardInner = document.getElementById('card-inner');
-const kanjiDisplay = document.getElementById('kanji');
-const readingDisplay = document.getElementById('reading');
-const meaningDisplay = document.getElementById('meaning');
-const exampleDisplay = document.getElementById('example');
-const prevButton = document.getElementById('prev-btn');
-const nextButton = document.getElementById('next-btn');
-const progressBar = document.getElementById('progress-bar');
-const progressText = document.getElementById('progress-text');
-const idFront = document.getElementById('card-id-front');
-const idBack = document.getElementById('card-id-back');
+const cardInner = document.getElementById("card-inner");
+const kanjiDisplay = document.getElementById("kanji");
+const readingDisplay = document.getElementById("reading");
+const meaningDisplay = document.getElementById("meaning");
+const exampleDisplay = document.getElementById("example");
+const prevButton = document.getElementById("prev-btn");
+const nextButton = document.getElementById("next-btn");
+const progressBar = document.getElementById("progress-bar");
+const progressText = document.getElementById("progress-text");
+const idFront = document.getElementById("card-id-front");
+const idBack = document.getElementById("card-id-back");
 
 // ==========================================
 // 3. AUXILIARY FUNCTIONS PROGRESS
@@ -56,8 +106,15 @@ const idBack = document.getElementById('card-id-back');
 function updateUI() {
     const word = vocabulary[currentIndex];
     const displayId = `${currentIndex + 1}`;
-    const elements = [kanjiDisplay, readingDisplay, meaningDisplay, exampleDisplay];
-    elements.forEach(el => { if(el) el.style.opacity = '0.3'; });
+    const elements = [
+        kanjiDisplay,
+        readingDisplay,
+        meaningDisplay,
+        exampleDisplay,
+    ];
+    elements.forEach((el) => {
+        if (el) el.style.opacity = "0.3";
+    });
 
     setTimeout(() => {
         idFront.innerText = displayId;
@@ -66,8 +123,10 @@ function updateUI() {
         readingDisplay.innerText = word.reading;
         meaningDisplay.innerText = word.meaning;
         if (exampleDisplay) exampleDisplay.innerText = word.example;
-        
-        elements.forEach(el => { if(el) el.style.opacity = '1'; });
+
+        elements.forEach((el) => {
+            if (el) el.style.opacity = "1";
+        });
         updateProgress();
     }, 50);
 }
@@ -78,7 +137,7 @@ function updateProgress() {
     const total = vocabulary.length;
     const current = currentIndex + 1;
     const percentage = (current / total) * 100;
-    
+
     if (progressBar) progressBar.style.width = `${percentage}%`;
     if (progressText) progressText.innerText = `${current}/${total}`;
 }
@@ -86,7 +145,9 @@ function updateProgress() {
  * Audio engine configuration
  */
 // Initialize a subtle UI sound effect (Sfx) for better tactile feedback
-const flipSfx = new Audio('https://www.soundjay.com/buttons/sounds/button-20.mp3'); 
+const flipSfx = new Audio(
+    "https://www.soundjay.com/buttons/sounds/button-20.mp3",
+);
 flipSfx.volume = 0.3;
 
 /**
@@ -109,17 +170,20 @@ function speakJapanese(text) {
     // 3. Configure the Japanese TTS voice using a reliable CDN
     const audioUrl = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&le=jap`;
     const audio = new Audio(audioUrl);
-    
+
     // Global reference to manage state across multiple interactions
     window.currentAudio = audio;
-    
+
     // Set volume to 0.9 to prevent clipping/distortion on mobile speakers
-    audio.volume = 0.9; 
+    audio.volume = 0.9;
 
     // 4. Slight 100ms delay to separate the click sound from the speech
     setTimeout(() => {
-        audio.play().catch(error => {
-            console.warn("Audio playback was prevented by browser security policy.", error);
+        audio.play().catch((error) => {
+            console.warn(
+                "Audio playback was prevented by browser security policy.",
+                error,
+            );
         });
     }, 100);
 }
@@ -132,25 +196,24 @@ function speakJapanese(text) {
  * Handles the card flip interaction.
  * Implements "Active Recall" by only playing audio when the answer is revealed.
  */
-cardInner.addEventListener('click', function() {
+cardInner.addEventListener("click", function () {
     // 1. Toggle the visual flip animation
-    this.classList.toggle('is-flipped');
+    this.classList.toggle("is-flipped");
 
     // Data extraction
     const currentKanji = vocabulary[currentIndex].kanji;
     // 2. Logic: Only play pronunciation when revealing the back side (The Answer)
-    if (this.classList.contains('is-flipped')) {
-        
+    if (this.classList.contains("is-flipped")) {
         // Play Japanese pronunciation as a confirmation of the user's guess
-        speakJapanese(currentKanji); 
+        speakJapanese(currentKanji);
     } else {
-        // If flipping back to the front (The Question) 
+        // If flipping back to the front (The Question)
         speakJapanese(currentKanji);
     }
 
     // 3. Provide subtle Haptic Feedback for a tactile experience
     if (navigator.vibrate) {
-        navigator.vibrate(15); 
+        navigator.vibrate(15);
     }
 });
 
@@ -164,41 +227,44 @@ let isTransitioning = false; // Prevents overlapping animations from rapid click
  * @param {boolean} isNext - Direction of navigation
  */
 function handleNavigation(isNext) {
-    if (isTransitioning) return; 
+    if (isTransitioning) return;
     isTransitioning = true;
 
     // 1. Trigger Haptic Feedback (Stronger for Next, lighter for Prev)
     if (navigator.vibrate) {
-        navigator.vibrate(isNext ? [30, 10, 30] : 20); 
+        navigator.vibrate(isNext ? [30, 10, 30] : 20);
     }
 
     // 2. Reset card flip state before switching content
-    cardInner.classList.remove('is-flipped');
+    cardInner.classList.remove("is-flipped");
 
     // 3. Wait for flip-back animation (300ms) for a premium feel
     setTimeout(() => {
         if (isNext) {
             currentIndex = (currentIndex + 1) % vocabulary.length;
         } else {
-            currentIndex = (currentIndex - 1 + vocabulary.length) % vocabulary.length;
+            currentIndex =
+                (currentIndex - 1 + vocabulary.length) % vocabulary.length;
         }
 
         // Persist progress to LocalStorage
-        localStorage.setItem('nihongo_progress', currentIndex);
-        
+        localStorage.setItem("nihongo_progress", currentIndex);
+
         // Update User Interface
         updateUI();
         flipSfx.play().catch(() => {});
-        
+
         // Unlock navigation after UI update is complete
-        setTimeout(() => { isTransitioning = false; }, 100);
+        setTimeout(() => {
+            isTransitioning = false;
+        }, 100);
     }, 300);
 }
-nextButton.addEventListener('click', (event) => {
+nextButton.addEventListener("click", (event) => {
     event.stopPropagation();
     handleNavigation(true); // true = Next
 });
-prevButton.addEventListener('click', (event) => {
+prevButton.addEventListener("click", (event) => {
     event.stopPropagation();
     handleNavigation(false); // false = Prev
 });
@@ -211,22 +277,26 @@ prevButton.addEventListener('click', (event) => {
  * Allows users to hear the pronunciation as a hint while staying on the front side.
  * This supports different learning styles (Auditory Hinting).
  */
-const audioHintBtn = document.getElementById('audio-hint');
+const audioHintBtn = document.getElementById("audio-hint");
 
-audioHintBtn.addEventListener('click', function(event) {
-    // Prevent the card from flipping when clicking the speaker icon
-    event.stopPropagation();
-    // 2. Prevent default behavior
-    event.preventDefault();
+audioHintBtn.addEventListener(
+    "click",
+    function (event) {
+        // Prevent the card from flipping when clicking the speaker icon
+        event.stopPropagation();
+        // 2. Prevent default behavior
+        event.preventDefault();
 
-    const currentWord = vocabulary[currentIndex].kanji;
+        const currentWord = vocabulary[currentIndex].kanji;
 
-    // Provide the audio feedback while keeping the answer hidden
-    speakJapanese(currentWord);
+        // Provide the audio feedback while keeping the answer hidden
+        speakJapanese(currentWord);
 
-    // Haptic feedback for hint activation
-    if (navigator.vibrate) navigator.vibrate(10);}, { passive: false 
-});
+        // Haptic feedback for hint activation
+        if (navigator.vibrate) navigator.vibrate(10);
+    },
+    { passive: false },
+);
 
 // ==========================================
 // 6. PI WEB3 & PAYMENT INTEGRATION
@@ -244,14 +314,17 @@ async function unlockPremiumContent() {
         };
 
         const callbacks = {
-            onReadyForServerApproval: (paymentId) => console.log("Payment approved. ID:", paymentId),
-            onReadyForServerCompletion: (paymentId, txid) => console.log("Payment completed. TXID:", txid),
-            onCancel: (paymentId) => console.log("Người dùng đã hủy thanh toán."),
+            onReadyForServerApproval: (paymentId) =>
+                console.log("Payment approved. ID:", paymentId),
+            onReadyForServerCompletion: (paymentId, txid) =>
+                console.log("Payment completed. TXID:", txid),
+            onCancel: (paymentId) =>
+                console.log("Người dùng đã hủy thanh toán."),
             onError: (error) => console.error("Lỗi thanh toán:", error),
         };
 
         const payment = await Pi.createPayment(paymentData, callbacks);
-        
+
         if (payment) {
             alert("Thành công! Gói Premium đã được mở khóa.");
             enablePremiumFeatures();
@@ -265,12 +338,12 @@ async function unlockPremiumContent() {
  * Update UI elements to reflect Premium status.
  */
 function enablePremiumFeatures() {
-    const badge = document.getElementById('premium-badge');
-    const premiumSection = document.getElementById('premium-section');
+    const badge = document.getElementById("premium-badge");
+    const premiumSection = document.getElementById("premium-section");
 
-    if (badge) badge.classList.remove('hidden');
-    if (premiumSection) premiumSection.style.display = 'none';
-    
+    if (badge) badge.classList.remove("hidden");
+    if (premiumSection) premiumSection.style.display = "none";
+
     console.log("Tính năng Premium đã được kích hoạt.");
 }
 
