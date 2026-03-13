@@ -137,21 +137,22 @@ function handleNavigation(isNext) {
     }, 300);
 }
 
-nextButton.addEventListener("click", (e) => {
-    e.stopPropagation();
+nextButton.addEventListener("click", (event) => {
+    event.stopPropagation();
     handleNavigation(true);
 });
 
-prevButton.addEventListener("click", (e) => {
-    e.stopPropagation();
+prevButton.addEventListener("click", (event) => {
+    event.stopPropagation();
     handleNavigation(false);
 });
 
 // Audio Hint Button
-audioHintBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    speakJapanese(vocabulary[currentIndex].kanji);
+audioHintBtn.addEventListener("click", (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    const currentWord = vocabulary[currentIndex].kanji;
+    speakJapanese(currentWord);
     if (navigator.vibrate) navigator.vibrate(10);
 }, { passive: false });
 
