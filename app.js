@@ -68,155 +68,51 @@ const vocabulary = [{
 // Load saved progress
 let currentIndex = parseInt(localStorage.getItem("nihongo_progress")) || 0;
 let isTransitioning = false;
-let currentIndex = 0;
-
-// ==========================================
-// 2. DOM ELEMENTS SELECTION
-// ==========================================
-const menuToggle = document.getElementById("menu-toggle");
-const menuClose = document.getElementById("menu-close");
-const sideMenu = document.getElementById("side-menu");
-const menuOverlay = document.getElementById("menu-overlay");
-
-const cardInner = document.getElementById("card-inner");
-const kanjiDisplay = document.getElementById("kanji");
-const readingDisplay = document.getElementById("reading");
-const meaningDisplay = document.getElementById("meaning");
-const exampleDisplay = document.getElementById("example");
-
-const prevButton = document.getElementById("prev-btn");
-const nextButton = document.getElementById("next-btn");
-const finishButton = document.getElementById('finish-btn');
-const progressBar = document.getElementById("progress-bar");
-const progressText = document.getElementById("progress-text");
-const idFront = document.getElementById("card-id-front");
-const idBack = document.getElementById("card-id-back");
-const audioHintBtn = document.getElementById("audio-hint");
-const totalCards = 10;
-
 document.addEventListener('DOMContentLoaded', () => {
+    // ==========================================
+    // 2. DOM ELEMENTS SELECTION
+    // ==========================================
+    const menuToggle = document.getElementById("menu-toggle");
+    const menuClose = document.getElementById("menu-close");
+    const sideMenu = document.getElementById("side-menu");
+    const menuOverlay = document.getElementById("menu-overlay");
+
+    const cardInner = document.getElementById("card-inner");
+    const kanjiDisplay = document.getElementById("kanji");
+    const readingDisplay = document.getElementById("reading");
+    const meaningDisplay = document.getElementById("meaning");
+    const exampleDisplay = document.getElementById("example");
+
+    const prevButton = document.getElementById("prev-btn");
+    const nextButton = document.getElementById("next-btn");
+    const finishButton = document.getElementById('finish-btn');
+    const progressBar = document.getElementById("progress-bar");
+    const progressText = document.getElementById("progress-text");
+    const idFront = document.getElementById("card-id-front");
+    const idBack = document.getElementById("card-id-back");
+    const audioHintBtn = document.getElementById("audio-hint");
+    const totalCards = 10;
 
 	// ==========================================
 	// 3. UI & PROGRESS FUNCTIONS
 	// ==========================================
-	function updateUI() {
-		const word = vocabulary[currentIndex];
-		const displayId = `${currentIndex + 1}`;
-
-		// Hiệu ứng mờ dần khi đổi nội dung
-		const elements = [kanjiDisplay, readingDisplay, meaningDisplay, exampleDisplay];
-		elements.forEach(el => {
-			if (el) el.style.opacity = "0.3";
-		});
-
-		setTimeout(() => {
-			idFront.innerText = displayId;
-			idBack.innerText = displayId;
-			kanjiDisplay.innerText = word.kanji;
-			readingDisplay.innerText = word.reading;
-			meaningDisplay.innerText = word.meaning;
-			if (exampleDisplay) exampleDisplay.innerText = word.example;
-
-			elements.forEach(el => {
-				if (el) el.style.opacity = "1";
-			});
-			updateProgress();
-		}, 50);
-	}
-
 	function updateProgress() {
-		const total = vocabulary.length;
+        const total = vocabulary.length;
 		const current = currentIndex + 1;
-		const percentage = (current / total) * 100;
-
+        const percentage = (current / total) * 100;
 		if (progressBar) progressBar.style.width = `${percentage}%`;
 		if (progressText) progressText.innerText = `${current}/${total}`;
 	}
-
-	// ==========================================
-	// 4. AUDIO & TTS ENGINE
-	// ==========================================
-	const flipSfx = new Audio("https://www.soundjay.com/buttons/sounds/button-20.mp3");
-	flipSfx.volume = 0.3;
-
-	function speakJapanese(text) {
-		if (window.currentAudio) {
-			window.currentAudio.pause();
-			window.currentAudio.currentTime = 0;
-		}
-
-		flipSfx.play().catch(() => {});
-
-		const audioUrl = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&le=jap`;
-		const audio = new Audio(audioUrl);
-		window.currentAudio = audio;
-		audio.volume = 0.9;
-
-		setTimeout(() => {
-			audio.play().catch(err => console.warn("Audio blocked:", err));
-		}, 100);
-	}
-
-	// ==========================================
-	// 5. INTERACTIVE LOGIC (Card & Nav)
-	// ==========================================
-
-	// Flip Card
-	cardInner.addEventListener("click", function() {
-		this.classList.toggle("is-flipped");
-		const currentKanji = vocabulary[currentIndex].kanji;
-		speakJapanese(currentKanji);
-
-		if (navigator.vibrate) navigator.vibrate(15);
-	});
-
-	// Navigation logic
-	function handleNavigation(isNext) {
-		if (isTransitioning) return;
-		isTransitioning = true;
-
-		if (navigator.vibrate) {
-			navigator.vibrate(isNext ? [30, 10, 30] : 20);
-		}
-
-		cardInner.classList.remove("is-flipped");
-
-		setTimeout(() => {
-			if (isNext) {
-				currentIndex = (currentIndex + 1) % vocabulary.length;
-			} else {
-				currentIndex = (currentIndex - 1 + vocabulary.length) % vocabulary.length;
-			}
-
-			localStorage.setItem("nihongo_progress", currentIndex);
-			updateUI();
-
-			setTimeout(() => {
-				isTransitioning = false;
-			}, 100);
-		}, 300);
-	}
-
-	nextButton.addEventListener("click", (event) => {
-		event.stopPropagation();
-		handleNavigation(true);
-	});
-
-	prevButton.addEventListener("click", (event) => {
-		event.stopPropagation();
-		handleNavigation(false);
-	});
-
 	function updateNavigationDisplay() {
+		const total = vocabulary.length;
 		// 1. Xử lý nút QUAY LẠI
 		if (currentIndex === 0) {
 			prevButton.classList.add('invisible'); // Ẩn nhưng giữ chỗ để logo không lệch
 		} else {
 			prevButton.classList.remove('invisible');
 		}
-
 		// 2. Xử lý nút TIẾP THEO và HOÀN THÀNH
-		if (currentIndex === totalCards - 1) {
+		if (currentIndex === total - 1) {
 			// Nếu là thẻ CUỐI CÙNG
 			nextButton.classList.add('hidden'); // Mất hẳn nút Tiếp theo
 			finishButton.classList.remove('hidden'); // Hiện nút Hoàn thành rực rỡ
@@ -226,6 +122,103 @@ document.addEventListener('DOMContentLoaded', () => {
 			finishButton.classList.add('hidden');
 		}
 	}
+	function updateUI() {
+	    const word = vocabulary[currentIndex];
+		const displayId = `${currentIndex + 1}`;
+		const elements = [kanjiDisplay, readingDisplay, meaningDisplay, exampleDisplay];
+		// 3.1 Lưu tiến độ vào máy người dùng
+        localStorage.setItem("nihongo_progress", currentIndex);
+		// 3.2 Hiệu ứng mờ dần khi đổi nội dung
+		elements.forEach(el => {if (el) el.style.opacity = "0.3";});
+		// 3.3 Đợi một chút (khoảng 200ms) rồi mới thay đổi chữ, số thứ tự và hiện lên lại
+		setTimeout(() => {
+			// 3.3.1 Nội dung chữ
+			if (kanjiDisplay) kanjiDisplay.innerText = word.kanji;
+            if (readingDisplay) readingDisplay.innerText = word.reading;
+            if (meaningDisplay) meaningDisplay.innerText = word.meaning;
+            if (exampleDisplay) exampleDisplay.innerText = word.example;
+			// 3.3.2 Số thứ tự trên thẻ (Punch hole)
+            const cardIdFront = document.getElementById('card-id-front');
+            const cardIdBack = document.getElementById('card-id-back');
+            if (cardIdFront) cardIdFront.innerText = displayId;
+            if (cardIdBack) cardIdBack.innerText = displayId;
+			// 3.3.3 Trả lại độ rõ nét
+			elements.forEach(el => {if (el) el.style.opacity = "1";});
+			// 3.3.4 Tự động lật thẻ về mặt trước nếu người dùng đang ở mặt sau
+            const cardInner = document.getElementById('card-inner');
+            if (cardInner && cardInner.classList.contains('rotate-y-180')) {
+                cardInner.classList.remove('rotate-y-180');
+            }
+			// 3.3.5 Cập nhật Thanh tiến độ & Các nút điều hướng (Next/Prev/Finish)
+            updateProgress();
+			updateNavigationDisplay(); 
+		}, 200);
+	}
+    updateUI();
+	
+	// ==========================================
+	// 4. AUDIO & TTS ENGINE (Text-To-Speech Engine)
+	// ==========================================
+	function speakJapanese(text) {
+		if (!text) return; // Phòng hờ nếu text rỗng
+		// 4.1 Dừng âm thanh cũ
+		if (window.currentAudio) {
+			window.currentAudio.pause();
+			window.currentAudio.currentTime = 0;
+		}
+		// 4.2 Sử dụng API của Youdao để chuyển văn bản (Text) thành giọng nói (Speech)
+		const audioUrl = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&le=jap`;
+		const audio = new Audio(audioUrl);
+		window.currentAudio = audio;
+		audio.volume = 0.9;
+		// 4.3. Xử lý lỗi nếu không tải được âm thanh
+    audio.onerror = () => console.error("Không thể tải giọng đọc cho:", text);
+		// 4.4 Tạo khoảng nghỉ tự nhiên (200ms)
+		setTimeout(() => {
+			audio.play().catch(err => console.warn("Audio blocked:", err));
+		}, 200);
+	}
+
+	// ==========================================
+	// 5. INTERACTIVE LOGIC (Card & Nav)
+	// ==========================================
+	// Flip Card
+	cardInner.addEventListener("click", function() {
+		this.classList.toggle("is-flipped");
+		const currentKanji = vocabulary[currentIndex].kanji;
+		speakJapanese(currentKanji);
+		if (navigator.vibrate) navigator.vibrate(15);
+	});
+	// Navigation logic
+	function handleNavigation(isNext) {
+		if (isTransitioning) return;
+		isTransitioning = true;
+		if (navigator.vibrate) {
+			navigator.vibrate(isNext ? [30, 10, 30] : 20);
+		}
+		cardInner.classList.remove("is-flipped");
+		setTimeout(() => {
+			if (isNext) {
+				currentIndex = (currentIndex + 1) % vocabulary.length;
+			} else {
+				currentIndex = (currentIndex - 1 + vocabulary.length) % vocabulary.length;
+			}
+			localStorage.setItem("nihongo_progress", currentIndex);
+			updateUI();
+			setTimeout(() => {
+				isTransitioning = false;
+			}, 100);
+		}, 300);
+	}
+	nextButton.addEventListener("click", (event) => {
+		event.stopPropagation();
+		handleNavigation(true);
+	});
+	prevButton.addEventListener("click", (event) => {
+		event.stopPropagation();
+		handleNavigation(false);
+	});
+	
 	document.addEventListener('DOMContentLoaded', () => {
 		// Toàn bộ code của bạn nằm ở đây
 	});
@@ -336,6 +329,5 @@ document.addEventListener('DOMContentLoaded', () => {
 		if (premiumSection) premiumSection.style.display = "none";
 		alert("Thành công! Gói Premium đã được mở khóa.");
 	}
-});
-
 updateUI();
+});
