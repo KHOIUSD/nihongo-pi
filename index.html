@@ -6,6 +6,7 @@
     <title>Nihongo Flashcards Pi</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://sdk.mine.pi/pi-sdk.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
@@ -18,6 +19,32 @@
             font-family: sans-serif;
         }
 
+        /* Side Menu Logic */
+        #side-menu.active { left: 0 !important; }
+        #menu-overlay.active { display: block !important; opacity: 1 !important; }
+
+        /* Bottom Nav Pi Style */
+        .pi-bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100% !important;
+            height: 75px; background: #fff; display: flex;
+            justify-content: space-around; align-items: center;
+            border-top: 1px solid #eee; z-index: 1000;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .pi-nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; color: #8E8E93; font-size: 10px; cursor: pointer; }
+        .pi-nav-item.active { color: #673AB7; }
+        .pi-nav-item i { font-size: 1.4rem; margin-bottom: 2px; }
+        .pi-nav-main { transform: translateY(-20px); }
+        .pi-main-circle {
+            width: 60px; height: 60px; background: linear-gradient(135deg, #673AB7, #4B0082);
+            border-radius: 50%; border: 5px solid #fff; color: #fff;
+            display: flex; justify-content: center; align-items: center; font-size: 1.5rem;
+            box-shadow: 0 10px 25px rgba(103, 58, 183, 0.4);
+        }
+        .pi-badge {
+            position: absolute; top: 15px; right: 20%; background: #FF3B30;
+            color: #fff; font-size: 9px; padding: 2px 5px; border-radius: 10px; border: 2px solid #fff;
+        }
         /* Perspective for Card Flip */
         .perspective-1000 { perspective: 1000px; }
         .transform-style-3d { transform-style: preserve-3d; }
@@ -54,10 +81,17 @@
             gap: 12px;
         }
         .btn-next, .btn-nav-secondary {
-            flex: 1; height: 54px; border-radius: 9999px;
-            font-weight: 700; display: flex; align-items: center;
-            justify-content: center; gap: 8px; transition: all 0.2s;
-            cursor: pointer; border: 2px solid #8A2BE2 !important;
+            flex: 1;
+            height: 54px;
+            border-radius: 9999px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: 2px solid #8A2BE2 !important;
         }
         .btn-next { background: #8A2BE2 !important; color: #fff !important; }
         .btn-nav-secondary { background: rgba(138, 43, 226, 0.1) !important; color: #8A2BE2 !important; }
@@ -65,64 +99,50 @@
 
         /* Audio Hint Button Fix */
         .audio-hint-btn {
-            position: absolute; top: 1.25rem; right: 1.25rem; z-index: 100;
-            width: 3.5rem; height: 3.5rem; display: flex; align-items: center;
-            justify-content: center; cursor: pointer; -webkit-tap-highlight-color: transparent;
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            z-index: 100;
+            width: 3.5rem;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
         }
         .audio-hint-btn i {
-            width: 2.4rem; height: 2.4rem; background: rgba(103, 58, 183, 0.1);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: #673AB7; border: 1px solid rgba(103, 58, 183, 0.2);
-        }
-
-        /* Side Menu Logic */
-        #side-menu.active { left: 0 !important; }
-        #menu-overlay.active { display: block !important; opacity: 1 !important; }
-
-        /* Bottom Nav Pi Style */
-        .pi-bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100% !important;
-            height: 75px; background: #fff; display: flex;
-            justify-content: space-around; align-items: center;
-            border-top: 1px solid #eee; z-index: 1000;
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-        .pi-nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; color: #8E8E93; font-size: 10px; cursor: pointer; }
-        .pi-nav-item.active { color: #673AB7; }
-        .pi-nav-item i { font-size: 1.4rem; margin-bottom: 2px; }
-        .pi-nav-main { transform: translateY(-20px); }
-        .pi-main-circle {
-            width: 60px; height: 60px; background: linear-gradient(135deg, #673AB7, #4B0082);
-            border-radius: 50%; border: 5px solid #fff; color: #fff;
-            display: flex; justify-content: center; align-items: center; font-size: 1.5rem;
-            box-shadow: 0 10px 25px rgba(103, 58, 183, 0.4);
-        }
-        .pi-badge {
-            position: absolute; top: 15px; right: 20%; background: #FF3B30;
-            color: #fff; font-size: 9px; padding: 2px 5px; border-radius: 10px; border: 2px solid #fff;
+            width: 2.4rem;
+            height: 2.4rem;
+            background: rgba(103, 58, 183, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #673AB7;
+            border: 1px solid rgba(103, 58, 183, 0.2);
         }
     </style>
 </head>
 <body>
-
-    <header class="fixed top-0 left-0 w-full h-14 bg-gradient-to-r from-[#673AB7] to-[#4B0082] flex items-center justify-between px-4 z-[1500] shadow-lg">
+    <header class="fixed top-0 left-0 w-full h-10 bg-gradient-to-r from-[#673AB7] to-[#4B0082] flex items-center justify-between px-4 z-[1500] shadow-lg">
         <button id="menu-toggle" class="text-white text-xl p-2 active:scale-90 transition-transform">
             <i class="fas fa-bars"></i>
         </button>
-        <h1 class="text-white font-bold text-lg tracking-wide">Nihongo Pi <span class="text-yellow-400">π</span></h1>
+        <h1 class="text-white font-bold text-lg tracking-wide">Nihongo Flashcard With Pi <span class="text-yellow-400">π</span></h1>
         <div class="w-8"></div> 
     </header>
 
-    <div id="side-menu" class="fixed top-0 left-[-100%] w-[80%] max-w-[300px] h-full bg-[#1A0D3F] z-[2000] transition-all duration-300 shadow-2xl">
+    <div id="side-menu" class="fixed top-0 left-[-100%] w-[70%] max-w-[300px] h-full bg-[#1A0D3F] z-[2000] transition-all duration-300 shadow-2xl">
         <div class="p-8">
             <div class="flex justify-end mb-8">
                 <button id="menu-close" class="text-white text-3xl">&times;</button>
             </div>
             <nav class="flex flex-col gap-6">
-                <a href="#" class="text-white font-bold flex items-center gap-3"><i class="fas fa-cubes text-yellow-500"></i> Level N1</a>
+                <a href="#" class="text-white font-bold flex items-center gap-3"><i class="fas fa-chess-knight text-yellow-500"></i> Level N1</a>
                 <a href="#" class="text-white font-bold flex items-center gap-3"><i class="fas fa-project-diagram text-yellow-500"></i> Level N2</a>
-                <a href="#" class="text-white font-bold flex items-center gap-3"><i class="fas fa-info-circle text-yellow-500"></i> Level N3</a>
-                <a href="#" class="text-white font-bold flex items-center gap-3"><i class="fas fa-users text-yellow-500"></i> Level N4+N5</a>
+                <a href="#" class="text-white font-bold flex items-center gap-3"><i class="fas fa-cubes text-yellow-500"></i> Level N3</a>
+                <a href="#" class="text-white font-bold flex items-center gap-3"><i class="fas fa-seedling text-yellow-500"></i> Level N4+N5</a>
             </nav>
         </div>
     </div>
@@ -145,8 +165,8 @@
                 <span class="text-[10px] font-bold text-purple-500 uppercase tracking-widest">Tiến độ học tập</span>
                 <span id="progress-text" class="text-[10px] font-bold text-purple-500">0/10</span>
             </div>
-            <div class="w-full bg-gray-200 rounded-full h-1.5">
-                <div id="progress-bar" class="bg-purple-600 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div id="progress-bar" class="bg-purple-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
             </div>
         </div>
 
@@ -164,16 +184,31 @@
                     <div class="punch-hole"><span id="card-id-back" class="text-[10px] font-black text-slate-500">1</span></div>
                     <p id="reading" class="text-2xl text-purple-600 mb-2">にほんご</p>
                     <p id="meaning" class="text-3xl text-gray-800 font-bold text-center">Tiếng Nhật</p>
-                    <div class="w-12 h-1 bg-purple-200 my-4 rounded-full"></div>
+                    <div class="flex items-center gap-3 my-6 w-full justify-center">
+                        <div class="h-[1px] w-10 bg-gradient-to-r from-transparent to-purple-300"></div>
+                        <i class="fas fa-star text-[8px] text-purple-400"></i>
+                        <div class="h-[1px] w-10 bg-gradient-to-l from-transparent to-purple-300"></div>
+                    </div>
                     <p id="example" class="text-sm text-gray-500 italic text-center leading-relaxed">日本語を勉強します。</p>
                 </div>
             </div>
         </div>
 
-        <div class="control-group">
-            <button id="prev-btn" class="btn-nav-secondary"><i class="fas fa-chevron-left"></i> Quay lại</button>
-            <div class="app-brand-center"><img src="assets/logo-icon.png" class="h-8" alt="Logo"></div>
-            <button id="next-btn" class="btn-next">Tiếp theo <i class="fas fa-chevron-right"></i></button>
+        <div class="control-group flex justify-between items-center w-full px-4">
+            <button id="prev-btn" class="btn-nav-secondary invisible">
+                <i class="fas fa-chevron-left"></i> Quay lại
+            </button>
+            <div class="app-brand-center">
+                <img src="assets/logo-icon.png" class="h-8" alt="Logo">
+            </div>
+            <div id="right-controls">
+                <button id="next-btn" class="btn-next">
+                Tiếp theo <i class="fas fa-chevron-right"></i>
+                </button>
+                <button id="finish-btn" class="hidden bg-green-500 text-white px-4 py-2 rounded-xl font-bold shadow-lg animate-bounce flex items-center gap-2">
+                Hoàn Thành! <i class="fas fa-graduation-cap"></i>
+                </button>
+            </div>
         </div>
 
         <section id="premium-section" class="mt-4 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-2xl p-4 flex justify-between items-center shadow-sm">
