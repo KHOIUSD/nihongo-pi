@@ -45,6 +45,8 @@ const idBack = document.getElementById("card-id-back");
 const audioHintBtn = document.getElementById("audio-hint");
 const totalCards = 10; 
 
+document.addEventListener('DOMContentLoaded', () => {
+
 // ==========================================
 // 3. UI & PROGRESS FUNCTIONS
 // ==========================================
@@ -169,14 +171,43 @@ function updateNavigationDisplay() {
         finishButton.classList.add('hidden');
     }
 }
-
-// Sự kiện khi nhấn Hoàn thành
+document.addEventListener('DOMContentLoaded', () => {
+    // Toàn bộ code của bạn nằm ở đây
+});
 finishButton.onclick = () => {
-    alert("Chúc mừng! Bạn đã chinh phục Thành công bài học hôm nay! 🎉");
-    // Bạn có thể điều hướng về trang chủ hoặc hiện một bảng tổng kết ở đây.
-};
+    // 1. Tạo hiệu ứng pháo hoa bắn từ hai góc màn hình
+    const duration = 3 * 1000; // Pháo bắn trong 3 giây
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 3000 };
 
-// Đừng quên gọi hàm này trong các sự kiện click của Next/Prev như bài trước tôi đã hướng dẫn.
+    const randomInRange = (min, max) => Math.random() * (max - min) + min;
+
+    const interval = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+            return clearInterval(interval);
+        }
+
+        const particleCount = 50 * (timeLeft / duration);
+        
+        // Bắn pháo từ bên trái
+        confetti(Object.assign({}, defaults, { 
+            particleCount, 
+            origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } 
+        }));
+        // Bắn pháo từ bên phải
+        confetti(Object.assign({}, defaults, { 
+            particleCount, 
+            origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } 
+        }));
+    }, 250);
+
+    // 2. Hiện thông báo chúc mừng sau khi bắn pháo một chút
+    setTimeout(() => {
+        alert("Omedetou! (Chúc mừng!) Bạn đã hoàn thành xuất sắc bài học! 🏆");
+    }, 1000);
+};
 updateNavigationDisplay();
 
 // Audio Hint Button
@@ -235,5 +266,6 @@ function enablePremiumFeatures() {
     if (premiumSection) premiumSection.style.display = "none";
     alert("Thành công! Gói Premium đã được mở khóa.");
 }
+});
 
 updateUI();
