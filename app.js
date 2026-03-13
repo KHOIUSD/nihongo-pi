@@ -203,7 +203,4 @@ function enablePremiumFeatures() {
     alert("Thành công! Gói Premium đã được mở khóa.");
 }
 
-// ==========================================
-// START APP
-// ==========================================
 updateUI();
