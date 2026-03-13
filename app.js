@@ -19,6 +19,7 @@ const vocabulary = [
 // Load saved progress
 let currentIndex = parseInt(localStorage.getItem("nihongo_progress")) || 0;
 let isTransitioning = false;
+let currentIndex = 0;
 
 // ==========================================
 // 2. DOM ELEMENTS SELECTION
@@ -36,11 +37,13 @@ const exampleDisplay = document.getElementById("example");
 
 const prevButton = document.getElementById("prev-btn");
 const nextButton = document.getElementById("next-btn");
+const finishButton = document.getElementById('finish-btn');
 const progressBar = document.getElementById("progress-bar");
 const progressText = document.getElementById("progress-text");
 const idFront = document.getElementById("card-id-front");
 const idBack = document.getElementById("card-id-back");
 const audioHintBtn = document.getElementById("audio-hint");
+const totalCards = 10; 
 
 // ==========================================
 // 3. UI & PROGRESS FUNCTIONS
@@ -146,6 +149,35 @@ prevButton.addEventListener("click", (event) => {
     event.stopPropagation();
     handleNavigation(false);
 });
+
+function updateNavigationDisplay() {
+    // 1. Xử lý nút QUAY LẠI
+    if (currentIndex === 0) {
+        prevButton.classList.add('invisible'); // Ẩn nhưng giữ chỗ để logo không lệch
+    } else {
+        prevButton.classList.remove('invisible');
+    }
+
+    // 2. Xử lý nút TIẾP THEO và HOÀN THÀNH
+    if (currentIndex === totalCards - 1) {
+        // Nếu là thẻ CUỐI CÙNG
+        nextButton.classList.add('hidden');      // Mất hẳn nút Tiếp theo
+        finishButton.classList.remove('hidden'); // Hiện nút Hoàn thành rực rỡ
+    } else {
+        // Nếu chưa đến thẻ cuối
+        nextButton.classList.remove('hidden');
+        finishButton.classList.add('hidden');
+    }
+}
+
+// Sự kiện khi nhấn Hoàn thành
+finishButton.onclick = () => {
+    alert("Chúc mừng! Bạn đã chinh phục Thành công bài học hôm nay! 🎉");
+    // Bạn có thể điều hướng về trang chủ hoặc hiện một bảng tổng kết ở đây.
+};
+
+// Đừng quên gọi hàm này trong các sự kiện click của Next/Prev như bài trước tôi đã hướng dẫn.
+updateNavigationDisplay();
 
 // Audio Hint Button
 audioHintBtn.addEventListener("click", (event) => {
