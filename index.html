@@ -391,6 +391,12 @@
                         </div>
                     </div>
                 </div>
+                <header class="fixed top-0 left-0 w-full h-14 bg-gradient-to-r from-[#673AB7] to-[#4B0082] flex items-center justify-between px-4 z-[1001] shadow-lg">
+                    <button id="menu-toggle" class="text-white text-xl">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 class="text-white font-bold text-lg tracking-wide">Nihongo Pi <span class="text-yellow-400">π</span></h1>
+                    <div class="w-8"></div> </header>
                 <div class="control-group">
                     <button id="prev-btn" class="btn-nav-secondary">
                         <i class="fas fa-chevron-left"></i> Quay lại </button>
@@ -400,6 +406,31 @@
                     <button id="next-btn" class="btn-next"> Tiếp theo <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
+                <nav class="pi-bottom-nav">
+                    <div class="pi-nav-item active">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Home</span>
+                    </div>
+
+                    <div class="pi-nav-item">
+                        <i class="fa-regular fa-layer-group"></i>
+                        <span>Kho từ</span>
+                    </div>
+                    <div class="pi-nav-main">
+                        <div class="pi-main-circle">
+                            <i class="fa-solid fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="pi-nav-item">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="pi-badge">12</span>
+                        <span>Thông báo</span>
+                    </div>
+                    <div class="pi-nav-item">
+                        <i class="fa-regular fa-user"></i>
+                        <span>Cá nhân</span>
+                    </div>
+                </nav>
                 <section id="premium-section" class="mt-8 w-full bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-2xl p-4 shadow-sm">
                     <div class="flex items-center justify-between">
                         <div>
@@ -439,33 +470,5 @@
             };
         </script>
         <script src="app.js"></script>
-        <nav class="pi-bottom-nav">
-            <div class="pi-nav-item active">
-                <i class="fa-solid fa-house"></i>
-                <span>Home</span>
-            </div>
-
-            <div class="pi-nav-item">
-                <i class="fa-regular fa-layer-group"></i>
-                <span>Kho từ</span>
-            </div>
-
-            <div class="pi-nav-main">
-                <div class="pi-main-circle">
-                    <i class="fa-solid fa-plus"></i>
-                </div>
-            </div>
-
-            <div class="pi-nav-item">
-                <i class="fa-regular fa-bell"></i>
-                <span class="pi-badge">12</span>
-                <span>Thông báo</span>
-            </div>
-
-            <div class="pi-nav-item">
-                <i class="fa-regular fa-user"></i>
-                <span>Cá nhân</span>
-            </div>
-        </nav>;
     </body>
 </html>
