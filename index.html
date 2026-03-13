@@ -8,128 +8,51 @@
     <script src="https://sdk.mine.pi/pi-sdk.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        html, body {
-            touch-action: pan-x pan-y;
-            user-select: none;
-            -webkit-user-select: none;
-            overflow-x: hidden;
-            background-color: #F8F6FF;
-        }
-
-        /* Perspective for Card Flip */
+        html, body { touch-action: pan-x pan-y; user-select: none; -webkit-user-select: none; overflow-x: hidden; background-color: #F8F6FF; }
         .perspective-1000 { perspective: 1000px; }
         .transform-style-3d { transform-style: preserve-3d; }
         .backface-hidden { backface-visibility: hidden; }
         .rotate-y-180 { transform: rotateY(180deg); }
         .is-flipped { transform: rotateY(180deg); }
-
-        /* Punch Hole Design */
-        .punch-hole {
-            position: absolute;
-            top: 24px;
-            left: 24px;
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background-color: #F8F6FF;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.12);
-            border: 2px solid #ffffff;
-            z-index: 50;
-        }
-
-        /* Navigation Buttons */
-        .control-group {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            max-width: 420px;
-            margin: 24px auto;
-            padding: 0 16px;
-            gap: 12px;
-        }
-        .btn-next, .btn-nav-secondary {
-            flex: 1; height: 54px; border-radius: 9999px;
-            font-weight: 700; display: flex; align-items: center;
-            justify-content: center; gap: 8px; transition: all 0.2s;
-            cursor: pointer; border: 2px solid #8A2BE2 !important;
-        }
-        .btn-next { background: #8A2BE2 !important; color: #fff !important; }
-        .btn-nav-secondary { background: rgba(138, 43, 226, 0.1) !important; color: #8A2BE2 !important; }
-        .btn-next:active, .btn-nav-secondary:active { transform: scale(0.94); }
-
-        /* Audio Hint Button Fix */
-        .audio-hint-btn {
-            position: absolute; top: 1.25rem; right: 1.25rem; z-index: 100;
-            width: 3.5rem; height: 3.5rem; display: flex; align-items: center;
-            justify-content: center; cursor: pointer; -webkit-tap-highlight-color: transparent;
-        }
-        .audio-hint-btn i {
-            width: 2.4rem; height: 2.4rem; background: rgba(103, 58, 183, 0.1);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: #673AB7; border: 1px solid rgba(103, 58, 183, 0.2);
-        }
-
-        /* Side Menu Logic */
+        .punch-hole { position: absolute; top: 24px; left: 24px; width: 42px; height: 42px; border-radius: 50%; background-color: #F8F6FF; display: flex; justify-content: center; align-items: center; box-shadow: inset 0 4px 6px rgba(0,0,0,0.12); border: 2px solid #fff; z-index: 50; }
         #side-menu.active { left: 0 !important; }
         #menu-overlay.active { display: block !important; opacity: 1 !important; }
-
-        /* Bottom Nav Pi Style */
-        .pi-bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100% !important;
-            height: 75px; background: #fff; display: flex;
-            justify-content: space-around; align-items: center;
-            border-top: 1px solid #eee; z-index: 1000;
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-        .pi-nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; color: #8E8E93; font-size: 10px; }
-        .pi-nav-item.active { color: #673AB7; }
-        .pi-nav-item i { font-size: 1.4rem; margin-bottom: 2px; }
+        .control-group { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 420px; margin: 24px auto; padding: 0 16px; gap: 12px; }
+        .btn-next, .btn-nav-secondary { flex: 1; height: 54px; border-radius: 9999px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; cursor: pointer; border: 2px solid #8A2BE2 !important; }
+        .btn-next { background: #8A2BE2 !important; color: #fff !important; }
+        .btn-nav-secondary { background: rgba(138, 43, 226, 0.1) !important; color: #8A2BE2 !important; }
+        .audio-hint-btn { position: absolute; top: 1.25rem; right: 1.25rem; z-index: 100; width: 3.5rem; height: 3.5rem; display: flex; align-items: center; justify-content: center; }
+        .audio-hint-btn i { width: 2.4rem; height: 2.4rem; background: rgba(255,255,255,0.12); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #E2D1F9; backdrop-filter: blur(8px); }
+        .pi-bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 75px; background: #fff; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #eee; z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
         .pi-nav-main { transform: translateY(-20px); }
-        .pi-main-circle {
-            width: 60px; height: 60px; background: linear-gradient(135deg, #673AB7, #4B0082);
-            border-radius: 50%; border: 5px solid #fff; color: #fff;
-            display: flex; justify-content: center; align-items: center; font-size: 1.5rem;
-        }
-        .pi-badge {
-            position: absolute; top: 15px; right: 20%; background: #FF3B30;
-            color: #fff; font-size: 9px; padding: 2px 5px; border-radius: 10px; border: 2px solid #fff;
-        }
+        .pi-main-circle { width: 60px; height: 60px; background: linear-gradient(135deg, #673AB7 0%, #4B0082 100%); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; border: 5px solid #fff; box-shadow: 0 10px 25px rgba(103,58,183,0.4); }
     </style>
 </head>
 <body>
-
     <header class="fixed top-0 left-0 w-full h-14 bg-gradient-to-r from-[#673AB7] to-[#4B0082] flex items-center justify-between px-4 z-[1500] shadow-lg">
         <button id="menu-toggle" class="text-white text-xl p-2 active:scale-90 transition-transform">
             <i class="fas fa-bars"></i>
         </button>
         <h1 class="text-white font-bold text-lg tracking-wide">Nihongo Pi <span class="text-yellow-400">π</span></h1>
-        <div class="w-8"></div> 
+        <div class="w-8"></div>
     </header>
 
-    <div id="side-menu" class="fixed top-0 left-[-100%] w-[80%] max-w-[300px] h-full bg-[#1A0D3F] z-[2000] transition-all duration-300 shadow-2xl">
-        <div class="p-8">
-            <div class="flex justify-end mb-8">
-                <button id="menu-close" class="text-white text-3xl">&times;</button>
-            </div>
+    <div id="side-menu" class="fixed top-0 left-[-100%] w-[80%] max-w-[300px] h-full bg-[#1A0D3F] z-[2000] transition-all duration-300 shadow-2xl overflow-y-auto">
+        <div class="p-8 text-white">
+            <div class="flex justify-end mb-8"><button id="menu-close" class="text-2xl">&times;</button></div>
             <nav class="flex flex-col gap-6">
-                <a href="#" class="text-white font-bold flex items-center gap-3"><i class="fas fa-cubes text-yellow-500"></i> Level N1</a>
-                <a href="#" class="text-white font-bold flex items-center gap-3"><i class="fas fa-project-diagram text-yellow-500"></i> Level N2</a>
-                <a href="#" class="text-white font-bold flex items-center gap-3"><i class="fas fa-info-circle text-yellow-500"></i> Level N3</a>
-                <a href="#" class="text-white font-bold flex items-center gap-3"><i class="fas fa-users text-yellow-500"></i> Level N4+N5</a>
+                <a href="#" class="flex items-center gap-3"><i class="fas fa-cubes text-yellow-500"></i> Level N1</a>
+                <a href="#" class="flex items-center gap-3"><i class="fas fa-project-diagram text-yellow-500"></i> Level N2</a>
+                <a href="#" class="flex items-center gap-3"><i class="fas fa-info-circle text-yellow-500"></i> Level N3</a>
             </nav>
         </div>
     </div>
-    <div id="menu-overlay" class="fixed inset-0 bg-black/50 z-[1999] hidden opacity-0 transition-opacity"></div>
+    <div id="menu-overlay" class="fixed inset-0 bg-black/50 z-[1999] hidden opacity-0 transition-opacity duration-300"></div>
 
-    <main class="pt-20 pb-24 px-4 max-w-md mx-auto min-h-screen">
-        <div class="mb-6">
+    <main class="pt-20 pb-24 max-w-md mx-auto p-4 flex flex-col min-h-screen">
+        <div class="px-4 mb-4">
             <div class="flex justify-between items-center mb-1">
-                <span class="text-[10px] font-bold text-purple-500 uppercase">Tiến độ</span>
-                <span id="progress-text" class="text-[10px] font-bold text-purple-500">0/10</span>
+                <span id="progress-text" class="text-[10px] font-bold text-purple-500">0/0</span>
             </div>
             <div class="w-full bg-gray-200 rounded-full h-1.5">
                 <div id="progress-bar" class="bg-purple-600 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
@@ -137,48 +60,36 @@
         </div>
 
         <div id="card-container" class="w-full aspect-[4/3] perspective-1000 mb-8">
-            <div id="card-inner" class="relative w-full h-full transform-style-3d transition-transform duration-500 cursor-pointer">
-                <div class="absolute inset-0 backface-hidden bg-white rounded-2xl flex flex-col justify-center items-center shadow-xl border-b-4 border-purple-200">
-                    <div class="audio-hint-btn" id="audio-hint">
-                        <i class="fas fa-volume-up"></i>
-                    </div>
+            <div id="card-inner" class="relative w-full h-full transition-all duration-500 transform-style-3d cursor-pointer">
+                <div class="absolute inset-0 w-full h-full backface-hidden bg-white rounded-2xl flex flex-col justify-center items-center p-8 border-b-4 border-purple-200">
+                    <div class="audio-hint-btn" id="audio-hint"><i class="fas fa-volume-up"></i></div>
                     <div class="punch-hole"><span id="card-id-front" class="text-[10px] font-black text-slate-500">1</span></div>
                     <h2 id="kanji" class="text-6xl font-bold text-gray-800">---</h2>
-                    <p class="absolute bottom-4 text-[10px] text-purple-400 italic">Chạm để lật</p>
                 </div>
-                <div class="absolute inset-0 backface-hidden rotate-y-180 bg-purple-50 rounded-2xl flex flex-col justify-center items-center shadow-xl border-b-4 border-purple-400 p-6">
+                <div class="absolute inset-0 w-full h-full backface-hidden bg-purple-50 rounded-2xl flex flex-col justify-center items-center p-8 rotate-y-180 border-b-4 border-purple-400">
                     <div class="punch-hole"><span id="card-id-back" class="text-[10px] font-black text-slate-500">1</span></div>
-                    <p id="reading" class="text-2xl text-purple-600 mb-2"></p>
+                    <p id="reading" class="text-3xl text-purple-600 mb-2 font-medium"></p>
                     <p id="meaning" class="text-3xl text-gray-800 font-bold text-center"></p>
-                    <div class="w-12 h-1 bg-purple-200 my-4 rounded-full"></div>
-                    <p id="example" class="text-sm text-gray-500 italic text-center leading-relaxed"></p>
+                    <p id="example" class="text-sm text-gray-500 italic mt-4 text-center px-4"></p>
                 </div>
             </div>
         </div>
 
         <div class="control-group">
-            <button id="prev-btn" class="btn-nav-secondary"><i class="fas fa-chevron-left"></i></button>
-            <div class="app-brand-center"><img src="assets/logo-icon.png" class="h-8"></div>
+            <button id="prev-btn" class="btn-nav-secondary"><i class="fas fa-chevron-left"></i> Quay lại</button>
             <button id="next-btn" class="btn-next">Tiếp theo <i class="fas fa-chevron-right"></i></button>
         </div>
 
-        <section id="premium-section" class="mt-8 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-2xl p-4 flex justify-between items-center">
-            <div>
-                <h3 class="font-bold text-yellow-800 text-sm">Gói Premium 🌟</h3>
-                <p class="text-[10px] text-yellow-700">Mở khóa 2000+ từ vựng</p>
-            </div>
-            <button onclick="unlockPremiumContent()" class="bg-yellow-500 text-white px-4 py-2 rounded-xl font-bold text-xs shadow-md">3.14 Pi</button>
+        <section id="premium-section" class="mt-8 bg-yellow-50 border border-yellow-200 rounded-2xl p-4 flex justify-between items-center">
+            <div><h3 class="font-bold text-yellow-800 text-sm">Gói Premium 🌟</h3></div>
+            <button onclick="unlockPremiumContent()" class="bg-yellow-500 text-white px-5 py-2 rounded-xl font-bold text-sm">3.14 Pi</button>
         </section>
-
-        <button id="btn-auth" class="w-full mt-6 bg-white border-2 border-purple-600 text-purple-600 font-bold py-3 rounded-2xl">Kết nối ví Pi</button>
     </main>
 
     <nav class="pi-bottom-nav">
-        <div class="pi-nav-item active"><i class="fa-solid fa-house"></i><span>Home</span></div>
-        <div class="pi-nav-item"><i class="fa-solid fa-layer-group"></i><span>Kho từ</span></div>
+        <div class="flex flex-col items-center text-purple-600"><i class="fa-solid fa-house"></i><span>Home</span></div>
         <div class="pi-nav-main"><div class="pi-main-circle"><i class="fa-solid fa-plus"></i></div></div>
-        <div class="pi-nav-item"><i class="fa-solid fa-bell"></i><span class="pi-badge">12</span><span>Thông báo</span></div>
-        <div class="pi-nav-item"><i class="fa-solid fa-user"></i><span>Cá nhân</span></div>
+        <div class="flex flex-col items-center text-gray-400"><i class="fa-solid fa-user"></i><span>Profile</span></div>
     </nav>
 
     <script src="script.js"></script>
