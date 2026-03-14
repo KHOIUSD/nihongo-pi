@@ -70,6 +70,9 @@ const vocabulary = [{
 ];
 
 // Load saved progress
+let wordDisplay, readingDisplay, meaningDisplay, exampleDisplay;
+let prevButton, nextButton, finishButton, progressBar, progressText;
+let cardInner, sideMenu, menuOverlay;
 let currentIndex = parseInt(localStorage.getItem("nihongo_progress")) || 0;
 let isTransitioning = false;
 document.addEventListener('DOMContentLoaded', () => {
@@ -280,14 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	// ==========================================
     // 6. SIDE MENU LOGIC (SỬA LẠI CHO ĐÚNG THỨ TỰ)
     // ==========================================
-
-    // BƯỚC 1: ĐI CHỢ (Lấy các phần tử từ HTML)
-    const menuToggle = document.getElementById("menu-toggle");
-    const sideMenu = document.getElementById("side-menu");
-    const menuClose = document.getElementById("menu-close");
-    const menuOverlay = document.getElementById("menu-overlay");
-
-    // BƯỚC 2: CHẾ BIẾN (Viết hàm đóng/mở)
+    // BƯỚC 1: Hàm đóng 
     const handleToggleMenu = () => {
         if (!sideMenu || !menuOverlay) return;
         const isActive = sideMenu.classList.toggle("active");
@@ -304,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // BƯỚC 3: DỌN RA BÀN (Gán sự kiện click)
+    // BƯỚC 2: Gán sự kiện cho Menu
     if (menuToggle) menuToggle.onclick = handleToggleMenu;
     if (menuClose) menuClose.onclick = handleToggleMenu;
     if (menuOverlay) menuOverlay.onclick = handleToggleMenu;
