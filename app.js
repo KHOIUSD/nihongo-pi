@@ -283,6 +283,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	// 6. SIDE MENU LOGIC
 	// ==========================================
 	const toggleMenu = () => {
+		const toggleMenuHandler = () => {
+        if (!sideMenu || !menuOverlay) return;
         const isActive = sideMenu.classList.toggle("active");
         menuOverlay.classList.toggle("active");
         if (isActive) {
@@ -296,6 +298,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 300); 
         }
     };
+	if (menuToggle) menuToggle.onclick = toggleMenuHandler;
+    if (menuClose) menuClose.onclick = toggleMenuHandler;
+    if (menuOverlay) menuOverlay.onclick = toggleMenuHandler;
 	// ==========================================
 	// 7. PI NETWORK WEB3 INTEGRATION
 	// ==========================================
