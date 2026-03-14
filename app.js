@@ -267,6 +267,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		const currentWord = vocabulary[currentIndex].word;
 		speakJapanese(currentWord);
 		if (navigator.vibrate) navigator.vibrate(10);
+		audioHintBtn.style.transform = "scale(0.9)";
+    　　setTimeout(() => {
+    　　　　audioHintBtn.style.transform = "scale(1)";
+    　　}, 100);
 	}, {
 		passive: false
 	});
