@@ -1,8 +1,12 @@
 // ==========================================
 // 1. INITIALIZATION & DATA CONFIGURATION
 // ==========================================
-const Pi = window.Pi;
-
+if (window.Pi) {
+   const Pi = window.Pi;
+   // Tiến hành các thao tác Web3
+} else {
+   console.warn("Vui lòng mở ứng dụng trong Pi Browser để sử dụng tính năng thanh toán.");
+}
 const vocabulary = [{
 		word: "加工",
 		reading: "かこう",
