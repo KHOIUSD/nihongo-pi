@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Nihongo Flashcards Pi</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://sdk.mine.pi/pi-sdk.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -18,7 +19,7 @@
             background-color: #F8F6FF;
             font-family: sans-serif;
         }
-        /* Side Menu Logic */
+        /* Side Menu & Overlay */
         #side-menu.active { left: 0 !important; }
         #menu-overlay.active { opacity: 1 !important; }
 
@@ -45,133 +46,62 @@
             color: #fff; font-size: 9px; padding: 2px 5px; border-radius: 10px; border: 2px solid #fff;
         }
         
-        /* Khung ngoài tạo độ sâu 3D */
-        #card-container {
-            perspective: 1200px;
-            width: 100%;
-            height: 300px; 
-            margin-bottom: 2rem;
-            position: relative;
-        }
-        /* Phần lõi của thẻ */
+        /* Card 3D Flip System */
+        #card-container { perspective: 1200px; width: 100%; height: 300px; margin-bottom: 2rem; position: relative; }
         #card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); /* Xoay mượt */
-            transform-style: preserve-3d; /* Giữ các mặt trong không gian 3D */
-            cursor: pointer;
+            position: relative; width: 100%; height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d; cursor: pointer;
         }
-        /* Thẻ xoay 180 độ */
-        #card-inner.is-flipped {
-            transform: rotateY(180deg);
-        }
-        /* Định vị mặt trước và mặt sau đè lên nhau */
+        #card-inner.is-flipped { transform: rotateY(180deg); }
         .card-front, .card-back {
-            position: absolute;
-            inset: 0;
-            backface-visibility: hidden !important; /* Giấu mặt ngược khi xoay */
+            position: absolute; inset: 0;
+            backface-visibility: hidden !important;
             -webkit-backface-visibility: hidden !important;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-radius: 15px; /* Bo góc cho thẻ hiện đại */
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Tạo bóng đổ nhẹ */
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-        .card-front {
-            background-color: #ffffff;
-            z-index: 2; 
-            transform: rotateY(0deg);
-        }
-        .card-back {
-            background-color: #F5F3FF; 
-            transform: rotateY(180deg); translateZ(1px);
-            z-index: 1;
-        }
-        /* Punch Hole Design */
+        .card-front { background-color: #ffffff; z-index: 2; transform: rotateY(0deg); }
+        .card-back { background-color: #F5F3FF; transform: rotateY(180deg); translateZ(1px); z-index: 1; }
+
+        /* Design Details */
         .punch-hole {
-            position: absolute;
-            top: 24px;
-            left: 24px;
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background-color: #F8F6FF;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.12);
-            border: 2px solid #ffffff;
-            z-index: 50;
+            position: absolute; top: 24px; left: 24px; width: 42px; height: 42px;
+            border-radius: 50%; background-color: #F8F6FF; display: flex;
+            justify-content: center; align-items: center;
+            box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.12); border: 2px solid #ffffff; z-index: 50;
         }
 
-        /* Navigation Buttons (Next/Prev) */
+        /* Nav Controls */
         .control-group {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            max-width: 420px;
-            margin: 24px auto;
-            padding: 0 16px;
-            gap: 12px;
+            display: flex; align-items: center; justify-content: space-between;
+            width: 100%; max-width: 420px; margin: 24px auto; padding: 0 16px; gap: 12px;
         }
         .btn-next, .btn-nav-secondary {
-            width: 140px !important;
-            height: 54px;
-            border-radius: 9999px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            flex-shrink: 0;
-            transition: all 0.2s;
-            cursor: pointer;
+            width: 140px !important; height: 54px; border-radius: 9999px;
+            font-weight: 700; display: flex; align-items: center; justify-content: center;
+            gap: 8px; flex-shrink: 0; transition: all 0.2s; cursor: pointer;
             border: 2px solid #8A2BE2 !important;
         }
-        .app-brand-center {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .app-brand-center img {
-        max-height: 35px;
-        width: auto;
-        }
+        .app-brand-center { flex: 1; display: flex; justify-content: center; align-items: center; }
+        .app-brand-center img { max-height: 35px; width: auto; }
         .btn-next { background: #8A2BE2 !important; color: #fff !important; }
         .btn-nav-secondary { background: rgba(138, 43, 226, 0.1) !important; color: #8A2BE2 !important; }
         .btn-next:active, .btn-nav-secondary:active { transform: scale(0.94); }
 
-        /* Audio Hint Button Fix */
         .audio-hint-btn {
-            position: absolute;
-            top: 1.25rem;
-            right: 1.25rem;
-            z-index: 100;
-            width: 3.5rem;
-            height: 3.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
+            position: absolute; top: 1.25rem; right: 1.25rem; z-index: 100;
+            width: 3.5rem; height: 3.5rem; display: flex; align-items: center;
+            justify-content: center; cursor: pointer; -webkit-tap-highlight-color: transparent;
         }
         .audio-hint-btn i {
-            width: 2.4rem;
-            height: 2.4rem;
-            background: rgba(103, 58, 183, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #673AB7;
-            border: 1px solid rgba(103, 58, 183, 0.2);
+            width: 2.4rem; height: 2.4rem; background: rgba(103, 58, 183, 0.1);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: #673AB7; border: 1px solid rgba(103, 58, 183, 0.2);
         }
     </style>
 </head>
+
 <body>
     <header class="fixed top-0 left-0 w-full h-14 bg-gradient-to-r from-[#673AB7] to-[#4B0082] flex items-center justify-between px-4 z-[1500] shadow-lg">
         <button id="menu-toggle" class="text-white text-xl p-2 active:scale-90 transition-transform">
@@ -251,10 +181,10 @@
             </div>
             <div id="right-controls">
                 <button id="next-btn" class="btn-next">
-                Tiếp theo <i class="fas fa-chevron-right"></i>
+                    Tiếp theo <i class="fas fa-chevron-right"></i>
                 </button>
                 <button id="finish-btn" class="hidden bg-green-500 text-white px-4 py-2 rounded-xl font-bold shadow-lg animate-bounce flex items-center gap-2">
-                Hoàn Thành! <i class="fas fa-graduation-cap"></i>
+                    Hoàn Thành! <i class="fas fa-graduation-cap"></i>
                 </button>
             </div>
         </div>
@@ -279,13 +209,13 @@
     </nav>
 
     <script>
-        // --- INITIALIZATION PI SDK ---
+        // Khởi tạo Pi SDK bản cập nhật mới nhất
         const Pi = window.Pi;
         if (Pi) {
             Pi.init({ version: "2.0", sandbox: true });
         }
 
-        // Logic Auth
+        // Logic Auth 
         const btnAuth = document.getElementById('btn-auth');
         if (btnAuth) {
             btnAuth.addEventListener('click', async () => {
@@ -301,6 +231,7 @@
                 }
             });
         }
-    </script> <script src="app.js"></script>
+    </script> 
+    <script src="app.js"></script>
 </body>
 </html>
