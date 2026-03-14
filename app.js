@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		// 3.1 Lưu tiến độ vào máy người dùng
         localStorage.setItem("nihongo_progress", currentIndex);
 		// 3.2 Hiệu ứng mờ dần khi đổi nội dung
-		elements.forEach(el => {if (el) el.style.setProperty('opacity', '0')});
+		elements.forEach(el => { if (el) el.style.opacity = "0"; });
 		// 3.3 Đợi một chút (khoảng 200ms) rồi mới thay đổi chữ, số thứ tự và hiện lên lại
 		setTimeout(() => {
 			// 3.3.1 Nội dung chữ
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (cardIdFront) cardIdFront.innerText = displayId;
             if (cardIdBack) cardIdBack.innerText = displayId;
 			// 3.3.3 Trả lại độ rõ nét
-			elements.forEach(el => {if (el) el.style.setProperty('opacity', '1')});
+			elements.forEach(el => { if (el) el.style.opacity = "1"; });
 			// 3.3.4 Tự động lật thẻ về mặt trước nếu người dùng đang ở mặt sau
             const cardInner = document.getElementById('card-inner');
             if (cardInner && cardInner.classList.contains('is-flipped')) {
