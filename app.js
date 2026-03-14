@@ -79,26 +79,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // 2. DOM ELEMENTS SELECTION
     // ==========================================
-    const menuToggle = document.getElementById("menu-toggle");
-    const menuClose = document.getElementById("menu-close");
-    const sideMenu = document.getElementById("side-menu");
-    const menuOverlay = document.getElementById("menu-overlay");
+    menuToggle = document.getElementById("menu-toggle");
+    menuClose = document.getElementById("menu-close");
+    sideMenu = document.getElementById("side-menu");
+    menuOverlay = document.getElementById("menu-overlay");
 
-    const cardInner = document.getElementById("card-inner");
-    const wordDisplay = document.getElementById("word");
-    const readingDisplay = document.getElementById("reading");
-    const meaningDisplay = document.getElementById("meaning");
-    const exampleDisplay = document.getElementById("example");
+    cardInner = document.getElementById("card-inner");
+    wordDisplay = document.getElementById("word");
+    readingDisplay = document.getElementById("reading");
+    meaningDisplay = document.getElementById("meaning");
+    exampleDisplay = document.getElementById("example");
 
-    const prevButton = document.getElementById("prev-btn");
-    const nextButton = document.getElementById("next-btn");
-    const finishButton = document.getElementById('finish-btn');
-    const progressBar = document.getElementById("progress-bar");
-    const progressText = document.getElementById("progress-text");
-    const idFront = document.getElementById("card-id-front");
-    const idBack = document.getElementById("card-id-back");
-    const audioHintBtn = document.getElementById("audio-hint");
-    const totalCards = 10;
+    prevButton = document.getElementById("prev-btn");
+    nextButton = document.getElementById("next-btn");
+    finishButton = document.getElementById('finish-btn');
+    progressBar = document.getElementById("progress-bar");
+    progressText = document.getElementById("progress-text");
+    idFront = document.getElementById("card-id-front");
+    idBack = document.getElementById("card-id-back");
+    audioHintBtn = document.getElementById("audio-hint");
+    totalCards = 10;
 
 	// ==========================================
 	// 3. UI & PROGRESS FUNCTIONS
@@ -281,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 
 	// ==========================================
-    // 6. SIDE MENU LOGIC (SỬA LẠI CHO ĐÚNG THỨ TỰ)
+    // 6. SIDE MENU LOGIC 
     // ==========================================
     // BƯỚC 1: Hàm đóng 
     const handleToggleMenu = () => {
