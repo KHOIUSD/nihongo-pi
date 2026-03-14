@@ -146,8 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			elements.forEach(el => {if (el) el.style.opacity = "1";});
 			// 3.3.4 Tự động lật thẻ về mặt trước nếu người dùng đang ở mặt sau
             const cardInner = document.getElementById('card-inner');
-            if (cardInner && cardInner.classList.contains('rotate-y-180')) {
-                cardInner.classList.remove('rotate-y-180');
+            if (cardInner && cardInner.classList.contains('is-flipped')) {
+                cardInner.classList.remove('is-flipped');
             }
 			// 3.3.5 Cập nhật Thanh tiến độ & Các nút điều hướng (Next/Prev/Finish)
             updateProgress();
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		this.classList.toggle("is-flipped");
 		if (this.classList.contains("is-flipped")) {
 		    const currentWord = vocabulary[currentIndex].word;
-		    speakJapanesecurrentWord);}
+		    speakJapanese(currentWord);}
 		if (navigator.vibrate) navigator.vibrate(15);
 	});
 	// Navigation logic
