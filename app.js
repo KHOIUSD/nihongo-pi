@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		// 3.3 Đợi một chút (khoảng 200ms) rồi mới thay đổi chữ, số thứ tự và hiện lên lại
 		setTimeout(() => {
 			// 3.3.1 Nội dung chữ
-			if (wordDisplay) wordDisplay.innerText = word.kanji;
+			if (wordDisplay) wordDisplay.innerText = word.word;
             if (readingDisplay) readingDisplay.innerText = word.reading;
             if (meaningDisplay) meaningDisplay.innerText = word.meaning;
             if (exampleDisplay) exampleDisplay.innerText = word.example;
@@ -279,15 +279,19 @@ document.addEventListener('DOMContentLoaded', () => {
 	// 6. SIDE MENU LOGIC
 	// ==========================================
 	const toggleMenu = () => {
-		sideMenu.classList.toggle("active");
-		menuOverlay.classList.toggle("active");
-		menuOverlay.classList.toggle("hidden");
-	};
-
-	menuToggle.addEventListener("click", toggleMenu);
-	menuClose.addEventListener("click", toggleMenu);
-	menuOverlay.addEventListener("click", toggleMenu);
-
+        const isActive = sideMenu.classList.toggle("active");
+        menuOverlay.classList.toggle("active");
+        if (isActive) {
+        menuOverlay.classList.remove("hidden");
+        } else {
+            // Chờ hiệu ứng fade-out xong rồi mới ẩn hẳn
+            setTimeout(() => {
+                if (!sideMenu.classList.contains("active")) {
+                    menuOverlay.classList.add("hidden");
+                }
+            }, 300); 
+        }
+    };
 	// ==========================================
 	// 7. PI NETWORK WEB3 INTEGRATION
 	// ==========================================
