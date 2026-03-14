@@ -302,29 +302,6 @@
             });
         }
 
-        // --- UI LOGIC (SIDE MENU) ---
-        const menuToggle = document.getElementById('menu-toggle');
-        const sideMenu = document.getElementById('side-menu');
-        const menuClose = document.getElementById('menu-close');
-        const overlay = document.getElementById('menu-overlay');
-
-        function toggleMenu() {
-            sideMenu.classList.toggle('active');
-            overlay.classList.toggle('active');
-            overlay.classList.toggle('hidden');
-        }
-
-        menuToggle.onclick = toggleMenu;
-        menuClose.onclick = toggleMenu;
-        overlay.onclick = toggleMenu;
-
-        // --- CARD FLIP LOGIC ---
-        const cardInner = document.getElementById('card-inner');
-        function unlockPremiumContent() {
-            console.log("Processing Pi Payment...");
-            // Logic payment Pi Network sẽ viết ở file script.js riêng
-        }
-    </script>
     <script src="app.js"></script>
 </body>
 </html>
