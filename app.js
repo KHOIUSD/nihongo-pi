@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		// 3.1 Lưu tiến độ vào máy người dùng
         localStorage.setItem("nihongo_progress", currentIndex);
 		// 3.2 Hiệu ứng mờ dần khi đổi nội dung
-		elements.forEach(el => {if (el.style.opacity = "0.3";});
+		elements.forEach(el => {if (el.style.opacity = "0";});
 		// 3.3 Đợi một chút (khoảng 200ms) rồi mới thay đổi chữ, số thứ tự và hiện lên lại
 		setTimeout(() => {
 			// 3.3.1 Nội dung chữ
