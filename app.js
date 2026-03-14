@@ -4,61 +4,61 @@
 const Pi = window.Pi;
 
 const vocabulary = [{
-		kanji: "加工",
+		word: "加工",
 		reading: "かこう",
 		meaning: "Gia công",
 		example: "プラスチックを加工する (Gia công nhựa)."
 	},
 	{
-		kanji: "合格",
+		word: "合格",
 		reading: "ごうかく",
 		meaning: "Đỗ / Vượt qua",
 		example: "N2試験に合格する (Đỗ kỳ thi N2)."
 	},
 	{
-		kanji: "改善",
+		word: "改善",
 		reading: "かいぜん",
 		meaning: "Cải thiện / Cải tiến (Kaizen)",
 		example: "作業工程を改善する (Cải thiện quy trình làm việc)."
 	},
 	{
-		kanji: "準備",
+		word: "準備",
 		reading: "じゅんび",
 		meaning: "Chuẩn bị",
 		example: "会議の準備をする (Chuẩn bị cho cuộc họp)."
 	},
 	{
-		kanji: "確認",
+		word: "確認",
 		reading: "かくにん",
 		meaning: "Xác nhận",
 		example: "メールを確認してください (Hãy kiểm tra email)."
 	},
 	{
-		kanji: "連絡",
+		word: "連絡",
 		reading: "れんらく",
 		meaning: "Liên lạc",
 		example: "後で連絡します (Tôi sẽ liên lạc sau)."
 	},
 	{
-		kanji: "報告",
+		word: "報告",
 		reading: "ほうこく",
 		meaning: "Báo cáo",
 		example: "進捗を報告する (Báo cáo tiến độ)."
 	},
 	{
-		kanji: "相談",
+		word: "相談",
 		reading: "そうだん",
 		meaning: "Thảo luận/Bàn bạc",
 		example: "上司に相談する (Thảo luận với cấp trên)."
 	},
 	{
-		kanji: "注意",
+		word: "注意",
 		reading: "ちゅうい",
 		meaning: "Chú ý/Cẩn thận",
 		example: "足元に注意してください (Hãy chú ý dưới chân)."
 	},
 	{
-		kanji: "安全",
+		word: "安全",
 		reading: "あんぜん",
 		meaning: "An toàn",
 		example: "安全第一 (An toàn là trên hết)."
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuOverlay = document.getElementById("menu-overlay");
 
     const cardInner = document.getElementById("card-inner");
-    const kanjiDisplay = document.getElementById("kanji");
+    const wordDisplay = document.getElementById("word");
     const readingDisplay = document.getElementById("reading");
     const meaningDisplay = document.getElementById("meaning");
     const exampleDisplay = document.getElementById("example");
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	function updateUI() {
 	    const word = vocabulary[currentIndex];
 		const displayId = `${currentIndex + 1}`;
-		const elements = [kanjiDisplay, readingDisplay, meaningDisplay, exampleDisplay];
+		const elements = [wordDisplay, readingDisplay, meaningDisplay, exampleDisplay];
 		// 3.1 Lưu tiến độ vào máy người dùng
         localStorage.setItem("nihongo_progress", currentIndex);
 		// 3.2 Hiệu ứng mờ dần khi đổi nội dung
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		// 3.3 Đợi một chút (khoảng 200ms) rồi mới thay đổi chữ, số thứ tự và hiện lên lại
 		setTimeout(() => {
 			// 3.3.1 Nội dung chữ
-			if (kanjiDisplay) kanjiDisplay.innerText = word.kanji;
+			if (wordDisplay) wordDisplay.innerText = word.kanji;
             if (readingDisplay) readingDisplay.innerText = word.reading;
             if (meaningDisplay) meaningDisplay.innerText = word.meaning;
             if (exampleDisplay) exampleDisplay.innerText = word.example;
@@ -185,8 +185,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	// Flip Card
 	cardInner.addEventListener("click", function() {
 		this.classList.toggle("is-flipped");
-		const currentKanji = vocabulary[currentIndex].kanji;
-		speakJapanese(currentKanji);
+		if (this.classList.contains("is-flipped")) {
+		    const currentWord = vocabulary[currentIndex].word;
+		    speakJapanesecurrentWord);}
 		if (navigator.vibrate) navigator.vibrate(15);
 	});
 	// Navigation logic
@@ -199,10 +200,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		cardInner.classList.remove("is-flipped");
 		setTimeout(() => {
 			if (isNext) {
-				currentIndex = (currentIndex + 1) % vocabulary.length;
-			} else {
-				currentIndex = (currentIndex - 1 + vocabulary.length) % vocabulary.length;
-			}
+                if (currentIndex < vocabulary.length - 1) currentIndex++;
+            } else {
+                if (currentIndex > 0) currentIndex--;
+            }
 			localStorage.setItem("nihongo_progress", currentIndex);
 			updateUI();
 			setTimeout(() => {
@@ -218,10 +219,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		event.stopPropagation();
 		handleNavigation(false);
 	});
-	
-	document.addEventListener('DOMContentLoaded', () => {
-		// Toàn bộ code của bạn nằm ở đây
-	});
 	finishButton.onclick = () => {
 		// 1. Tạo hiệu ứng pháo hoa bắn từ hai góc màn hình
 		const duration = 3 * 1000; // Pháo bắn trong 3 giây
@@ -232,18 +229,13 @@ document.addEventListener('DOMContentLoaded', () => {
 			ticks: 60,
 			zIndex: 3000
 		};
-
 		const randomInRange = (min, max) => Math.random() * (max - min) + min;
-
 		const interval = setInterval(function() {
 			const timeLeft = animationEnd - Date.now();
-
 			if (timeLeft <= 0) {
 				return clearInterval(interval);
 			}
-
 			const particleCount = 50 * (timeLeft / duration);
-
 			// Bắn pháo từ bên trái
 			confetti(Object.assign({}, defaults, {
 				particleCount,
@@ -261,19 +253,18 @@ document.addEventListener('DOMContentLoaded', () => {
 				}
 			}));
 		}, 250);
-
 		// 2. Hiện thông báo chúc mừng sau khi bắn pháo một chút
 		setTimeout(() => {
-			alert("Omedetou! (Chúc mừng!) Bạn đã hoàn thành xuất sắc bài học! 🏆");
+			alert("おめでとうございます! Bạn đã hoàn thành xuất sắc bài học! 🏆");
 		}, 1000);
+		setTimeout(() => { location.reload(); }, 5000);
 	};
 	updateNavigationDisplay();
-
 	// Audio Hint Button
 	audioHintBtn.addEventListener("click", (event) => {
 		event.stopPropagation();
 		event.preventDefault();
-		const currentWord = vocabulary[currentIndex].kanji;
+		const currentWord = vocabulary[currentIndex].word;
 		speakJapanese(currentWord);
 		if (navigator.vibrate) navigator.vibrate(10);
 	}, {
