@@ -21,27 +21,27 @@
 
         /* Side Menu Logic */
         #side-menu.active { left: 0 !important; }
-        #menu-overlay.active { display: block !important; opacity: 1 !important; }
+        #menu-overlay.active { opacity: 1 !important; }
 
         /* Bottom Nav Pi Style */
-        .smart-bottom-nav {
+        .pi-bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100% !important;
             height: 75px; background: #fff; display: flex;
             justify-content: space-around; align-items: center;
             border-top: 1px solid #eee; z-index: 1000;
             padding-bottom: env(safe-area-inset-bottom);
         }
-        .smart-nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; color: #8E8E93; font-size: 10px; cursor: pointer; }
-        .smart-nav-item.active { color: #673AB7; }
-        .smart-nav-item i { font-size: 1.4rem; margin-bottom: 2px; }
-        .smart-nav-main { transform: translateY(-20px); }
-        .smart-main-circle {
+        .pi-nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; color: #8E8E93; font-size: 10px; cursor: pointer; }
+        .pi-nav-item.active { color: #673AB7; }
+        .pi-nav-item i { font-size: 1.4rem; margin-bottom: 2px; }
+        .pi-nav-main { transform: translateY(-20px); }
+        .pi-main-circle {
             width: 60px; height: 60px; background: linear-gradient(135deg, #673AB7, #4B0082);
             border-radius: 50%; border: 5px solid #fff; color: #fff;
             display: flex; justify-content: center; align-items: center; font-size: 1.5rem;
             box-shadow: 0 10px 25px rgba(103, 58, 183, 0.4);
         }
-        .smart-badge {
+        .pi-badge {
             position: absolute; top: 15px; right: 20%; background: #FF3B30;
             color: #fff; font-size: 9px; padding: 2px 5px; border-radius: 10px; border: 2px solid #fff;
         }
@@ -209,7 +209,7 @@
                     <h2 id="word" class="text-6xl font-bold text-gray-800">日本語</h2>
                     <p class="absolute bottom-4 text-[10px] text-purple-400 italic">Chạm để lật</p>
                 </div>
-                <div class="absolute inset-0 backface-hidden rotate-y-180 bg-purple-50 rounded-2xl flex flex-col justify-center items-center shadow-xl border-b-4 border-purple-400 p-6">
+                <div class="absolute inset-0 backface-hidden bg-purple-50 rounded-2xl flex flex-col justify-center items-center shadow-xl border-b-4 border-purple-400 p-6">
                     <div class="punch-hole"><span id="card-id-back" class="text-[10px] font-black text-slate-500">1</span></div>
                     <p id="reading" class="text-2xl text-purple-600 mb-2">にほんご</p>
                     <p id="meaning" class="text-3xl text-gray-800 font-bold text-center">Tiếng Nhật</p>
