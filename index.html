@@ -12,12 +12,24 @@
     
     <style>
         html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            overscroll-behavior-y: none;
+            background-color: #F8F6FF;
             touch-action: pan-x pan-y;
             user-select: none;
             -webkit-user-select: none;
             overflow-x: hidden;
-            background-color: #F8F6FF;
             font-family: sans-serif;
+        }
+        #scroll-area {
+            height: 100vh;
+            padding-top: 56px;
+            padding-bottom: 75px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
         /* Side Menu & Overlay */
         #side-menu.active { left: 0 !important; }
@@ -125,80 +137,82 @@
         </div>
     </div>
     <div id="menu-overlay" class="fixed inset-0 bg-black/50 z-[1999] hidden opacity-0 transition-opacity"></div>
+    <div id="scroll-area">
 
-    <main class="pt-20 pb-28 px-4 max-w-md mx-auto min-h-screen flex flex-col">
+        <main class="pt-20 pb-28 px-4 max-w-md mx-auto min-h-screen flex flex-col">
         
-        <div id="user-info" class="bg-white rounded-xl p-3 shadow-sm mb-6 hidden border border-purple-50">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    <p class="text-xs font-medium text-gray-700">User: <span id="username" class="text-purple-600">...</span></p>
-                </div>
-                <span id="premium-badge" class="hidden bg-yellow-100 text-yellow-700 text-[10px] font-bold px-2 py-1 rounded-full border border-yellow-200">PREMIUM 🌟</span>
-            </div>
-        </div>
-
-        <div class="mb-6">
-            <div class="flex justify-between items-center mb-1">
-                <span class="text-[10px] font-bold text-purple-500 uppercase tracking-widest">Tiến độ học tập</span>
-                <span id="progress-text" class="text-[10px] font-bold text-purple-500">0/10</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-2">
-                <div id="progress-bar" class="bg-purple-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
-            </div>
-        </div>
-
-        <div id="card-container" class="w-full aspect-[4/3] perspective-1000 mb-8">
-            <div id="card-inner" class="relative w-full h-full transform-style-3d transition-transform duration-500 cursor-pointer">
-                <div class="card-front absolute inset-0 bg-white rounded-2xl flex flex-col justify-center items-center shadow-xl border-b-4 border-purple-200">
-                    <div class="audio-hint-btn" id="audio-hint">
-                        <i class="fas fa-volume-up"></i>
+            <div id="user-info" class="bg-white rounded-xl p-3 shadow-sm mb-6 hidden border border-purple-50">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <p class="text-xs font-medium text-gray-700">User: <span id="username" class="text-purple-600">...</span></p>
                     </div>
-                    <div class="punch-hole"><span id="card-id-front" class="text-[10px] font-black text-slate-500">1</span></div>
-                    <h2 id="word" class="text-6xl font-bold text-gray-800"> </h2>
-                    <p class="absolute bottom-4 text-[10px] text-purple-400 italic">Chạm để lật</p>
+                    <span id="premium-badge" class="hidden bg-yellow-100 text-yellow-700 text-[10px] font-bold px-2 py-1 rounded-full border border-yellow-200">PREMIUM 🌟</span>
                 </div>
-                <div class="card-back absolute inset-0 bg-purple-50 rounded-2xl flex flex-col justify-center items-center shadow-xl border-b-4 border-purple-400 p-6">
-                    <div class="punch-hole"><span id="card-id-back" class="text-[10px] font-black text-slate-500">1</span></div>
-                    <p id="reading" class="text-2xl text-purple-600 mb-2"> </p>
-                    <p id="meaning" class="text-3xl text-gray-800 font-bold text-center"> </p>
-                    <div class="flex items-center gap-3 my-6 w-full justify-center">
-                        <div class="h-[1px] w-10 bg-gradient-to-r from-transparent to-purple-300"></div>
-                        <i class="fas fa-star text-[8px] text-purple-400"></i>
-                        <div class="h-[1px] w-10 bg-gradient-to-l from-transparent to-purple-300"></div>
+            </div>
+
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-1">
+                    <span class="text-[10px] font-bold text-purple-500 uppercase tracking-widest">Tiến độ học tập</span>
+                    <span id="progress-text" class="text-[10px] font-bold text-purple-500">0/10</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div id="progress-bar" class="bg-purple-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div id="card-container" class="w-full aspect-[4/3] perspective-1000 mb-8">
+                <div id="card-inner" class="relative w-full h-full transform-style-3d transition-transform duration-500 cursor-pointer">
+                    <div class="card-front absolute inset-0 bg-white rounded-2xl flex flex-col justify-center items-center shadow-xl border-b-4 border-purple-200">
+                        <div class="audio-hint-btn" id="audio-hint">
+                            <i class="fas fa-volume-up"></i>
+                        </div>
+                        <div class="punch-hole"><span id="card-id-front" class="text-[10px] font-black text-slate-500">1</span></div>
+                        <h2 id="word" class="text-6xl font-bold text-gray-800"> </h2>
+                        <p class="absolute bottom-4 text-[10px] text-purple-400 italic">Chạm để lật</p>
                     </div>
-                    <p id="example" class="text-sm text-gray-500 italic text-center leading-relaxed"> </p>
+                    <div class="card-back absolute inset-0 bg-purple-50 rounded-2xl flex flex-col justify-center items-center shadow-xl border-b-4 border-purple-400 p-6">
+                        <div class="punch-hole"><span id="card-id-back" class="text-[10px] font-black text-slate-500">1</span></div>
+                        <p id="reading" class="text-2xl text-purple-600 mb-2"> </p>
+                        <p id="meaning" class="text-3xl text-gray-800 font-bold text-center"> </p>
+                        <div class="flex items-center gap-3 my-6 w-full justify-center">
+                            <div class="h-[1px] w-10 bg-gradient-to-r from-transparent to-purple-300"></div>
+                            <i class="fas fa-star text-[8px] text-purple-400"></i>
+                            <div class="h-[1px] w-10 bg-gradient-to-l from-transparent to-purple-300"></div>
+                        </div>
+                        <p id="example" class="text-sm text-gray-500 italic text-center leading-relaxed"> </p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="control-group flex justify-between items-center w-full px-4">
-            <button id="prev-btn" class="btn-nav-secondary invisible">
-                <i class="fas fa-chevron-left"></i> Quay lại
-            </button>
-            <div class="app-brand-center">
-                <span class="text-purple-300 font-bold">日本語</span>
-            </div>
-            <div id="right-controls">
-                <button id="next-btn" class="btn-next">
-                    Tiếp theo <i class="fas fa-chevron-right"></i>
+            <div class="control-group flex justify-between items-center w-full px-4">
+                <button id="prev-btn" class="btn-nav-secondary invisible">
+                    <i class="fas fa-chevron-left"></i> Quay lại
                 </button>
-                <button id="finish-btn" class="hidden bg-green-500 text-white px-4 py-2 rounded-xl font-bold shadow-lg animate-bounce flex items-center gap-2">
-                    Hoàn Thành! <i class="fas fa-graduation-cap"></i>
-                </button>
+                <div class="app-brand-center">
+                    <span class="text-purple-300 font-bold">日本語</span>
+                </div>
+                <div id="right-controls">
+                    <button id="next-btn" class="btn-next">
+                        Tiếp theo <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <button id="finish-btn" class="hidden bg-green-500 text-white px-4 py-2 rounded-xl font-bold shadow-lg animate-bounce flex items-center gap-2">
+                        Hoàn Thành! <i class="fas fa-graduation-cap"></i>
+                    </button>
+                </div>
             </div>
-        </div>
 
-        <section id="premium-section" class="mt-4 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-2xl p-4 flex justify-between items-center shadow-sm">
-            <div>
-                <h3 class="font-bold text-yellow-800 text-sm">Gói Premium 🌟</h3>
-                <p class="text-[10px] text-yellow-700 uppercase">Mở khóa 2000+ từ vựng</p>
-            </div>
-            <button onclick="unlockPremiumContent()" class="bg-yellow-500 text-white px-4 py-2 rounded-xl font-bold text-xs shadow-md active:scale-95 transition-transform">3.14 Pi</button>
-        </section>
+            <section id="premium-section" class="mt-4 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-2xl p-4 flex justify-between items-center shadow-sm">
+                <div>
+                    <h3 class="font-bold text-yellow-800 text-sm">Gói Premium 🌟</h3>
+                    <p class="text-[10px] text-yellow-700 uppercase">Mở khóa 2000+ từ vựng</p>
+                </div>
+                <button onclick="unlockPremiumContent()" class="bg-yellow-500 text-white px-4 py-2 rounded-xl font-bold text-xs shadow-md active:scale-95 transition-transform">3.14 Pi</button>
+            </section>
 
-        <button id="btn-auth" class="w-full mt-6 bg-white border-2 border-purple-600 text-purple-600 font-bold py-3 rounded-2xl active:bg-purple-50 transition-colors">Kết nối ví Pi</button>
-    </main>
+            <button id="btn-auth" class="w-full mt-6 bg-white border-2 border-purple-600 text-purple-600 font-bold py-3 rounded-2xl active:bg-purple-50 transition-colors">Kết nối ví Pi</button>
+        </main>
+    </div>
 
     <nav class="pi-bottom-nav">
         <div class="pi-nav-item"><i class="fa-solid fa-house"></i><span>ホーム</span></div>
