@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Nihongo Flashcards Pi</title>
+    <title>Nihongo Pro - Pi Ecosystem</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://sdk.mine.pi/pi-sdk.js"></script>
@@ -11,127 +11,161 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
-        :root { --pi-purple: #673AB7; --pi-gold: #D97706; }
-        html, body { 
-            height: 100%; margin: 0; background-color: #F8F6FF; 
-            font-family: system-ui, -apple-system, sans-serif;
-            overflow: hidden; touch-action: manipulation;
-        }
-        #scroll-area {
-            height: 100vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
-            padding-top: 60px; padding-bottom: 100px;
-        }
-        /* Side Menu */
-        #side-menu { transition: transform 0.3s ease-in-out; transform: translateX(-100%); }
-        #side-menu.active { transform: translateX(0); }
-        .menu-overlay { display: none; background: rgba(0,0,0,0.5); z-index: 1999; }
-        .menu-overlay.active { display: block; }
+        :root { --primary: #673AB7; --secondary: #D97706; --bg: #F8F6FF; }
 
-        /* Card 3D */
-        .perspective-1000 { perspective: 1000px; }
-        .transform-style-3d { transform-style: preserve-3d; }
-        .backface-hidden { -webkit-backface-visibility: hidden; backface-visibility: hidden; }
-        .is-flipped { transform: rotateY(180deg); }
-        
-        /* Bottom Nav */
+        /* KHÓA THANH TRÊN DƯỚI - CHUẨN APP CHUYÊN NGHIỆP */
+        html, body {
+            height: 100%; margin: 0; padding: 0;
+            overflow: hidden; /* Chống cuộn toàn trang */
+            background-color: var(--bg);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            user-select: none; -webkit-user-select: none;
+        }
+
+        header {
+            position: fixed; top: 0; left: 0; right: 0; height: 60px;
+            background: #ffffff; display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px; z-index: 1000; border-bottom: 1px solid #f0f0f0;
+            touch-action: none; /* Khóa di động tại header */
+        }
+
         .pi-bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0; height: 80px;
-            background: #fff; display: flex; justify-content: space-around;
-            border-top: 1px solid #eee; z-index: 1000; padding-bottom: env(safe-area-inset-bottom);
+            position: fixed; bottom: 0; left: 0; right: 0; height: 85px;
+            background: #ffffff; display: flex; justify-content: space-around;
+            padding-bottom: env(safe-area-inset-bottom); border-top: 1px solid #f0f0f0;
+            z-index: 1000; touch-action: none; /* Khóa di động tại footer */
         }
-        .pi-nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--pi-gold); font-size: 10px; }
-        .pi-nav-item.active { color: var(--pi-purple); }
-        .pi-nav-main { transform: translateY(-25px); }
-        .pi-main-circle {
-            width: 55px; height: 55px; background: linear-gradient(135deg, #673AB7, #4B0082);
-            border-radius: 50%; border: 4px solid var(--pi-gold); color: #fff;
-            display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+
+        #scroll-area {
+            position: absolute; top: 60px; bottom: 85px; left: 0; right: 0;
+            overflow-y: auto; -webkit-overflow-scrolling: touch;
+            padding: 20px 16px;
         }
+
+        /* CARD 3D SYSTEM */
+        .card-container { perspective: 1200px; position: relative; width: 100%; aspect-ratio: 4/3; }
+        .card-inner {
+            position: relative; width: 100%; height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .is-flipped { transform: rotateY(180deg); }
+
+        .card-front, .card-back {
+            position: absolute; inset: 0; border-radius: 24px;
+            backface-visibility: hidden; -webkit-backface-visibility: hidden;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .card-front { background: white; z-index: 2; transform: rotateY(0deg); }
+        .card-back { background: #fdfdff; z-index: 1; transform: rotateY(180deg); border: 2px solid #eee; }
+
+        /* NÚT LOA CỐ ĐỊNH */
+        .audio-btn {
+            position: absolute; top: 16px; right: 16px; width: 48px; height: 48px;
+            background: #f3f0ff; color: var(--primary); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 50; transition: transform 0.2s;
+        }
+        .audio-btn:active { transform: scale(0.9); }
+
+        /* SIDE MENU */
+        #side-menu {
+            position: fixed; top: 0; left: -100%; width: 280px; height: 100%;
+            background: white; z-index: 2000; transition: 0.3s; padding: 40px 24px;
+        }
+        #side-menu.active { left: 0; }
+        .overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+            z-index: 1999; display: none;
+        }
+        .overlay.active { display: block; }
     </style>
 </head>
 <body>
-    <header class="fixed top-0 left-0 w-full h-14 bg-white flex items-center justify-between px-4 z-[1500] border-b shadow-sm">
-        <button id="menu-toggle" class="text-[#D97706] p-2"><i class="fas fa-bars text-xl"></i></button>
-        <h1 class="text-[#4B0082] font-bold text-md">Nihongo Flashcard Pi <span class="text-yellow-500">π</span></h1>
-        <div id="user-status-dot" class="w-3 h-3 bg-gray-300 rounded-full"></div>
+
+    <header>
+        <button id="menu-toggle" class="text-amber-600 p-2 text-xl"><i class="fas fa-bars"></i></button>
+        <span class="font-bold text-purple-900">Nihongo Flashcard Pi</span>
+        <div id="auth-status" class="w-2 h-2 rounded-full bg-gray-300"></div>
     </header>
 
-    <div id="menu-overlay" class="menu-overlay fixed inset-0"></div>
-    <div id="side-menu" class="fixed top-0 left-0 w-64 h-full bg-white z-[2000] shadow-2xl p-6">
-        <div class="flex justify-between items-center mb-8">
-            <span class="font-bold text-purple-800">Cấp độ JLPT</span>
+    <div id="side-menu">
+        <div class="flex justify-between items-center mb-10">
+            <h2 class="font-bold text-lg">Menu Học Tập (JLPT)</h2>
             <button id="menu-close" class="text-2xl text-gray-400">&times;</button>
         </div>
-        <nav class="flex flex-col gap-4">
-            <button class="flex items-center gap-3 p-3 rounded-lg hover:bg-purple-50 text-amber-700 font-medium"><i class="fas fa-crown text-sm"></i> N1 Premium</button>
-            <button class="flex items-center gap-3 p-3 rounded-lg hover:bg-purple-50 text-amber-700 font-medium"><i class="fas fa-star text-sm"></i> N2 Intermediate</button>
-            <button class="flex items-center gap-3 p-3 rounded-lg bg-purple-100 text-purple-700 font-bold"><i class="fas fa-leaf text-sm"></i> N4 + N5 Basic</button>
-        </nav>
+        <div class="space-y-4">
+            <div class="p-4 rounded-xl bg-purple-50 text-purple-700 font-bold">Sơ Cấp N5-N4</div>
+            <div class="p-4 rounded-xl hover:bg-gray-50 text-gray-600">Trung Cấp N3-N2</div>
+            <div class="p-4 rounded-xl hover:bg-gray-50 text-gray-600">Cao Cấp vựng N1</div>
+        </div>
     </div>
+    <div id="overlay" class="overlay"></div>
 
     <div id="scroll-area">
-        <main class="max-w-md mx-auto px-5">
-            <div id="user-info" class="hidden mb-6 mt-4 p-3 bg-white rounded-2xl border border-purple-100 shadow-sm flex justify-between items-center">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 font-bold text-xs" id="user-initial">U</div>
-                    <span id="username" class="text-sm font-medium text-gray-700">Username</span>
-                </div>
-                <span id="premium-badge" class="hidden text-[9px] bg-yellow-400 text-white px-2 py-1 rounded-full font-bold">PREMIUM</span>
-            </div>
+        <div id="user-info" class="mb-6 p-4 bg-white rounded-2xl shadow-sm hidden flex items-center justify-between border border-purple-50">
+            <span id="username" class="font-medium text-purple-700 text-sm">...</span>
+            <span id="premium-tag" class="hidden text-[10px] bg-amber-500 text-white px-2 py-0.5 rounded-full font-bold">PREMIUM</span>
+        </div>
 
-            <div class="mb-8">
-                <div class="flex justify-between text-[10px] font-bold text-purple-400 mb-2 uppercase tracking-tighter">
-                    <span>Tiến độ học</span>
-                    <span id="progress-text">0/10</span>
-                </div>
-                <div class="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                    <div id="progress-bar" class="h-full bg-gradient-to-r from-purple-400 to-purple-600 transition-all duration-500" style="width: 0%"></div>
-                </div>
+        <div class="mb-6">
+            <div class="flex justify-between text-[11px] font-bold text-gray-400 mb-2">
+                <span>TIẾN ĐỘ</span>
+                <span id="progress-text">0/10</span>
             </div>
+            <div class="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                <div id="progress-bar" class="h-full bg-purple-600 w-0 transition-all duration-500"></div>
+            </div>
+        </div>
 
-            <div id="card-container" class="w-full aspect-[4/3] perspective-1000">
-                <div id="card-inner" class="relative w-full h-full transform-style-3d transition-transform duration-500 cursor-pointer">
-                    <div class="card-front backface-hidden absolute inset-0 bg-white rounded-3xl shadow-xl flex flex-col items-center justify-center border-b-4 border-purple-200">
-                        <button id="audio-hint" class="absolute top-4 right-4 w-12 h-12 flex items-center justify-center text-purple-500 bg-purple-50 rounded-full">
-                            <i class="fas fa-volume-up"></i>
-                        </button>
-                        <div class="absolute top-5 left-5 w-10 h-10 rounded-full bg-slate-50 border-2 border-white shadow-inner flex items-center justify-center text-[10px] font-bold text-slate-400" id="card-id-front">1</div>
-                        <h2 id="word" class="text-6xl font-bold text-slate-800"></h2>
-                    </div>
-                    <div class="card-back backface-hidden absolute inset-0 bg-purple-50 rounded-3xl shadow-xl flex flex-col items-center justify-center border-b-4 border-purple-400 p-8 transform rotateY(180deg)">
-                        <div class="absolute top-5 left-5 w-10 h-10 rounded-full bg-white shadow-inner flex items-center justify-center text-[10px] font-bold text-purple-300" id="card-id-back">1</div>
-                        <p id="reading" class="text-xl text-purple-600 font-medium mb-1"></p>
-                        <h3 id="meaning" class="text-3xl font-bold text-slate-800 text-center mb-4"></h3>
-                        <div class="w-12 h-0.5 bg-purple-200 mb-4"></div>
-                        <p id="example" class="text-sm text-slate-500 italic text-center leading-relaxed"></p>
-                    </div>
+        <div class="card-container">
+            <button id="audio-btn" class="audio-btn"><i class="fas fa-volume-up"></i></button>
+            <div id="card-inner" class="card-inner cursor-pointer">
+                <div class="card-front">
+                    <div class="absolute top-6 left-6 text-xs font-bold text-gray-300 bg-gray-50 w-8 h-8 rounded-full flex items-center justify-center border" id="card-num-f">1</div>
+                    <h2 id="word" class="text-6xl font-bold text-gray-800"></h2>
+                    <p class="absolute bottom-10 text-[10px] text-gray-300 uppercase tracking-widest italic">Chạm để lật thẻ</p>
+                </div>
+                <div class="card-back">
+                    <div class="absolute top-6 left-6 text-xs font-bold text-purple-200 bg-white w-8 h-8 rounded-full flex items-center justify-center border" id="card-num-b">1</div>
+                    <p id="reading" class="text-xl text-purple-600 font-medium mb-1"></p>
+                    <h3 id="meaning" class="text-3xl font-bold text-gray-800 text-center px-4"></h3>
+                    <div class="w-12 h-1 bg-purple-100 my-6 rounded-full"></div>
+                    <p id="example" class="text-sm text-gray-500 italic text-center px-8 leading-relaxed"></p>
                 </div>
             </div>
+        </div>
 
-            <div class="flex justify-between items-center mt-10 gap-4">
-                <button id="prev-btn" class="flex-1 py-4 rounded-2xl border-2 border-purple-600 text-purple-600 font-bold active:scale-95 transition-transform invisible">Quay lại</button>
-                <button id="next-btn" class="flex-[1.5] py-4 rounded-2xl bg-purple-600 text-white font-bold shadow-lg shadow-purple-200 active:scale-95 transition-transform">Tiếp theo</button>
-                <button id="finish-btn" class="hidden flex-[1.5] py-4 rounded-2xl bg-green-500 text-white font-bold shadow-lg shadow-green-200 animate-pulse">Hoàn thành!</button>
+        <div class="mt-8 flex items-center gap-3">
+            <button id="prev-btn" class="flex-1 h-14 rounded-2xl border-2 border-purple-600 text-purple-600 font-bold active:scale-95 transition-transform invisible">
+                <i class="fas fa-chevron-left mr-2"></i> Trước
+            </button>
+            <button id="next-btn" class="flex-[2] h-14 rounded-2xl bg-purple-600 text-white font-bold shadow-lg shadow-purple-200 active:scale-95 transition-transform">
+                Tiếp theo <i class="fas fa-chevron-right ml-2"></i>
+            </button>
+            <button id="finish-btn" class="hidden flex-[2] h-14 rounded-2xl bg-green-500 text-white font-bold shadow-lg shadow-green-200 animate-bounce">
+                Hoàn Thành <i class="fas fa-graduation-cap ml-2"></i>
+            </button>
+        </div>
+
+        <div id="premium-box" class="mt-8 p-5 bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border border-amber-200 flex items-center justify-between">
+            <div>
+                <h4 class="text-amber-800 font-bold text-sm">Gói Học Tập Nâng Cao</h4>
+                <p class="text-[10px] text-amber-600 uppercase">Mở khóa 2,000 từ vựng JLPT</p>
             </div>
+            <button onclick="handlePayment()" class="bg-amber-600 text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow-md">3.14 Pi</button>
+        </div>
 
-            <div id="premium-section" class="mt-8 p-4 bg-gradient-to-br from-amber-50 to-orange-100 rounded-2xl border border-amber-200 flex items-center justify-between">
-                <div>
-                    <h4 class="text-amber-800 font-bold text-sm">Nâng cấp Premium</h4>
-                    <p class="text-[10px] text-amber-600">Mở khóa toàn bộ 2.000 từ vựng N1-N5</p>
-                </div>
-                <button onclick="unlockPremiumContent()" class="bg-amber-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md">3.14 Pi</button>
-            </div>
-
-            <button id="btn-auth" class="w-full mt-6 py-4 border-2 border-dashed border-purple-300 rounded-2xl text-purple-400 font-medium hover:bg-purple-50 transition-colors">Đăng nhập với Pi Network</button>
-        </main>
+        <button id="btn-auth" class="w-full mt-6 py-4 border-2 border-dashed border-purple-300 text-purple-400 font-medium rounded-2xl">Kết nối Pi Network</button>
     </div>
 
     <nav class="pi-bottom-nav">
-        <div class="pi-nav-item active"><i class="fas fa-home text-lg mb-1"></i><span>Trang chủ</span></div>
-        <div class="pi-nav-item"><i class="fas fa-book text-lg mb-1"></i><span>Từ vựng</span></div>
-        <div class="pi-nav-main"><div class="pi-main-circle"><i class="fas fa-plus text-xl"></i></div></div>
-        <div class="pi-nav-item"><i class="fas fa-graduation-cap text-lg mb-1"></i><span>Luyện đề</span></div>
-        <div class="pi-nav-item"><i class="fas fa-user text-lg mb-1"></i><span>Tôi</span></div>
+        <div class="flex flex-col items-center text-purple-600"><i class="fas fa-home text-xl mb-1"></i><span class="text-[10px]">Trang chủ</span></div>
+        <div class="flex flex-col items-center text-amber-600"><i class="fas fa-book text-xl mb-1"></i><span class="text-[10px]">Từ vựng</span></div>
+        <div class="transform -translate-y-6"><div class="w-14 h-14 bg-gradient-to-br from-purple-600 to-indigo-800 rounded-full border-4 border-amber-500 flex items-center justify-center text-white text-xl shadow-lg"><i class="fas fa-plus"></i></div></div>
+        <div class="flex flex-col items-center text-amber-600"><i class="fas fa-graduation-cap text-xl mb-1"></i><span class="text-[10px]">Luyện đề</span></div>
+        <div class="flex flex-col items-center text-amber-600"><i class="fas fa-user text-xl mb-1"></i><span class="text-[10px]">Hồ Sơ</span></div>
     </nav>
 
     <script src="app.js"></script>
