@@ -1,105 +1,176 @@
+// 1. DỮ LIỆU VÀ TRẠNG THÁI
 const vocabulary = [
     { word: "加工", reading: "かこう", meaning: "Gia công", example: "プラスチックを加工する (Gia công nhựa)." },
     { word: "合格", reading: "ごうかく", meaning: "Đỗ / Vượt qua", example: "N2試験に合格する (Đỗ kỳ thi N2)." },
-    { word: "改善", reading: "かいぜん", meaning: "Cải thiện", example: "作業工程を改善する (Cải thiện quy trình)." },
+    { word: "改善", reading: "かいぜん", meaning: "Cải thiện / Cải tiến", example: "作業工程を改善する (Cải thiện quy trình)." },
     { word: "準備", reading: "じゅんび", meaning: "Chuẩn bị", example: "会議の準備をする (Chuẩn bị họp)." },
     { word: "確認", reading: "かくにん", meaning: "Xác nhận", example: "メールを確認してください (Hãy check mail)." },
     { word: "連絡", reading: "れんらく", meaning: "Liên lạc", example: "後で連絡します (Tôi sẽ liên lạc sau)." },
     { word: "報告", reading: "ほうこく", meaning: "Báo cáo", example: "進捗を報告する (Báo cáo tiến độ)." },
-    { word: "相談", reading: "そうだん", meaning: "Thảo luận", example: "上司に相談する (Bàn bạc với sếp)." },
-    { word: "注意", reading: "ちゅうい", meaning: "Chú ý", example: "足元に注意してください (Hãy chú ý dưới chân)." },
+    { word: "相談", reading: "そうだん", meaning: "Thảo luận", example: "上司に相談する (Thảo luận với sếp)." },
+    { word: "注意", reading: "ちゅうい", meaning: "Chú ý", example: "足元に注意してください (Chú ý dưới chân)." },
     { word: "安全", reading: "あんぜん", meaning: "An toàn", example: "安全第一 (An toàn là trên hết)." }
 ];
 
-let currentIndex = parseInt(localStorage.getItem("pi_vocab_idx")) || 0;
+let currentIndex = parseInt(localStorage.getItem("nihongo_progress")) || 0;
+let isFlipped = false;
+let currentAudio = null;
 
+// 2. PHẦN TỬ DOM
+const dom = {
+    cardInner: document.getElementById('card-inner'),
+    word: document.getElementById('word'),
+    reading: document.getElementById('reading'),
+    meaning: document.getElementById('meaning'),
+    example: document.getElementById('example'),
+    idFront: document.getElementById('card-id-front'),
+    idBack: document.getElementById('card-id-back'),
+    prevBtn: document.getElementById('prev-btn'),
+    nextBtn: document.getElementById('next-btn'),
+    finishBtn: document.getElementById('finish-btn'),
+    progressBar: document.getElementById('progress-bar'),
+    progressText: document.getElementById('progress-text'),
+    sideMenu: document.getElementById('side-menu'),
+    overlay: document.getElementById('menu-overlay')
+};
+
+// 3. HÀM XỬ LÝ CHÍNH
 function updateUI() {
     const data = vocabulary[currentIndex];
-    
-    // Cập nhật nội dung
-    document.getElementById('word').innerText = data.word;
-    document.getElementById('reading').innerText = data.reading;
-    document.getElementById('meaning').innerText = data.meaning;
-    document.getElementById('example').innerText = data.example;
-    document.getElementById('card-id-front').innerText = currentIndex + 1;
-    document.getElementById('card-id-back').innerText = currentIndex + 1;
-
-    // Thanh tiến độ
     const total = vocabulary.length;
-    document.getElementById('progress-text').innerText = `${currentIndex + 1}/${total}`;
-    document.getElementById('progress-bar').style.width = `${((currentIndex + 1) / total) * 100}%`;
 
-    // Điều hướng
-    document.getElementById('prev-btn').classList.toggle('invisible', currentIndex === 0);
-    const isLast = currentIndex === total - 1;
-    document.getElementById('next-btn').classList.toggle('hidden', isLast);
-    document.getElementById('finish-btn').classList.toggle('hidden', !isLast);
+    // Cập nhật nội dung thẻ với hiệu ứng mờ nhẹ
+    [dom.word, dom.reading, dom.meaning, dom.example].forEach(el => el.style.opacity = 0);
+    
+    setTimeout(() => {
+        dom.word.innerText = data.word;
+        dom.reading.innerText = data.reading;
+        dom.meaning.innerText = data.meaning;
+        dom.example.innerText = data.example;
+        dom.idFront.innerText = currentIndex + 1;
+        dom.idBack.innerText = currentIndex + 1;
+        [dom.word, dom.reading, dom.meaning, dom.example].forEach(el => el.style.opacity = 1);
+    }, 150);
 
-    // Reset lật thẻ
-    document.getElementById('card-inner').classList.remove('is-flipped');
-    localStorage.setItem("pi_vocab_idx", currentIndex);
+    // Cập nhật thanh tiến độ
+    const percent = ((currentIndex + 1) / total) * 100;
+    dom.progressBar.style.width = `${percent}%`;
+    dom.progressText.innerText = `${currentIndex + 1}/${total}`;
+
+    // Điều hướng nút bấm
+    dom.prevBtn.classList.toggle('invisible', currentIndex === 0);
+    if (currentIndex === total - 1) {
+        dom.nextBtn.classList.add('hidden');
+        dom.finishBtn.classList.remove('hidden');
+    } else {
+        dom.nextBtn.classList.remove('hidden');
+        dom.finishBtn.classList.add('hidden');
+    }
+
+    // Reset trạng thái lật
+    dom.cardInner.classList.remove('is-flipped');
+    isFlipped = false;
+
+    // Lưu tiến độ
+    localStorage.setItem("nihongo_progress", currentIndex);
 }
 
-function playAudio() {
-    const text = vocabulary[currentIndex].word;
-    const audio = new Audio(`https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&le=jap`);
-    audio.play().catch(e => console.log("Audio play blocked"));
+function playAudio(text) {
+    if (currentAudio) currentAudio.pause();
+    currentAudio = new Audio(`https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&le=jap`);
+    currentAudio.play().catch(e => console.log("Audio play blocked by browser"));
 }
 
+// 4. SỰ KIỆN TƯƠNG TÁC
 document.addEventListener('DOMContentLoaded', () => {
+    // Khởi tạo Pi SDK
     if (window.Pi) {
         window.Pi.init({ version: "2.0", sandbox: true });
-        document.getElementById('status-dot').classList.replace('bg-gray-300', 'bg-green-500');
+        document.getElementById('user-status-dot').classList.replace('bg-gray-300', 'bg-green-500');
     }
 
     // Lật thẻ
-    const cardInner = document.getElementById('card-inner');
-    cardInner.onclick = () => {
-        cardInner.classList.toggle('is-flipped');
-        if (cardInner.classList.contains('is-flipped')) playAudio();
+    dom.cardInner.onclick = () => {
+        isFlipped = !isFlipped;
+        dom.cardInner.classList.toggle('is-flipped', isFlipped);
+        if (isFlipped) playAudio(vocabulary[currentIndex].word);
         if (navigator.vibrate) navigator.vibrate(10);
     };
 
-    // Nút loa chủ động
+    // Nút loa
     document.getElementById('audio-hint').onclick = (e) => {
-        e.stopPropagation(); // Không cho lật thẻ khi bấm loa
-        playAudio();
+        e.stopPropagation();
+        playAudio(vocabulary[currentIndex].word);
     };
 
-    // Nút điều hướng
-    document.getElementById('next-btn').onclick = () => { if(currentIndex < vocabulary.length-1) { currentIndex++; updateUI(); } };
-    document.getElementById('prev-btn').onclick = () => { if(currentIndex > 0) { currentIndex--; updateUI(); } };
+    // Điều hướng
+    dom.nextBtn.onclick = () => {
+        if (currentIndex < vocabulary.length - 1) {
+            currentIndex++;
+            updateUI();
+        }
+    };
 
-    // Side Menu
-    document.getElementById('menu-toggle').onclick = () => {
-        document.getElementById('side-menu').classList.add('active');
-        document.getElementById('menu-overlay').classList.add('active');
+    dom.prevBtn.onclick = () => {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateUI();
+        }
     };
-    document.getElementById('menu-close').onclick = document.getElementById('menu-overlay').onclick = () => {
-        document.getElementById('side-menu').classList.remove('active');
-        document.getElementById('menu-overlay').classList.remove('active');
+
+    // Menu toggle
+    const toggleMenu = () => {
+        dom.sideMenu.classList.toggle('active');
+        dom.overlay.classList.toggle('active');
     };
+    document.getElementById('menu-toggle').onclick = toggleMenu;
+    document.getElementById('menu-close').onclick = toggleMenu;
+    dom.overlay.onclick = toggleMenu;
 
     // Hoàn thành
-    document.getElementById('finish-btn').onclick = () => {
+    dom.finishBtn.onclick = () => {
         confetti({ particleCount: 150, spread: 70, origin: { y: 0.7 } });
-        setTimeout(() => { alert("Xuất sắc! Bạn đã hoàn thành bài học."); location.reload(); }, 1000);
+        setTimeout(() => {
+            alert("Chúc mừng bạn đã hoàn thành bài học hôm nay! 🏆");
+            currentIndex = 0;
+            updateUI();
+        }, 1000);
+    };
+
+    // Pi Auth
+    document.getElementById('btn-auth').onclick = async () => {
+        try {
+            const auth = await window.Pi.authenticate(['username', 'payments'], (p) => {});
+            document.getElementById('username').innerText = auth.user.username;
+            document.getElementById('user-initial').innerText = auth.user.username.charAt(0).toUpperCase();
+            document.getElementById('user-info').classList.remove('hidden');
+            document.getElementById('btn-auth').classList.add('hidden');
+        } catch (err) {
+            alert("Vui lòng truy cập từ Pi Browser!");
+        }
     };
 
     updateUI();
 });
 
+// 5. THANH TOÁN PI
 async function unlockPremiumContent() {
     try {
         await window.Pi.createPayment({
             amount: 3.14,
-            memo: "Mở khóa kho từ vựng N2 Premium",
-            metadata: { pack: "N2_FULL" }
+            memo: "Mở khóa kho từ vựng tiếng Nhật Premium",
+            metadata: { package: "N1_N5_FULL" }
         }, {
-            onReadyForServerApproval: (id) => console.log("Approved:", id),
-            onReadyForServerCompletion: (id, txid) => alert("Thành công! Gói Premium đã được mở khóa."),
+            onReadyForServerApproval: (id) => console.log("Chờ server duyệt:", id),
+            onReadyForServerCompletion: (id, txid) => {
+                document.getElementById('premium-badge').classList.remove('hidden');
+                document.getElementById('premium-section').style.display = 'none';
+                alert("Nâng cấp thành công!");
+            },
             onCancel: (id) => {},
-            onError: (err) => {},
+            onError: (err) => alert("Lỗi thanh toán!"),
         });
-    } catch (e) { console.error(e); }
+    } catch (e) {
+        console.error(e);
+    }
 }
