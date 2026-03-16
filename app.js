@@ -14,7 +14,7 @@ const vocabulary = [
 
 let currentIndex = parseInt(localStorage.getItem("nihongo_progress")) || 0;
 let isFlipped = false;
-let currentAudio = null;
+let globalAudio = new Audio();
 
 // 2. PHẦN TỬ DOM
 const dom = {
@@ -76,9 +76,14 @@ function updateUI() {
 }
 
 function playAudio(text) {
-    if (currentAudio) currentAudio.pause();
-    currentAudio = new Audio(`https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&le=jap`);
-    currentAudio.play().catch(e => console.log("Audio play blocked by browser"));
+    if (!text) return;
+    const cleanText = text.trim();
+    globalAudio.pause();
+    globalAudio.currentTime = 0;
+    globalAudio.src = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&le=jap`;
+    globalAudio.play().catch(e => {
+        console.error("Lỗi phát âm thanh:", e.message);
+    });
 }
 
 // 4. SỰ KIỆN TƯƠNG TÁC
@@ -131,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dom.finishBtn.onclick = () => {
         confetti({ particleCount: 150, spread: 70, origin: { y: 0.7 } });
         setTimeout(() => {
-            alert("Chúc mừng bạn đã hoàn thành bài học hôm nay! 🏆");
+            alert("おめでとうございます！Bạn đã hoàn thành bộ thẻ này! 🏆");
             currentIndex = 0;
             updateUI();
         }, 1000);
