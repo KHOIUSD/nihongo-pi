@@ -95,12 +95,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Lật thẻ
-    dom.cardInner.onclick = () => {
-        isFlipped = !isFlipped;
-        dom.cardInner.classList.toggle('is-flipped', isFlipped);
-        if (isFlipped) playAudio(vocabulary[currentIndex].word);
-        if (navigator.vibrate) navigator.vibrate(10);
-    };
+    cardInner.addEventListener('click', function(e) {
+        if (e.target.closest('#audio-hint')) return;
+        this.classList.toggle('is-flipped');
+        const isFlippedNow = this.classList.contains('is-flipped');
+        if (isFlippedNow) {
+            playAudio(vocabulary[currentIndex].word);
+            if (navigator.vibrate) navigator.vibrate(10);
+        }
+    });
 
     // Nút loa
     document.getElementById('audio-hint').onclick = (e) => {
