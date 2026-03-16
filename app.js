@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Lật thẻ
-    cardInner.addEventListener('click', function(e) {
+    dom.cardInner.addEventListener('click', function(e) {
         if (e.target.closest('#audio-hint')) return;
         this.classList.toggle('is-flipped');
         const isFlippedNow = this.classList.contains('is-flipped');
