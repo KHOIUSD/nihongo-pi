@@ -78,10 +78,10 @@
     </header>
     <nav class="pi-bottom-nav">
         <div class="pi-nav-item active"><i class="fas fa-home text-lg mb-1"></i><span>Trang chủ</span></div>
-        <div class="pi-nav-item"><i class="fas fa-book text-lg mb-1"></i><span>Từ vựng</span></div>
+        <div class="pi-nav-item"><i class="fas fa-book text-lg mb-1"></i><span>Kho từ vựng</span></div>
         <div class="pi-nav-main"><div class="pi-main-circle"><i class="fas fa-plus text-xl"></i></div></div>
         <div class="pi-nav-item"><i class="fas fa-graduation-cap text-lg mb-1"></i><span>Luyện đề</span></div>
-        <div class="pi-nav-item"><i class="fas fa-user text-lg mb-1"></i><span>Tôi</span></div>
+        <div class="pi-nav-item"><i class="fas fa-user text-lg mb-1"></i><span>Hồ sơ</span></div>
     </nav>
     <div id="menu-overlay" class="menu-overlay fixed inset-0"></div>
     <div id="side-menu" class="fixed top-0 left-0 w-64 h-full bg-white z-[2000] shadow-2xl p-6">
@@ -90,9 +90,9 @@
             <button id="menu-close" class="text-2xl text-gray-400">&times;</button>
         </div>
         <nav class="flex flex-col gap-4">
-            <button class="flex items-center gap-3 p-3 rounded-lg hover:bg-purple-50 text-amber-700 font-medium"><i class="fas fa-crown text-sm"></i> N1 Premium</button>
-            <button class="flex items-center gap-3 p-3 rounded-lg hover:bg-purple-50 text-amber-700 font-medium"><i class="fas fa-star text-sm"></i> N2 Intermediate</button>
-            <button class="flex items-center gap-3 p-3 rounded-lg bg-purple-100 text-purple-700 font-bold"><i class="fas fa-leaf text-sm"></i> N4 + N5 Basic</button>
+            <button class="flex items-center gap-3 p-3 rounded-lg hover:bg-purple-50 text-amber-700 font-medium"><i class="fas fa-crown text-sm"></i> N1 Cao cấp</button>
+            <button class="flex items-center gap-3 p-3 rounded-lg hover:bg-purple-50 text-amber-700 font-medium"><i class="fas fa-star text-sm"></i> N3/N2 Trung cấp</button>
+            <button class="flex items-center gap-3 p-3 rounded-lg bg-purple-100 text-purple-700 font-bold"><i class="fas fa-leaf text-sm"></i> N4 + N5 Sơ cấp</button>
         </nav>
     </div>
 
@@ -109,7 +109,7 @@
             <div class="mb-8">
                 <div class="flex justify-between text-[10px] font-bold text-purple-400 mb-2 uppercase tracking-tighter">
                     <span>Tiến độ học tập</span>
-                    <span id="progress-text">0/10</span>
+                    <span id="progress-text"></span>
                 </div>
                 <div class="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
                     <div id="progress-bar" class="h-full bg-gradient-to-r from-purple-400 to-purple-600 transition-all duration-500" style="width: 0%"></div>
