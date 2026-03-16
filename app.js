@@ -67,7 +67,7 @@ function updateUI() {
         dom.finishBtn.classList.add('hidden');
     }
 
-    // Reset trạng thái lật
+    // Reset trạng thái lật về mặt trước khi sang từ 
     dom.cardInner.classList.remove('is-flipped');
     isFlipped = false;
 
