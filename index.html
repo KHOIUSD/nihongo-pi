@@ -47,7 +47,6 @@
             background: #f5f3ff; z-index: 1; 
             transform: rotateY(180deg); 
             transform-style: preserve-3d;
-            display: flex !important;
         }
         
         #audio-hint {
@@ -77,7 +76,13 @@
         <h1 class="text-[#4B0082] font-bold text-md">Nihongo Flashcard <span class="text-yellow-500">π</span></h1>
         <div id="user-status-dot" class="w-3 h-3 bg-gray-300 rounded-full"></div>
     </header>
-
+    <nav class="pi-bottom-nav">
+        <div class="pi-nav-item active"><i class="fas fa-home text-lg mb-1"></i><span>Trang chủ</span></div>
+        <div class="pi-nav-item"><i class="fas fa-book text-lg mb-1"></i><span>Từ vựng</span></div>
+        <div class="pi-nav-main"><div class="pi-main-circle"><i class="fas fa-plus text-xl"></i></div></div>
+        <div class="pi-nav-item"><i class="fas fa-graduation-cap text-lg mb-1"></i><span>Luyện đề</span></div>
+        <div class="pi-nav-item"><i class="fas fa-user text-lg mb-1"></i><span>Tôi</span></div>
+    </nav>
     <div id="menu-overlay" class="menu-overlay fixed inset-0"></div>
     <div id="side-menu" class="fixed top-0 left-0 w-64 h-full bg-white z-[2000] shadow-2xl p-6">
         <div class="flex justify-between items-center mb-8">
@@ -103,7 +108,7 @@
 
             <div class="mb-8">
                 <div class="flex justify-between text-[10px] font-bold text-purple-400 mb-2 uppercase tracking-tighter">
-                    <span>Tiến độ học</span>
+                    <span>Tiến độ học tập</span>
                     <span id="progress-text">0/10</span>
                 </div>
                 <div class="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
@@ -148,15 +153,6 @@
             <button id="btn-auth" class="w-full mt-6 py-4 border-2 border-dashed border-purple-300 rounded-2xl text-purple-400 font-medium hover:bg-purple-50 transition-colors">Đăng nhập với Pi Network</button>
         </main>
     </div>
-
-    <nav class="pi-bottom-nav">
-        <div class="pi-nav-item active"><i class="fas fa-home text-lg mb-1"></i><span>Trang chủ</span></div>
-        <div class="pi-nav-item"><i class="fas fa-book text-lg mb-1"></i><span>Từ vựng</span></div>
-        <div class="pi-nav-main"><div class="pi-main-circle"><i class="fas fa-plus text-xl"></i></div></div>
-        <div class="pi-nav-item"><i class="fas fa-graduation-cap text-lg mb-1"></i><span>Luyện đề</span></div>
-        <div class="pi-nav-item"><i class="fas fa-user text-lg mb-1"></i><span>Tôi</span></div>
-    </nav>
-
     <script src="app.js"></script>
 </body>
 </html>
