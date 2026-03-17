@@ -92,24 +92,6 @@ function playAudio(text) {
     globalAudio.play().catch(e => console.warn("Audio play blocked by browser"));
 }
 
-// 5. CHUYỂN ĐỔI TAB (Dashboard Profile)
-function switchTab(tabName) {
-    dom.navItems.forEach(item => item.classList.remove('active'));
-    
-    if (tabName === 'profile') {
-        dom.learningContent.classList.add('hidden');
-        dom.profileSection.classList.remove('hidden');
-        dom.navItems[4].classList.add('active');
-        
-        // Cập nhật thống kê
-        document.getElementById('stat-learned').innerText = currentIndex + 1;
-        document.getElementById('stat-percent').innerText = Math.round(((currentIndex + 1) / vocabulary.length) * 100) + "%";
-    } else {
-        dom.learningContent.classList.remove('hidden');
-        dom.profileSection.classList.add('hidden');
-        dom.navItems[0].classList.add('active');
-    }
-}
 // 6. SỰ KIỆN KHỞI TẠO
 document.addEventListener('DOMContentLoaded', () => {
     // Pi SDK Init
