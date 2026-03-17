@@ -34,9 +34,6 @@ const dom = {
     sideMenu: document.getElementById('side-menu'),
     overlay: document.getElementById('menu-overlay'),
     audioBtn: document.getElementById('audio-hint')
-    navItems: document.querySelectorAll('.pi-nav-item'),
-    profileSection: document.getElementById('profile-section'),
-    learningContent: document.getElementById('learning-content')
 };
 
 // 4. HÀM CẬP NHẬT GIAO DIỆN
@@ -194,30 +191,4 @@ async function unlockPremiumContent() {
             onError: (err) => alert("Lỗi thanh toán: " + err.message)
         });
     } catch (e) { console.error(e); }
-}
-
-// Hàm đồng bộ tiến độ lên Server (Pi Database)
-async function syncProgressToServer(index) {
-    // Kiểm tra xem người dùng đã đăng nhập Pi chưa
-    const username = document.getElementById('username').innerText;
-    if (username === "Username") return; // Chưa đăng nhập thì thôi
-
-    try {
-        // Giả sử bạn có một endpoint API trên server của mình
-        const response = await fetch('https://your-api-server.com/save-progress', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                pi_username: username,
-                current_index: index,
-                timestamp: Date.now()
-            })
-        });
-        
-        if (response.ok) {
-            console.log("Đã đồng bộ tiến độ với Pi Network Server");
-        }
-    } catch (e) {
-        console.error("Không thể kết nối server để lưu tiến độ:", e);
-    }
 }
