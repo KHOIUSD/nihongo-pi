@@ -15,49 +15,64 @@ const vocabulary = [
 let currentIndex = parseInt(localStorage.getItem("nihongo_progress")) || 0;
 let isFlipped = false;
 let globalAudio = new Audio();
-
+// Biến giữ các phần tử DOM (Khai báo toàn cục để các hàm dùng chung)
+let word, reading, meaning, example;
+let prevBtn, nextBtn, finishBtn, progressBar, progressText;
+let cardInner, sideMenu, MenuOverlay, menuToggle, menuClose, audioHintBtn;
 // 2. PHẦN TỬ DOM
 const dom = {
     cardInner: document.getElementById('card-inner'),
+    
     word: document.getElementById('word'),
     reading: document.getElementById('reading'),
     meaning: document.getElementById('meaning'),
     example: document.getElementById('example'),
+    
     idFront: document.getElementById('card-id-front'),
     idBack: document.getElementById('card-id-back'),
     prevBtn: document.getElementById('prev-btn'),
     nextBtn: document.getElementById('next-btn'),
     finishBtn: document.getElementById('finish-btn'),
+    
     progressBar: document.getElementById('progress-bar'),
     progressText: document.getElementById('progress-text'),
     sideMenu: document.getElementById('side-menu'),
-    overlay: document.getElementById('menu-overlay')
+    MenuOverlay: document.getElementById('menu-overlay')
 };
 
 // 3. HÀM XỬ LÝ CHÍNH
 function updateUI() {
     const data = vocabulary[currentIndex];
-    const total = vocabulary.length;
-
+    const displayId = `${currentIndex + 1}`;
+    const elements = [word, reading, meaning, example];
+    // Lưu tiến độ vào máy người dùng
+    localStorage.setItem("nihongo_progress", currentIndex);
     // Cập nhật nội dung thẻ với hiệu ứng mờ nhẹ
-    [dom.word, dom.reading, dom.meaning, dom.example].forEach(el => el.style.opacity = 0);
-    
+    elements.forEach(el => el.style.opacity = 0);
     setTimeout(() => {
         dom.word.innerText = data.word;
         dom.reading.innerText = data.reading;
         dom.meaning.innerText = data.meaning;
         dom.example.innerText = data.example;
+        
         dom.idFront.innerText = currentIndex + 1;
         dom.idBack.innerText = currentIndex + 1;
-        [dom.word, dom.reading, dom.meaning, dom.example].forEach(el => el.style.opacity = 1);
-    }, 150);
+        elements.forEach(el => el.style.opacity = 1);
+        updateProgress();
+        updateNavigationDisplay();
+    }, 200);
 
-    // Cập nhật thanh tiến độ
-    const percent = ((currentIndex + 1) / total) * 100;
+// Cập nhật thanh tiến độ
+function updateProgress() {
+    const total = vocabulary.length;
+    const current = currentIndex + 1;
+    const percent = (current / total) * 100;
     dom.progressBar.style.width = `${percent}%`;
-    dom.progressText.innerText = `${currentIndex + 1}/${total}`;
-
-    // Điều hướng nút bấm
+    dom.progressText.innerText = `${current}/${total}`;
+}
+// Điều hướng nút bấm
+function updateNavigationDisplay() {
+    const total = vocabulary.length;
     dom.prevBtn.classList.toggle('invisible', currentIndex === 0);
     if (currentIndex === total - 1) {
         dom.nextBtn.classList.add('hidden');
@@ -67,7 +82,7 @@ function updateUI() {
         dom.finishBtn.classList.add('hidden');
     }
 
-    // Reset trạng thái lật về mặt trước khi sang từ 
+    // Reset trạng thái lật về mặt trước khi sang từ mới
     dom.cardInner.classList.remove('is-flipped');
     isFlipped = false;
 
@@ -157,7 +172,6 @@ document.addEventListener('DOMContentLoaded', () => {
             alert("Vui lòng truy cập từ Pi Browser!");
         }
     };
-
     updateUI();
 });
 
