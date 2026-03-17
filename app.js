@@ -34,9 +34,9 @@ const dom = {
     sideMenu: document.getElementById('side-menu'),
     overlay: document.getElementById('menu-overlay'),
     audioBtn: document.getElementById('audio-hint')
-    dom.navItems = document.querySelectorAll('.pi-nav-item');
-    dom.mainContent = document.querySelector('main > div:not(#profile-section)'); // Các phần tử chính
-    dom.profileSection = document.getElementById('profile-section');
+    navItems: document.querySelectorAll('.pi-nav-item'),
+    profileSection: document.getElementById('profile-section'),
+    learningContent: document.getElementById('learning-content')
 };
 
 // 4. HÀM CẬP NHẬT GIAO DIỆN
@@ -95,40 +95,24 @@ function playAudio(text) {
     globalAudio.play().catch(e => console.warn("Audio play blocked by browser"));
 }
 
-// Hàm chuyển đổi Tab
+// 5. CHUYỂN ĐỔI TAB (Dashboard Profile)
 function switchTab(tabName) {
-    // 1. Reset màu icon
     dom.navItems.forEach(item => item.classList.remove('active'));
     
     if (tabName === 'profile') {
-        // 2. Hiện hồ sơ, ẩn nội dung học
-        document.querySelector('#card-container').parentElement.classList.add('hidden');
+        dom.learningContent.classList.add('hidden');
         dom.profileSection.classList.remove('hidden');
-        dom.navItems[4].classList.add('active'); // Nút Hồ sơ là thứ 5 (index 4)
+        dom.navItems[4].classList.add('active');
         
-        // 3. Cập nhật con số thống kê
-        const learned = currentIndex + 1;
-        const total = vocabulary.length;
-        document.getElementById('stat-learned').innerText = learned;
-        document.getElementById('stat-percent').innerText = Math.round((learned/total)*100) + "%";
-        
-        // Kiểm tra Premium
-        const isPremium = !document.getElementById('premium-badge').classList.contains('hidden');
-        document.getElementById('stat-status').innerText = isPremium ? "PREMIUM" : "Miễn phí";
-        document.getElementById('stat-status').className = isPremium ? "font-bold text-amber-500" : "font-bold text-gray-400";
-        
-    } else if (tabName === 'home') {
-        // Hiện lại nội dung học
-        document.querySelector('#card-container').parentElement.classList.remove('hidden');
+        // Cập nhật thống kê
+        document.getElementById('stat-learned').innerText = currentIndex + 1;
+        document.getElementById('stat-percent').innerText = Math.round(((currentIndex + 1) / vocabulary.length) * 100) + "%";
+    } else {
+        dom.learningContent.classList.remove('hidden');
         dom.profileSection.classList.add('hidden');
         dom.navItems[0].classList.add('active');
     }
 }
-
-// Gán sự kiện click cho các nút nav
-dom.navItems[0].onclick = () => switchTab('home');
-dom.navItems[4].onclick = () => switchTab('profile');
-
 // 6. SỰ KIỆN KHỞI TẠO
 document.addEventListener('DOMContentLoaded', () => {
     // Pi SDK Init
@@ -138,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if(dot) dot.classList.replace('bg-gray-300', 'bg-green-500');
     }
 
-    // Lật thẻ (Fix lỗi click)
+    // Lật thẻ 
     dom.cardInner.addEventListener('click', function(e) {
         if (e.target.closest('#audio-hint')) return;
         this.classList.toggle('is-flipped');
