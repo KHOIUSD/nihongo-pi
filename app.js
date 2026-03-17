@@ -2,7 +2,7 @@
 const vocabulary = [
     { word: "加工", reading: "かこう", meaning: "Gia công", example: "プラスチックを加工する (Gia công nhựa)." },
     { word: "合格", reading: "ごうかく", meaning: "Đỗ / Vượt qua", example: "N2試験に合格する (Đỗ kỳ thi N2)." },
-    { word: "改善", reading: "かいぜん", meaning: "Cải thiện / Cải tiến", example: "作業工程を改善する (Cải thiện quy trình)." },
+    { word: "改善", reading: "かいぜん", meaning: "Cải thiện / Cải tiến", example: "作業工程 được cải thiện (Cải thiện quy trình)." },
     { word: "準備", reading: "じゅんび", meaning: "Chuẩn bị", example: "会議の準備をする (Chuẩn bị họp)." },
     { word: "確認", reading: "かくにん", meaning: "Xác nhận", example: "メールを確認してください (Hãy check mail)." },
     { word: "連絡", reading: "れんらく", meaning: "Liên lạc", example: "後で連絡します (Tôi sẽ liên lạc sau)." },
@@ -15,54 +15,53 @@ const vocabulary = [
 let currentIndex = parseInt(localStorage.getItem("nihongo_progress")) || 0;
 let isFlipped = false;
 let globalAudio = new Audio();
-// Biến giữ các phần tử DOM (Khai báo toàn cục để các hàm dùng chung)
-let word, reading, meaning, example;
-let prevBtn, nextBtn, finishBtn, progressBar, progressText;
-let cardInner, sideMenu, MenuOverlay, menuToggle, menuClose, audioHintBtn;
+
 // 2. PHẦN TỬ DOM
 const dom = {
     cardInner: document.getElementById('card-inner'),
-    
     word: document.getElementById('word'),
     reading: document.getElementById('reading'),
     meaning: document.getElementById('meaning'),
     example: document.getElementById('example'),
-    
     idFront: document.getElementById('card-id-front'),
     idBack: document.getElementById('card-id-back'),
     prevBtn: document.getElementById('prev-btn'),
     nextBtn: document.getElementById('next-btn'),
     finishBtn: document.getElementById('finish-btn'),
-    
     progressBar: document.getElementById('progress-bar'),
     progressText: document.getElementById('progress-text'),
     sideMenu: document.getElementById('side-menu'),
-    MenuOverlay: document.getElementById('menu-overlay')
+    overlay: document.getElementById('menu-overlay') // Đã sửa tên thống nhất
 };
 
 // 3. HÀM XỬ LÝ CHÍNH
 function updateUI() {
     const data = vocabulary[currentIndex];
-    const displayId = `${currentIndex + 1}`;
-    const elements = [word, reading, meaning, example];
-    // Lưu tiến độ vào máy người dùng
-    localStorage.setItem("nihongo_progress", currentIndex);
-    // Cập nhật nội dung thẻ với hiệu ứng mờ nhẹ
+    const elements = [dom.word, dom.reading, dom.meaning, dom.example]; // Sửa lại dom.
+    
+    localStorage.setItem("nihongo_progress", currentIndex);
+
+    // Reset lật thẻ trước khi đổi nội dung
+    dom.cardInner.classList.remove('is-flipped');
+    isFlipped = false;
+
+    // Hiệu ứng mờ nhẹ và cập nhật nội dung
     elements.forEach(el => el.style.opacity = 0);
+    
     setTimeout(() => {
         dom.word.innerText = data.word;
         dom.reading.innerText = data.reading;
         dom.meaning.innerText = data.meaning;
         dom.example.innerText = data.example;
-        
         dom.idFront.innerText = currentIndex + 1;
         dom.idBack.innerText = currentIndex + 1;
+        
         elements.forEach(el => el.style.opacity = 1);
         updateProgress();
-        updateNavigationDisplay();
+        updateNavigationDisplay();
     }, 200);
+} // <--- THIẾU DẤU NÀY TRONG CODE CỦA BẠN
 
-// Cập nhật thanh tiến độ
 function updateProgress() {
     const total = vocabulary.length;
     const current = currentIndex + 1;
@@ -70,7 +69,7 @@ function updateProgress() {
     dom.progressBar.style.width = `${percent}%`;
     dom.progressText.innerText = `${current}/${total}`;
 }
-// Điều hướng nút bấm
+
 function updateNavigationDisplay() {
     const total = vocabulary.length;
     dom.prevBtn.classList.toggle('invisible', currentIndex === 0);
@@ -81,13 +80,6 @@ function updateNavigationDisplay() {
         dom.nextBtn.classList.remove('hidden');
         dom.finishBtn.classList.add('hidden');
     }
-
-    // Reset trạng thái lật về mặt trước khi sang từ mới
-    dom.cardInner.classList.remove('is-flipped');
-    isFlipped = false;
-
-    // Lưu tiến độ
-    localStorage.setItem("nihongo_progress", currentIndex);
 }
 
 function playAudio(text) {
@@ -95,104 +87,73 @@ function playAudio(text) {
     const cleanText = text.trim();
     globalAudio.pause();
     globalAudio.currentTime = 0;
-    globalAudio.src = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&le=jap`;
-    globalAudio.play().catch(e => {
-        console.error("Lỗi phát âm thanh:", e.message);
-    });
+    globalAudio.src = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(cleanText)}&le=jap`;
+    globalAudio.play().catch(e => console.error("Lỗi âm thanh:", e.message));
 }
 
 // 4. SỰ KIỆN TƯƠNG TÁC
 document.addEventListener('DOMContentLoaded', () => {
-    // Khởi tạo Pi SDK
     if (window.Pi) {
         window.Pi.init({ version: "2.0", sandbox: true });
-        document.getElementById('user-status-dot').classList.replace('bg-gray-300', 'bg-green-500');
+        const dot = document.getElementById('user-status-dot');
+        if(dot) dot.classList.replace('bg-gray-300', 'bg-green-500');
     }
 
-    // Lật thẻ
     dom.cardInner.addEventListener('click', function(e) {
         if (e.target.closest('#audio-hint')) return;
         this.classList.toggle('is-flipped');
-        const isFlippedNow = this.classList.contains('is-flipped');
-        if (isFlippedNow) {
+        isFlipped = this.classList.contains('is-flipped');
+        if (isFlipped) {
             playAudio(vocabulary[currentIndex].word);
             if (navigator.vibrate) navigator.vibrate(10);
         }
     });
 
-    // Nút loa
     document.getElementById('audio-hint').onclick = (e) => {
         e.stopPropagation();
         playAudio(vocabulary[currentIndex].word);
     };
 
-    // Điều hướng
-    dom.nextBtn.onclick = () => {
-        if (currentIndex < vocabulary.length - 1) {
-            currentIndex++;
-            updateUI();
-        }
-    };
+    dom.nextBtn.onclick = () => { if (currentIndex < vocabulary.length - 1) { currentIndex++; updateUI(); } };
+    dom.prevBtn.onclick = () => { if (currentIndex > 0) { currentIndex--; updateUI(); } };
 
-    dom.prevBtn.onclick = () => {
-        if (currentIndex > 0) {
-            currentIndex--;
-            updateUI();
-        }
-    };
-
-    // Menu toggle
     const toggleMenu = () => {
         dom.sideMenu.classList.toggle('active');
         dom.overlay.classList.toggle('active');
     };
+    
     document.getElementById('menu-toggle').onclick = toggleMenu;
     document.getElementById('menu-close').onclick = toggleMenu;
     dom.overlay.onclick = toggleMenu;
 
-    // Hoàn thành
     dom.finishBtn.onclick = () => {
         confetti({ particleCount: 150, spread: 70, origin: { y: 0.7 } });
         setTimeout(() => {
-            alert("おめでとうございます！Bạn đã hoàn thành bộ thẻ này! 🏆");
+            alert("Chúc mừng! Bạn đã hoàn thành! 🏆");
             currentIndex = 0;
             updateUI();
         }, 1000);
     };
 
-    // Pi Auth
-    document.getElementById('btn-auth').onclick = async () => {
-        try {
-            const auth = await window.Pi.authenticate(['username', 'payments'], (p) => {});
-            document.getElementById('username').innerText = auth.user.username;
-            document.getElementById('user-initial').innerText = auth.user.username.charAt(0).toUpperCase();
-            document.getElementById('user-info').classList.remove('hidden');
-            document.getElementById('btn-auth').classList.add('hidden');
-        } catch (err) {
-            alert("Vui lòng truy cập từ Pi Browser!");
-        }
-    };
     updateUI();
 });
 
-// 5. THANH TOÁN PI
+// Thanh toán Pi
 async function unlockPremiumContent() {
     try {
         await window.Pi.createPayment({
             amount: 3.14,
-            memo: "Mở khóa kho từ vựng tiếng Nhật Premium",
+            memo: "Nâng cấp Premium Nihongo Flashcards",
             metadata: { package: "N1_N5_FULL" }
         }, {
-            onReadyForServerApproval: (id) => console.log("Chờ server duyệt:", id),
+            onReadyForServerApproval: (id) => console.log("Approval:", id),
             onReadyForServerCompletion: (id, txid) => {
-                document.getElementById('premium-badge').classList.remove('hidden');
+                document.getElementById('premium-badge')?.classList.remove('hidden');
                 document.getElementById('premium-section').style.display = 'none';
                 alert("Nâng cấp thành công!");
             },
             onCancel: (id) => {},
-            onError: (err) => alert("Lỗi thanh toán!"),
+            onError: (err) => alert("Lỗi: " + err.message),
         });
-    } catch (e) {
-        console.error(e);
-    }
+    } catch (e) { console.error(e); }
 }
