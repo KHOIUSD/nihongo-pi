@@ -63,6 +63,8 @@ function updateUI() {
     }, 250);
 
     localStorage.setItem("nihongo_progress", currentIndex);
+    // Cứ mỗi khi chuyển từ, ta gọi hàm đồng bộ (có thể tối ưu bằng cách 5 từ gọi 1 lần)
+    syncProgressToServer(currentIndex);
 }
 
 function updateProgress() {
@@ -171,4 +173,30 @@ async function unlockPremiumContent() {
             onError: (err) => alert("Lỗi thanh toán: " + err.message)
         });
     } catch (e) { console.error(e); }
+}
+
+// Hàm đồng bộ tiến độ lên Server (Pi Database)
+async function syncProgressToServer(index) {
+    // Kiểm tra xem người dùng đã đăng nhập Pi chưa
+    const username = document.getElementById('username').innerText;
+    if (username === "Username") return; // Chưa đăng nhập thì thôi
+
+    try {
+        // Giả sử bạn có một endpoint API trên server của mình
+        const response = await fetch('https://your-api-server.com/save-progress', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                pi_username: username,
+                current_index: index,
+                timestamp: Date.now()
+            })
+        });
+        
+        if (response.ok) {
+            console.log("Đã đồng bộ tiến độ với Pi Network Server");
+        }
+    } catch (e) {
+        console.error("Không thể kết nối server để lưu tiến độ:", e);
+    }
 }
