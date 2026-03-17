@@ -76,6 +76,11 @@
             border-radius: 50%; border: 4px solid #FFF; color: #fff;
             display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(75,0,130,0.3);
         }
+        @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn { animation: fadeIn 0.4s ease-out forwards; }
     </style>
 </head>
 <body>
@@ -98,6 +103,38 @@
         </nav>
     </div>
 
+    <div id="profile-section" class="hidden animate-fadeIn">
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-purple-100 mb-6">
+            <h3 class="text-xl font-bold text-purple-900 mb-4">Thống kê học tập</h3>
+        
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-purple-50 p-4 rounded-2xl text-center">
+                    <p class="text-[10px] text-purple-400 font-bold uppercase">Đã học</p>
+                    <p id="stat-learned" class="text-2xl font-black text-purple-700">0</p>
+                </div>
+                <div class="bg-amber-50 p-4 rounded-2xl text-center">
+                    <p class="text-[10px] text-amber-500 font-bold uppercase">Tỷ lệ</p>
+                    <p id="stat-percent" class="text-2xl font-black text-amber-600">0%</p>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-500">Trạng thái tài khoản:</span>
+                    <span id="stat-status" class="font-bold text-gray-400">Miễn phí</span>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-500">Trình độ hiện tại:</span>
+                    <span class="font-bold text-purple-600">N4 + N5</span>
+                </div>
+            </div>
+        </div>
+    
+        <button onclick="location.reload()" class="w-full py-4 bg-slate-100 text-slate-500 rounded-2xl font-bold active:scale-95 transition-transform">
+            <i class="fas fa-sync-alt mr-2"></i> Làm mới dữ liệu
+        </button>
+    </div>
+    
     <div id="scroll-area">
         <main class="max-w-md mx-auto px-5">
             <div id="user-info" class="hidden mb-6 p-4 bg-white rounded-2xl border border-purple-100 shadow-sm flex justify-between items-center">
