@@ -2,9 +2,9 @@
 const vocabulary = [
     { word: "加工", reading: "かこう", meaning: "Gia công", example: "プラスチックを加工する (Gia công nhựa)." },
     { word: "合格", reading: "ごうかく", meaning: "Đỗ / Vượt qua", example: "N2試験に合格する (Đỗ kỳ thi N2)." },
-    { word: "改善", reading: "かいぜん", meaning: "Cải thiện / Cải tiến", example: "作業工程を改善する (Cải thiện quy trình)." },
+    { word: "改善", reading: "かいぜん", meaning: "Cải thiện / Cải tiến (Kaizen)", example: "作業工程を改善する (Cải thiện quy trình)." },
     { word: "準備", reading: "じゅんび", meaning: "Chuẩn bị", example: "会議の準備をする (Chuẩn bị họp)." },
-    { word: "確認", reading: "かくnにん", meaning: "Xác nhận", example: "メールを確認してください (Hãy check mail)." },
+    { word: "確認", reading: "かくにん", meaning: "Xác nhận", example: "メールを確認してください (Hãy check mail)." },
     { word: "連絡", reading: "れんらく", meaning: "Liên lạc", example: "後で連絡します (Tôi sẽ liên lạc sau)." },
     { word: "報告", reading: "ほうこく", meaning: "Báo cáo", example: "進捗を報告する (Báo cáo tiến độ)." },
     { word: "相談", reading: "そうだん", meaning: "Thảo luận", example: "上司に相談する (Thảo luận với sếp)." },
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dom.finishBtn.onclick = () => {
         confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
         setTimeout(() => {
-            alert("おめでとう！ Bạn đã hoàn thành bài học hôm nay! 🏆");
+            alert("おめでとうございます! Bạn đã hoàn thành bộ thẻ này! 🏆");
             currentIndex = 0;
             updateUI();
         }, 1000);
