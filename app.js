@@ -16,6 +16,7 @@ const vocabulary = [
 let currentIndex = parseInt(localStorage.getItem("nihongo_progress")) || 0;
 let isFlipped = false;
 let globalAudio = new Audio();
+let vocabulary = [];
 
 // 3. ĐỊNH NGHĨA DOM (Thống nhất tên biến)
 const dom = {
@@ -91,8 +92,20 @@ function playAudio(text) {
     globalAudio.src = url;
     globalAudio.play().catch(e => console.warn("Audio play blocked by browser"));
 }
-
-// 6. SỰ KIỆN KHỞI TẠO
+// 6. CẬP NHẬT DỮ LIỆU KHO TỪ 
+async function loadVocabulary(level) {
+    try {
+        const response = await fetch(`data/${level}.json`);
+        vocabulary = await response.json(); 
+        currentIndex = 0; 
+        updateUI(); 
+        console.log(`Đã tải xong dữ liệu ${level}`);
+    } catch (error) {
+        console.error("Lỗi tải dữ liệu:", error);
+        alert("Không tìm thấy dữ liệu. Vui lòng kiểm tra kết nối!");
+    }
+}
+// 7. SỰ KIỆN KHỞI TẠO
 document.addEventListener('DOMContentLoaded', () => {
     // Pi SDK Init
     if (window.Pi) {
@@ -100,7 +113,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const dot = document.getElementById('user-status-dot');
         if(dot) dot.classList.replace('bg-gray-300', 'bg-green-500');
     }
-
+    // Logic xử lý lick menu
+    document.querySelectorAll('#side-menu button[data-level]').forEach(btn => {
+        btn.onclick = () => {
+            const level = btn.getAttribute('data-level');
+            loadVocabulary(level); 
+            // Đóng menu sau khi chọn
+            dom.sideMenu.classList.remove('active');
+            dom.overlay.classList.remove('active');
+        };
+    });
     // Lật thẻ 
     dom.cardInner.addEventListener('click', function(e) {
         if (e.target.closest('#audio-hint')) return;
@@ -155,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateUI(); // Chạy lần đầu
 });
 
-// 7. THANH TOÁN PI
+// 8. THANH TOÁN PI
 async function unlockPremiumContent() {
     try {
         await window.Pi.createPayment({
